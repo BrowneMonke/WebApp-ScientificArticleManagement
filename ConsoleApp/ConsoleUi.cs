@@ -194,21 +194,18 @@ public class ConsoleUi
                 break;
             case 1:
                 ShowAllArticles();
-                Thread.Sleep(3000);
                 break;
             case 2:
                ShowCategories();
-               Thread.Sleep(3000);
                break;
             case 3:
                ShowAllAuthors();
-               Thread.Sleep(3000);
                break;
             case 4:
                 FilterAuthors();
-                Thread.Sleep(3000);
                 break;
         }
+        Thread.Sleep(2000);
     }
 
     private void ShowMenu()
