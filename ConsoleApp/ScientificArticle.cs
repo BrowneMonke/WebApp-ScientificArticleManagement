@@ -30,28 +30,28 @@ public class ScientificArticle
     {
         foreach (Scientist author in ArticleAuthors)
         {
-            author.Articles.Add(this);
+            author.AuthorArticles.Add(this);
         }
     }
 
     private void RelateJournal()
     {
-        Journal.Articles.Add(this);
+        Journal.JournalArticles.Add(this);
     }
     
     private string PrintAuthors()
     {   
-        /*string authorsList = "";
-        foreach (Scientist author in Authors)
+        string authorsList = "";
+        foreach (Scientist author in ArticleAuthors)
         {
             authorsList += author.Name + ", ";
         }
-        return authorsList.Trim().Trim(',');*/
-        return String.Join(", ", ArticleAuthors);
+        return authorsList.Trim().Trim(',');
+        // return String.Join(", ", ArticleAuthors);
     }
 
     public override string ToString()
     {
-        return $"{Title}; by {PrintAuthors()} [published in \"{Journal.JournalName}\"]";
+        return $"{Title} ({NumberOfPages} pages); by {PrintAuthors()} [published in \"{Journal.JournalName}\" on {DateOfPublication}]";
     }
 }
