@@ -29,7 +29,7 @@ public class ConsoleUi
         Scientist charlesWarwick = new Scientist("Charles Warwick", "Neuroscience", "University of Pittsburgh");
         Authors.Add(charlesWarwick);
 
-        Scientist anelaChoy = new Scientist("Anela Choy", "Ocenaography", "UC San Diego");
+        Scientist anelaChoy = new Scientist("Anela Choy", "Oceanography", "UC San Diego");
         Authors.Add(anelaChoy);
         
         Scientist robSherlock = new Scientist("Robert E. Sherlock", "Research", "MBARI", new DateOnly(1966, 11, 1));
@@ -46,7 +46,7 @@ public class ConsoleUi
         // Create Articles
         ScientificArticle articleOrbitalPeriodXRayBurster =
             new ScientificArticle("A four-hour orbital period of the X-ray burster 4U/MXB1636—53",
-                new List<Scientist>(){ walterLewin, janVanParadijs, holgerPedersen},
+                new List<Scientist>(){ walterLewin, janVanParadijs, holgerPedersen}, // TODO: ask teacher about collection expression
                 new DateOnly(1981, 12, 31), 3,
                 ArticleCategory.Astrophysics, journalNature);
         Articles.Add(articleOrbitalPeriodXRayBurster);
@@ -72,7 +72,7 @@ public class ConsoleUi
 
     private void ShowAllArticles()
     {
-        string header = "All articles";
+        string header = "All articles"; // TODO: ask teacher about const string
         Console.WriteLine($"\n{header}\n{new String('=', header.Length)}");
         for (int i = 0; i < Articles.Count; i++)
         {
@@ -98,8 +98,9 @@ public class ConsoleUi
     private void ShowCategories()
     {
         Console.WriteLine("\n");
-        for (int i = 0; i < Enum.GetNames(typeof(ArticleCategory)).Length; i++) {
-            Console.WriteLine(i + " = " + (ArticleCategory) i);
+        foreach (ArticleCategory category in Enum.GetValues<ArticleCategory>())
+        {
+            Console.WriteLine($"{(int) category} = {category}");
         }
         Console.Write("Choose category number: ");
         string categoryChoiceString = Console.ReadLine();
@@ -173,8 +174,7 @@ public class ConsoleUi
     private void FilterAuthors()
     {
         List<Scientist> filteredAuthorsList = new List<Scientist>();
-        Console.WriteLine();
-        Console.Write("Enter (part of) a name or leave blank: ");
+        Console.Write("\nEnter (part of) a name or leave blank: ");
         string nameString = Console.ReadLine();
         CheckNameFilter(nameString, filteredAuthorsList);
         
@@ -183,6 +183,16 @@ public class ConsoleUi
         CheckDobFilter(dobString, filteredAuthorsList);
         
         ShowFilteredAuthors(filteredAuthorsList);
+    }
+    
+    // TODO: ask teacher about AwaitInput as static method
+    private void AwaitInput(int inputChoice)
+    {
+        if (inputChoice != 0)
+        {
+            Console.Write("\nPress ENTER to continue...");
+            Console.ReadLine();
+        }
     }
     
     private void MainMenuAction(int inputChoice)
@@ -204,8 +214,10 @@ public class ConsoleUi
             case 4:
                 FilterAuthors();
                 break;
+            default:
+                return;
         }
-        Thread.Sleep(2000);
+        AwaitInput(inputChoice);
     }
 
     private void ShowMenu()

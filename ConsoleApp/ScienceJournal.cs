@@ -6,7 +6,7 @@ public class ScienceJournal
     public List<ScientificArticle> JournalArticles { get; set; }
     public double? Price { get; set; }
 
-    public ScienceJournal(string name, double? price = null)
+    public ScienceJournal(string name, double? price = null) // TODO: ask teacher about primary constructor
     {
         JournalName = name;
         Price = price;
@@ -15,6 +15,6 @@ public class ScienceJournal
 
     public override string ToString()
     {
-        return $"{JournalName} [${Price}]";
+        return $"{JournalName}{(Price != null ? $" [${Price}]" : "")}";
     }
 }
