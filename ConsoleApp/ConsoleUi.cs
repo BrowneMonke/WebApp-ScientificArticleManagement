@@ -70,10 +70,14 @@ public class ConsoleUi
         
     }
 
+    private void PrintHeader(string header)
+    {
+        Console.WriteLine($"\n{header}\n{new String('=', header.Length)}");
+    }
+    
     private void ShowAllArticles()
     {
-        string header = "All articles"; // TODO: ask teacher about const string
-        Console.WriteLine($"\n{header}\n{new String('=', header.Length)}");
+        PrintHeader("All articles");
         for (int i = 0; i < Articles.Count; i++)
         {
             Console.WriteLine($"{i+1}. {Articles[i]}\n");
@@ -82,8 +86,7 @@ public class ConsoleUi
 
     private void ShowArticlesPerCategory(int categoryChoice)
     {
-        string header = $"Articles on {(ArticleCategory) categoryChoice}";
-        Console.WriteLine($"\n{header}\n{new String('=', header.Length)}");
+        PrintHeader($"Articles on {(ArticleCategory) categoryChoice}");
         int index = 1;
         foreach (ScientificArticle article in Articles)
         {
@@ -113,9 +116,7 @@ public class ConsoleUi
 
     private void ShowAllAuthors()
     {
-        string header = "All authors";
-        Console.WriteLine($"\n{header}\n{new String('=', header.Length)}");
-        
+        PrintHeader("All authors");
         for (int i = 0; i < Authors.Count; i++)
         {
             Console.WriteLine($"{i+1}. {Authors[i]}\n");
@@ -155,9 +156,7 @@ public class ConsoleUi
 
     private void ShowFilteredAuthors(List<Scientist> filteredAuthorsList)
     {
-        string header = "Authors Found";
-        Console.WriteLine($"\n{header}\n{new String('=', header.Length)}");
-
+        PrintHeader("Authors Found");
         if (filteredAuthorsList.Count == 0)
         {
             Console.WriteLine("None\n");
@@ -244,11 +243,9 @@ public class ConsoleUi
     public void Run()
     {
         Seed();
-        
         while (!_quitConsoleApp)
         {
             ShowMenu();
         }
-        
     }
 }

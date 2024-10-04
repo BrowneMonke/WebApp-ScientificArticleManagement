@@ -6,7 +6,7 @@ public class ScienceJournal
     public List<ScientificArticle> JournalArticles { get; set; }
     public double? Price { get; set; }
 
-    public ScienceJournal(string name, double? price = null) // TODO: ask teacher about primary constructor
+    public ScienceJournal(string name, double? price = null)
     {
         JournalName = name;
         Price = price;
