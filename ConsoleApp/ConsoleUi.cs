@@ -221,17 +221,17 @@ public class ConsoleUi
 
     private void ShowMenu()
     {
-        Console.Write("""
-                      
-                      What would you like to do?
-                      ==========================
-                      0) Quit
-                      1) Show all articles
-                      2) Show articles of category
-                      3) Show all authors
-                      4) Show authors with name and/or date of birth
-                      """);
-        Console.Write("\nChoice: ");
+        List<string> options =
+        [
+            "Quit", "Show all articles", "Show articles of category", "Show all authors",
+            "Show authors with name and/or date of birth"
+        ];
+        PrintHeader("What would you like to do?");
+        for (int i = 0; i < options.Count; i++)
+        {
+            Console.WriteLine($"{i}) {options[i]}");
+        }
+        Console.Write("Choice: ");
         string inputChoice = Console.ReadLine();
         int choice;
         if (Int32.TryParse(inputChoice, out choice))
