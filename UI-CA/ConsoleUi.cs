@@ -221,6 +221,7 @@ public class ConsoleUi
 
     private void ShowMenu()
     {
+        
         List<string> options =
         [
             "Quit", "Show all articles", "Show articles of category", "Show all authors",
