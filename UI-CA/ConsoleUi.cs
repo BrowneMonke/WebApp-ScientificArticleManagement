@@ -1,101 +1,47 @@
-﻿namespace ConsoleApp;
+﻿using ArticleManagement.BL;
+using ArticleManagement.BL.Domain;
+using ArticleManagement.BL.Domain.Extensions;
+
+namespace ArticleManagement.UI.CA;
 
 public class ConsoleUi
 {
     private bool _quitConsoleApp = false;
-    private List<Scientist> Authors { get; set; }
-    private List<ScientificArticle> Articles { get; set; }
-    private List<ScienceJournal> Journals { get; set; }
+    private readonly IManager _manager;
 
-    private void Seed()
+    public ConsoleUi(IManager mgr)
     {
-        Authors = new List<Scientist>();
-        Journals = new List<ScienceJournal>();
-        Articles = new List<ScientificArticle>();
-
-        // Create Authors
-        Scientist walterLewin = new Scientist("Walter H. G. Lewin", "Physics", "MIT", new DateOnly(1936, 1, 29));
-        Authors.Add(walterLewin);
-        
-        Scientist janVanParadijs = new Scientist("Jan Van Paradijs", "Physics", "University Of Amsterdam", new DateOnly(1946, 6, 9));
-        Authors.Add(janVanParadijs);
-        
-        Scientist holgerPedersen = new Scientist("Holger Pedersen", "Physics", "Niels Bohr Institute", new DateOnly(1946, 11, 3));
-        Authors.Add(holgerPedersen);
-        
-        Scientist paulJoss = new Scientist("Paul C. Joss", "Physics", "MIT");
-        Authors.Add(paulJoss);
-
-        Scientist charlesWarwick = new Scientist("Charles Warwick", "Neuroscience", "University of Pittsburgh");
-        Authors.Add(charlesWarwick);
-
-        Scientist anelaChoy = new Scientist("Anela Choy", "Oceanography", "UC San Diego");
-        Authors.Add(anelaChoy);
-        
-        Scientist robSherlock = new Scientist("Robert E. Sherlock", "Research", "MBARI", new DateOnly(1966, 11, 1));
-        Authors.Add(robSherlock);
-
-
-        // Create Journals
-        ScienceJournal journalNature = new ScienceJournal("Nature");
-        Journals.Add(journalNature);
-
-        ScienceJournal journalScAdvances = new ScienceJournal("Science Advances", 15.00);
-        Journals.Add(journalScAdvances);
-
-        // Create Articles
-        ScientificArticle articleOrbitalPeriodXRayBurster =
-            new ScientificArticle("A four-hour orbital period of the X-ray burster 4U/MXB1636—53",
-                new List<Scientist>(){ walterLewin, janVanParadijs, holgerPedersen}, // TODO: ask teacher about collection expression
-                new DateOnly(1981, 12, 31), 3,
-                ArticleCategory.Astrophysics, journalNature);
-        Articles.Add(articleOrbitalPeriodXRayBurster);
-
-        ScientificArticle articleXRayBurstSources =
-            new ScientificArticle("X-ray burst sources", new List<Scientist>() { walterLewin, paulJoss },
-                new DateOnly(1977, 11, 17), 6, ArticleCategory.Astrophysics, journalNature);
-        Articles.Add(articleXRayBurstSources);
-        
-        ScientificArticle articleKappa =
-            new ScientificArticle("Kappa opioids inhibit spinal output neurons to suppress itch", new List<Scientist>() { charlesWarwick },
-                new DateOnly(2024, 09, 25), 18, ArticleCategory.Neuroscience, journalScAdvances);
-        Articles.Add(articleKappa);
-
-        ScientificArticle articleLarvaceans =
-            new ScientificArticle(
-                "From the surface to the seafloor: How giant larvaceans transport microplastics into the deep sea",
-                new List<Scientist>() { robSherlock, anelaChoy }, new DateOnly(2017, 8, 16), 5,
-                ArticleCategory.MarineEcology, journalScAdvances);
-        Articles.Add(articleLarvaceans);
-        
+        _manager = mgr;
     }
-
+    
     private void PrintHeader(string header)
     {
         Console.WriteLine($"\n{header}\n{new String('=', header.Length)}");
+    }
+
+    private void PrintList(IEnumerable<object> objectList)
+    {
+        int index = 0;
+        foreach (var obj in objectList)
+        {
+            Console.WriteLine($"{++index}. {obj}\n");
+        }
+        if (index == 0) Console.WriteLine("None Found\n");
     }
     
     private void ShowAllArticles()
     {
         PrintHeader("All articles");
-        for (int i = 0; i < Articles.Count; i++)
-        {
-            Console.WriteLine($"{i+1}. {Articles[i]}\n");
-        }
+  
+        PrintList(_manager.GetAllArticles());
     }
 
     private void ShowArticlesPerCategory(int categoryChoice)
     {
-        PrintHeader($"Articles on {(ArticleCategory) categoryChoice}");
-        int index = 1;
-        foreach (ScientificArticle article in Articles)
-        {
-            if (article.Category == (ArticleCategory) categoryChoice)
-            {
-                Console.WriteLine($"{index}. {article}\n");
-                index++;
-            }
-        }
+        ArticleCategory selectedCategory = (ArticleCategory)categoryChoice;
+        PrintHeader($"Articles on {selectedCategory.GetString()}");
+        
+        PrintList(_manager.GetArticlesByCategory(categoryChoice));
     }
 
     private void ShowCategories()
@@ -108,124 +54,97 @@ public class ConsoleUi
         Console.Write("Choose category number: ");
         string categoryChoiceString = Console.ReadLine();
         int categoryChoice;
-        if (Int32.TryParse(categoryChoiceString, out categoryChoice))
+        while (!(Int32.TryParse(categoryChoiceString, out categoryChoice) && categoryChoice <= Enum.GetValues(typeof(ArticleCategory)).Cast<int>().Max()))
         {
-            ShowArticlesPerCategory(categoryChoice);
+            Console.Write("\nPlease enter a valid value.\nChoose category number: ");
+            categoryChoiceString = Console.ReadLine();
         }
+        ShowArticlesPerCategory(categoryChoice);
     }
 
-    private void ShowAllAuthors()
+    private void ShowAllScientists()
     {
-        PrintHeader("All authors");
-        for (int i = 0; i < Authors.Count; i++)
-        {
-            Console.WriteLine($"{i+1}. {Authors[i]}\n");
-        }
+        PrintHeader("All scientists");
+
+        PrintList(_manager.GetAllScientists());
     }
 
-    private void CheckNameFilter(string nameString, List<Scientist> filteredAuthorsList)
+    private void ShowFilteredScientists()
     {
-        if (nameString != null)
+        Console.Write("\nEnter (part of) a name or leave blank: ");
+        string nameString = Console.ReadLine();
+        Console.Write("Enter a full date (yyyy/mm/dd) or leave blank: ");
+        string dobString = Console.ReadLine();
+        
+        PrintHeader("Scientists By Name / DoB");
+        PrintList(_manager.GetScientistsByNameAndDateOfBirth(nameString, dobString));
+    }
+    
+    private void ActionCreateArticle()
+    {
+        throw new NotImplementedException();
+    }
+    
+    private void ActionCreateScientist()
+    {
+        throw new NotImplementedException();
+    }
+    
+    private static void WaitToContinue(int inputChoice)
+    {
+        if (inputChoice == 0) return;
+        Console.Write("\nPress ENTER to continue...");
+        Console.ReadLine();
+    }
+    
+    private void MainMenuAction(string inputChoice)
+    {
+        int choice;
+        if (Int32.TryParse(inputChoice, out choice))
         {
-            if (nameString.Trim() != "")
+            switch (choice)
             {
-                foreach (Scientist author in Authors)
-                {
-                    if (author.Name.ToLower().Contains(nameString.ToLower()))
-                    {
-                        filteredAuthorsList.Add(author);
-                    }
-                }
+                case 0:
+                    _quitConsoleApp = true;
+                    break;
+                case 1:
+                    ShowAllArticles();
+                    break;
+                case 2:
+                    ShowCategories();
+                    break;
+                case 3:
+                    ShowAllScientists();
+                    break;
+                case 4:
+                    ShowFilteredScientists();
+                    break;
+                case 5:
+                    ActionCreateArticle();
+                    break;
+                case 6:
+                    ActionCreateScientist();
+                    break;
+                default:
+                    Console.WriteLine("\nPlease select a valid option.");
+                    break;
             }
-        }
-    }
-
-    private void CheckDobFilter(string dobString, List<Scientist> filteredAuthorsList)
-    {
-        if (DateOnly.TryParse(dobString, out DateOnly dateOfBirth))
-        {
-            foreach (Scientist author in Authors)
-            {
-                if (author.DateOfBirth == dateOfBirth)
-                {
-                    filteredAuthorsList.Add(author);
-                }
-            }
-        }
-    }
-
-    private void ShowFilteredAuthors(List<Scientist> filteredAuthorsList)
-    {
-        PrintHeader("Authors Found");
-        if (filteredAuthorsList.Count == 0)
-        {
-            Console.WriteLine("None\n");
         }
         else
         {
-            for (int i = 0; i < filteredAuthorsList.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {filteredAuthorsList[i]}\n");
-            }
+            choice = Int16.MaxValue;
+            Console.WriteLine("\nPlease enter a valid value.");
         }
-    }
-    
-    private void FilterAuthors()
-    {
-        List<Scientist> filteredAuthorsList = new List<Scientist>();
-        Console.Write("\nEnter (part of) a name or leave blank: ");
-        string nameString = Console.ReadLine();
-        CheckNameFilter(nameString, filteredAuthorsList);
-        
-        Console.Write("Enter a full date (yyyy/mm/dd) or leave blank: ");
-        string dobString = Console.ReadLine();
-        CheckDobFilter(dobString, filteredAuthorsList);
-        
-        ShowFilteredAuthors(filteredAuthorsList);
-    }
-    
-    // TODO: ask teacher about AwaitInput as static method
-    private void AwaitInput(int inputChoice)
-    {
-        if (inputChoice != 0)
-        {
-            Console.Write("\nPress ENTER to continue...");
-            Console.ReadLine();
-        }
-    }
-    
-    private void MainMenuAction(int inputChoice)
-    {
-        switch (inputChoice)
-        {
-            case 0:
-                _quitConsoleApp = true;
-                break;
-            case 1:
-                ShowAllArticles();
-                break;
-            case 2:
-               ShowCategories();
-               break;
-            case 3:
-               ShowAllAuthors();
-               break;
-            case 4:
-                FilterAuthors();
-                break;
-            default:
-                return;
-        }
-        AwaitInput(inputChoice);
+
+        WaitToContinue(choice);
     }
 
     private void ShowMenu()
     {
-        
         List<string> options =
         [
-            "Quit", "Show all articles", "Show articles of category", "Show all authors",
-            "Show authors with name and/or date of birth"
+            "Quit", "Show all articles", "Show articles of category", "Show all scientists",
+            "Show scientists with name and/or date of birth", "Add an article", "Add a scientist"
         ];
         PrintHeader("What would you like to do?");
         for (int i = 0; i < options.Count; i++)
@@ -234,16 +153,11 @@ public class ConsoleUi
         }
         Console.Write("Choice: ");
         string inputChoice = Console.ReadLine();
-        int choice;
-        if (Int32.TryParse(inputChoice, out choice))
-        {
-            MainMenuAction(choice);
-        }
+        MainMenuAction(inputChoice);
     }
     
     public void Run()
     {
-        Seed();
         while (!_quitConsoleApp)
         {
             ShowMenu();

@@ -1,8 +1,10 @@
-﻿namespace ConsoleApp;
+﻿namespace ArticleManagement.BL.Domain;
 
 public enum ArticleCategory
 {
     Astrophysics,
     Neuroscience,
-    MarineEcology
+    MarineEcology,
+    Biology,
+    Chemistry
 }

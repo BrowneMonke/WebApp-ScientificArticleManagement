@@ -1,16 +1,17 @@
-﻿namespace ConsoleApp;
+﻿namespace ArticleManagement.BL.Domain;
 
 public class ScienceJournal
 {
+    public int JournalId { get; set; }
     public string JournalName { get; set; }
-    public List<ScientificArticle> JournalArticles { get; set; }
+    public ICollection<ScientificArticle> Articles { get; set; }
     public double? Price { get; set; }
 
     public ScienceJournal(string name, double? price = null)
     {
         JournalName = name;
         Price = price;
-        JournalArticles = new List<ScientificArticle>();
+        Articles = new List<ScientificArticle>();
     }
 
     public override string ToString()

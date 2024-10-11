@@ -1,10 +1,11 @@
-﻿namespace ConsoleApp;
+﻿namespace ArticleManagement.BL.Domain;
 
 public class Scientist
 {
+    public int ScientistId { get; set; }
     public string Name { get; set; }
     public DateOnly? DateOfBirth { get; set; }
-    public List<ScientificArticle> AuthorArticles { get; set; }
+    public ICollection<ScientificArticle> Articles { get; set; }
     public string Faculty { get; set; }
     public string University { get; set; }
 
@@ -14,7 +15,7 @@ public class Scientist
         Faculty = faculty;
         University = university;
         DateOfBirth = dateOfBirth;
-        AuthorArticles = new List<ScientificArticle>();
+        Articles = new List<ScientificArticle>();
     }
     
     public override string ToString()

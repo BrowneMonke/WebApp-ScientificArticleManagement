@@ -1,18 +1,19 @@
-﻿namespace ConsoleApp;
+﻿namespace ArticleManagement.BL.Domain;
 
 public class ScientificArticle
 {
+    public int ArticleId { get; set; }
     public string Title { get; init; }
     public DateOnly DateOfPublication { get; set; }
     public int NumberOfPages { get; set; }
     public ScienceJournal Journal { get; set; }
     public ArticleCategory Category { get; set; }
-    public List<Scientist> ArticleAuthors { get; set; }
+    public ICollection<Scientist> Authors { get; set; }
 
-    public ScientificArticle(string title, List<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal)
+    public ScientificArticle(string title, ICollection<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal)
     {
         Title = title;
-        ArticleAuthors = authors;
+        Authors = authors;
         DateOfPublication = dateOfPublication;
         NumberOfPages = numberOfPages;
         Category = category;
@@ -28,21 +29,21 @@ public class ScientificArticle
 
     private void RelateAuthors()
     {
-        foreach (Scientist author in ArticleAuthors)
+        foreach (Scientist author in Authors)
         {
-            author.AuthorArticles.Add(this);
+            author.Articles.Add(this);
         }
-    }
+    }       
 
     private void RelateJournal()
     {
-        Journal.JournalArticles.Add(this);
+        Journal.Articles.Add(this);
     }
     
     private string PrintAuthors()
     {   
         string authorsList = "";
-        foreach (Scientist author in ArticleAuthors)
+        foreach (Scientist author in Authors)
         {
             authorsList += author.Name + ", ";
         }
