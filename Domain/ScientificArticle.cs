@@ -1,16 +1,21 @@
-﻿namespace ArticleManagement.BL.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ArticleManagement.BL.Domain;
 
 public class ScientificArticle
 {
+    [Key] [Range(1,Int32.MaxValue)]
     public int ArticleId { get; set; }
+    
+    [Required] [StringLength(150)]
     public string Title { get; init; }
     public DateOnly DateOfPublication { get; set; }
     public int NumberOfPages { get; set; }
     public ScienceJournal Journal { get; set; }
     public ArticleCategory Category { get; set; }
-    public ICollection<Scientist> Authors { get; set; }
+    public IEnumerable<Scientist> Authors { get; set; }
 
-    public ScientificArticle(string title, ICollection<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal)
+    public ScientificArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal = null)
     {
         Title = title;
         Authors = authors;
@@ -37,7 +42,7 @@ public class ScientificArticle
 
     private void RelateJournal()
     {
-        Journal.Articles.Add(this);
+        Journal?.Articles.Add(this);
     }
     
     private string PrintAuthors()
@@ -53,6 +58,8 @@ public class ScientificArticle
 
     public override string ToString()
     {
-        return $"{Title} ({NumberOfPages} pages); by {PrintAuthors()} [published in \"{Journal.JournalName}\" on {DateOfPublication}]";
+        string authors = PrintAuthors();
+        
+        return $"{Title} ({NumberOfPages} pages){(authors==""? "" : $"; by {authors}")} [published in \"{(Journal == null? "UNKNOWN" : Journal.JournalName)}\" on {DateOfPublication}] (Article ID: {ArticleId})";
     }
 }

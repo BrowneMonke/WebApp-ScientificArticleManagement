@@ -1,4 +1,5 @@
-﻿using ArticleManagement.BL.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+using ArticleManagement.BL.Domain;
 using ArticleManagement.DAL;
 
 namespace ArticleManagement.BL;
@@ -17,7 +18,7 @@ public class Manager : IManager
         return _repository.ReadAllArticles();
     }
 
-    public IEnumerable<ScientificArticle> GetArticlesByCategory(int categoryChoice)
+    public IEnumerable<ScientificArticle> GetArticlesByCategory(ArticleCategory categoryChoice)
     {
         return _repository.ReadArticlesByCategory(categoryChoice);
     }
@@ -27,7 +28,7 @@ public class Manager : IManager
         return _repository.ReadArticle(articleId);
     }
 
-    public ScientificArticle AddArticle(string title, ICollection<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal)
+    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal)
     {
         ScientificArticle article = new ScientificArticle(title, authors, dateOfPublication, numberOfPages, category, journal);
         _repository.CreateArticle(article);
@@ -48,11 +49,27 @@ public class Manager : IManager
     {
         return _repository.ReadScientist(scientistId);
     }
-
+    
     public Scientist AddScientist(string name, string faculty, string university, DateOnly? dateOfBirth = null)
     {
         Scientist scientist = new Scientist(name, faculty, university, dateOfBirth);
         _repository.CreateScientist(scientist);
         return scientist;
     }
+
+    public bool TryParseScientist(string scientistNameString, out Scientist existingScientist)
+    {
+        foreach (Scientist scientist in GetAllScientists())
+        {
+            if (_repository.MatchScientistName(scientistNameString, scientist))
+            {
+                existingScientist = scientist;
+                return true;
+            }
+        }
+        existingScientist = null;
+        return false;
+    }
+
+    
 }

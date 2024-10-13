@@ -5,6 +5,8 @@ public enum ArticleCategory
     Astrophysics,
     Neuroscience,
     MarineEcology,
-    Biology,
-    Chemistry
+    QuantumPhysics,
+    Electromagnetism,
+    Chemistry,
+    Biology
 }

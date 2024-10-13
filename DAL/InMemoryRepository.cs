@@ -1,4 +1,5 @@
-﻿using ArticleManagement.BL.Domain;
+﻿using System.Text.RegularExpressions;
+using ArticleManagement.BL.Domain;
 
 namespace ArticleManagement.DAL;
 
@@ -13,12 +14,12 @@ public class InMemoryRepository : IRepository
         return Articles;
     }
 
-    public IEnumerable<ScientificArticle> ReadArticlesByCategory(int categoryChoice)
+    public IEnumerable<ScientificArticle> ReadArticlesByCategory(ArticleCategory categoryChoice)
     {
         List<ScientificArticle> articlesOfCategory = [];
         foreach (ScientificArticle article in Articles)
         {
-            if (article.Category == (ArticleCategory) categoryChoice)
+            if (article.Category == categoryChoice)
             {
                 articlesOfCategory.Add(article);
             }
@@ -50,19 +51,27 @@ public class InMemoryRepository : IRepository
         return Scientists;
     }
 
+    public bool MatchScientistName(string nameString, Scientist scientist)
+    {
+        string[] scientistNameParts = nameString.Split(" ");
+
+        foreach (var namePart in scientistNameParts)
+        {
+            bool isMatching = scientist.Name.ToLower().Contains(namePart.ToLower());
+            if (!isMatching) return false;
+        }
+
+        return true;
+    }
+    
     private void CheckNameFilter(string nameString, List<Scientist> filteredScientistsList)
     {
         if (nameString == null || nameString.Trim() == "") return;
-        string[] scientistNameParts = nameString.Split(" ");
         
         foreach (Scientist scientist in Scientists)
         {
-            bool isMatching = false;
-            foreach (var namePart in scientistNameParts)
-            {
-                isMatching = scientist.Name.ToLower().Contains(namePart.ToLower());
-                if (!isMatching) break;
-            }
+            bool isMatching = MatchScientistName(nameString, scientist);
+            
             if (isMatching) filteredScientistsList.Add(scientist);
         }
     }
@@ -81,6 +90,7 @@ public class InMemoryRepository : IRepository
     
     public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, string dobString)
     {
+        if (nameString.Trim() == "" && dobString.Trim() == "") return ReadAllScientists();
         List<Scientist> filteredScientistsList = [];
         CheckNameFilter(nameString, filteredScientistsList);
         CheckDobFilter(dobString, filteredScientistsList);
