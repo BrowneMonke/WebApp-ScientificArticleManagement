@@ -1,4 +1,5 @@
-﻿using ArticleManagement.BL;
+﻿using System.ComponentModel.DataAnnotations;
+using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
 using ArticleManagement.BL.Domain.Extensions;
 
@@ -51,10 +52,11 @@ public class ConsoleUi
 
     private int InputCategoryChoice()
     {
+        ShowCategories();
         Console.Write("Choose category number: ");
         string categoryChoiceString = Console.ReadLine();
         int categoryChoice;
-        while (!(Int32.TryParse(categoryChoiceString, out categoryChoice) && categoryChoice <= Enum.GetValues(typeof(ArticleCategory)).Cast<int>().Max()))
+        while (!(Int32.TryParse(categoryChoiceString, out categoryChoice) /*&& categoryChoice <= Enum.GetValues(typeof(ArticleCategory)).Cast<int>().Max()*/))
         {
             Console.Write("\nPlease enter a valid value.\nChoose category number: ");
             categoryChoiceString = Console.ReadLine();
@@ -140,24 +142,36 @@ public class ConsoleUi
 
         DateOnly? nullableDob = null;
         if (DateOnly.TryParse(scientistDobString, out DateOnly dateOfBirth)) nullableDob = dateOfBirth; 
-        _manager.AddScientist(scientistName, scientistFaculty, scientistUniversity, nullableDob);
-        Console.WriteLine("\nScientist added successfully.\n");
+        try
+        {
+            Scientist scientist = _manager.AddScientist(scientistName, scientistFaculty, scientistUniversity, nullableDob);
+            Console.WriteLine("\nScientist added successfully.\n");
+        }
+        catch (ValidationException exception)
+        {
+            var errorMessages = exception.Message.Split("|");
+            foreach (var errorMessage in errorMessages)
+            {
+                Console.WriteLine(errorMessage);
+            }
+        }
     }
 
-    private bool InputArticleTitle(out string title)
+    private /*bool*/ string InputArticleTitle(/*out string title*/)
     {
         string articleTitle = null;
-        Console.Write("Enter article title (leave blank to exit): ");
+        Console.Write("Enter article title: ");
         articleTitle = Console.ReadLine();
-        if (articleTitle == null || articleTitle.Trim() == "")
+        /*if (articleTitle == null || articleTitle.Trim() == "")
         {
             Console.WriteLine("--Operation Terminated--");
             title = null;
             return false;
-        }
+        }*/
 
-        title = articleTitle;
-        return true;
+        // title = articleTitle;
+        // return true;
+        return articleTitle;
     }
 
     private List<Scientist> InputArticleAuthors()
@@ -224,13 +238,25 @@ public class ConsoleUi
     private void ActionCreateArticle()
     {
         Console.WriteLine();
-        if(!InputArticleTitle(out string title)) return;
+        // if(!InputArticleTitle(out string title)) return;
+        string title = InputArticleTitle();
         IEnumerable<Scientist> authors = InputArticleAuthors();
         DateOnly dateOfPublication = InputArticleDateOfPublication();
         int numberOfPages = InputArticleNumberOfPages();
-        ArticleCategory category = InputArticleCategory();
-        _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, category);
-        Console.WriteLine("\nArticle added successfully.");
+        /*ArticleCategory*/int category = /*InputArticleCategory()*/InputCategoryChoice();
+        try
+        {
+            ScientificArticle article = _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, category);
+            Console.WriteLine("\nArticle added successfully.");
+        }
+        catch (ValidationException exception)
+        {
+            var errorMessages = exception.Message.Split("|");
+            foreach (var errorMessage in errorMessages)
+            {
+                Console.WriteLine(errorMessage);
+            }
+        }
     }
     
     private static void WaitToContinue(int inputChoice)

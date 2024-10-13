@@ -4,10 +4,10 @@ namespace ArticleManagement.BL.Domain;
 
 public class Scientist
 {
-    [Key] [Range(1, Int32.MaxValue)]
+    [Key]
     public int ScientistId { get; set; }
     
-    [Required] [StringLength(50)]
+    [Required] [MaxLength(50)]
     public string Name { get; set; }
     public DateOnly? DateOfBirth { get; set; }
     public ICollection<ScientificArticle> Articles { get; set; }

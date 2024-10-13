@@ -2,9 +2,9 @@
 
 namespace ArticleManagement.BL.Domain;
 
-public class ScientificArticle
+public class ScientificArticle : IValidatableObject
 {
-    [Key] [Range(1,Int32.MaxValue)]
+    [Key]
     public int ArticleId { get; set; }
     
     [Required] [StringLength(150)]
@@ -60,6 +60,18 @@ public class ScientificArticle
     {
         string authors = PrintAuthors();
         
-        return $"{Title} ({NumberOfPages} pages){(authors==""? "" : $"; by {authors}")} [published in \"{(Journal == null? "UNKNOWN" : Journal.JournalName)}\" on {DateOfPublication}] (Article ID: {ArticleId})";
+        return $"{Title} ({NumberOfPages} {(NumberOfPages == 1 ? "page" : "pages")}){(authors==""? "" : $"; by {authors}")} [published in \"{(Journal == null? "UNKNOWN" : Journal.JournalName)}\" on {DateOfPublication}] (Article ID: {ArticleId})";
     }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        List<ValidationResult> errors = new List<ValidationResult>();
+        
+        // 1ste check
+        if (!Enum.IsDefined(Category))
+        {
+            errors.Add(new ValidationResult("Article category unknown!", new string[] { nameof(Category) }));
+        }
+        
+        return errors;    }
 }

@@ -28,9 +28,16 @@ public class Manager : IManager
         return _repository.ReadArticle(articleId);
     }
 
-    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal)
+    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, /*ArticleCategory*/int categoryChoice, ScienceJournal journal)
     {
+        ArticleCategory category = (ArticleCategory)categoryChoice;
         ScientificArticle article = new ScientificArticle(title, authors, dateOfPublication, numberOfPages, category, journal);
+        ICollection<ValidationResult> errors = new List<ValidationResult>();
+        bool isValid = Validator.TryValidateObject(article, new ValidationContext(article), errors, validateAllProperties:true);
+        if (!isValid)
+        {
+            throw new ValidationException(String.Join("|", errors.Select(err => err.ErrorMessage)));
+        }
         _repository.CreateArticle(article);
         return article;
     }
@@ -53,6 +60,12 @@ public class Manager : IManager
     public Scientist AddScientist(string name, string faculty, string university, DateOnly? dateOfBirth = null)
     {
         Scientist scientist = new Scientist(name, faculty, university, dateOfBirth);
+        ICollection<ValidationResult> errors = new List<ValidationResult>();
+        bool isValid = Validator.TryValidateObject(scientist, new ValidationContext(scientist), errors, validateAllProperties:true);
+        if (!isValid)
+        {
+            throw new ValidationException(String.Join("|", errors.Select(err => err.ErrorMessage)));
+        }
         _repository.CreateScientist(scientist);
         return scientist;
     }
