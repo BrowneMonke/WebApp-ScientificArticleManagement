@@ -74,4 +74,4 @@ public class ScientificArticle : IValidatableObject
         }
         
         return errors;    }
-}
+}   

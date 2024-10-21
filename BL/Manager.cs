@@ -18,6 +18,14 @@ public class Manager : IManager
         return _repository.ReadAllArticles();
     }
 
+    public void VerifyCategoryChoice(int categoryChoice)
+    {
+        if (!Enum.IsDefined((ArticleCategory)categoryChoice))
+        {
+            throw new ArithmeticException("Invalid Category Number! Please try again.");
+        }
+    }
+
     public IEnumerable<ScientificArticle> GetArticlesByCategory(ArticleCategory categoryChoice)
     {
         return _repository.ReadArticlesByCategory(categoryChoice);
@@ -72,12 +80,15 @@ public class Manager : IManager
 
     public bool TryParseScientist(string scientistNameString, out Scientist existingScientist)
     {
-        foreach (Scientist scientist in GetAllScientists())
+        if (!(scientistNameString == null || scientistNameString.Trim() == ""))
         {
-            if (_repository.MatchScientistName(scientistNameString, scientist))
+            foreach (Scientist scientist in GetAllScientists())
             {
-                existingScientist = scientist;
-                return true;
+                if (_repository.MatchScientistName(scientistNameString, scientist))
+                {
+                    existingScientist = scientist;
+                    return true;
+                }
             }
         }
         existingScientist = null;

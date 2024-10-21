@@ -56,7 +56,7 @@ public class ConsoleUi
         Console.Write("Choose category number: ");
         string categoryChoiceString = Console.ReadLine();
         int categoryChoice;
-        while (!(Int32.TryParse(categoryChoiceString, out categoryChoice) /*&& categoryChoice <= Enum.GetValues(typeof(ArticleCategory)).Cast<int>().Max()*/))
+        while (!(Int32.TryParse(categoryChoiceString, out categoryChoice) /*&& categoryChoice <= Enum.GetValues(typeof(ArticleCategory)).Cast<int>().Max()*/)) //condition commented because custom enum validation with IValidatableObject preferred
         {
             Console.Write("\nPlease enter a valid value.\nChoose category number: ");
             categoryChoiceString = Console.ReadLine();
@@ -69,11 +69,22 @@ public class ConsoleUi
     {
         ShowCategories();
         int categoryChoice = InputCategoryChoice();
+
+        try
+        {
+            _manager.VerifyCategoryChoice(categoryChoice);
+        }
+        catch (ArithmeticException exception)
+        {
+            Console.WriteLine(exception.Message);
+            return;
+        }
         
         ArticleCategory selectedCategory = (ArticleCategory)categoryChoice;
         PrintHeader($"Articles on {selectedCategory.GetString()}");
         
         PrintList(_manager.GetArticlesByCategory(selectedCategory));
+       
     }
 
     private void ShowAllScientists()
@@ -103,7 +114,7 @@ public class ConsoleUi
         }
         else
         {
-            Console.Write("Enter scientist name (leave blank to exit): ");
+            Console.Write("Enter scientist name (enter \'exit\' to quit): ");
             scientistName = Console.ReadLine();
         }
 
@@ -112,26 +123,25 @@ public class ConsoleUi
 
     private bool CheckScientistName(string scientistName, bool articleAuthorEntry = false)
     {
-        if (scientistName == null || scientistName.Trim() == "")
+        if ((articleAuthorEntry && scientistName == "") || scientistName.Trim().ToLower() == "exit")
         {
             if (!articleAuthorEntry) Console.WriteLine("--Operation Terminated--");
-            return true;
+            return false;
         }
 
-        if (!articleAuthorEntry) {
-            if (!_manager.TryParseScientist(scientistName, out Scientist existingScientist)) return false;
-
-            Console.WriteLine($"{existingScientist.Name} already in the list!");
-            return true;
-        }
-
+        if (articleAuthorEntry) return true;
+        
+        if (!_manager.TryParseScientist(scientistName, out Scientist existingScientist)) return true;
+        Console.WriteLine($"{existingScientist.Name} already in the list!");
         return false;
+
     }
+    
 
     private void ActionCreateScientist(string name = null)
     {
         string scientistName = InputScientistName(name);
-        if (CheckScientistName(scientistName)) return;
+        if (!CheckScientistName(scientistName)) return;
         
         Console.Write("Enter scientist university: ");
         string scientistUniversity = Console.ReadLine();
@@ -139,9 +149,9 @@ public class ConsoleUi
         string scientistFaculty = Console.ReadLine();
         Console.Write("Enter scientist date of birth [yyyy/mm/dd] (optional): ");
         string scientistDobString = Console.ReadLine();
-
         DateOnly? nullableDob = null;
-        if (DateOnly.TryParse(scientistDobString, out DateOnly dateOfBirth)) nullableDob = dateOfBirth; 
+        if (DateOnly.TryParse(scientistDobString, out DateOnly dateOfBirth)) nullableDob = dateOfBirth;
+        
         try
         {
             Scientist scientist = _manager.AddScientist(scientistName, scientistFaculty, scientistUniversity, nullableDob);
@@ -150,6 +160,7 @@ public class ConsoleUi
         catch (ValidationException exception)
         {
             var errorMessages = exception.Message.Split("|");
+            Console.WriteLine();
             foreach (var errorMessage in errorMessages)
             {
                 Console.WriteLine(errorMessage);
@@ -181,9 +192,9 @@ public class ConsoleUi
         while (true)
         {
             string authorNameString = null;
-            Console.Write("Enter author name (Leave blank to exit): ");
+            Console.Write("Enter author name (enter \'exit\' to quit): ");
             authorNameString = Console.ReadLine();
-            bool isInvalidName = CheckScientistName(authorNameString, true);
+            bool isInvalidName = !CheckScientistName(authorNameString, true);
             if (isInvalidName) return articleAuthors;
             bool scientistExists = _manager.TryParseScientist(authorNameString, out Scientist scientist);
             if (scientistExists)
@@ -228,12 +239,14 @@ public class ConsoleUi
         return numberOfPages;
     }
 
+    /*
     private ArticleCategory InputArticleCategory()
     {
         ShowCategories();
         int categoryNumber = InputCategoryChoice();
         return (ArticleCategory)categoryNumber;
     }
+    */
     
     private void ActionCreateArticle()
     {

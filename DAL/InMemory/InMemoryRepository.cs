@@ -41,7 +41,7 @@ public class InMemoryRepository : IRepository
         }
         else
         {
-            articleToInsert.ArticleId = Articles.Count + 1;
+            articleToInsert.ArticleId = Articles.Last().ArticleId + 1;
         }
         Articles.Add(articleToInsert);
     }
@@ -110,7 +110,7 @@ public class InMemoryRepository : IRepository
         }
         else
         {
-            scientistToInsert.ScientistId = Scientists.Count + 1;
+            scientistToInsert.ScientistId = Scientists.Last().ScientistId + 1;
         }
         Scientists.Add(scientistToInsert);
     }
@@ -133,7 +133,7 @@ public class InMemoryRepository : IRepository
         }
         else
         {
-            journalToInsert.JournalId = Journals.Count + 1;
+            journalToInsert.JournalId = Journals.Last().JournalId + 1;
         }
         Journals.Add(journalToInsert);
     }
