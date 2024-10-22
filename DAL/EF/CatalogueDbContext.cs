@@ -19,7 +19,7 @@ public class CatalogueDbContext : DbContext
         if (!optionsBuilder.IsConfigured)
         {
             // Configurations if no options are provided via the constructor
-            optionsBuilder.UseSqlite("");
+            optionsBuilder.UseSqlite("Data Source=AppDatabase.sqlite");
         }
         //...
     }

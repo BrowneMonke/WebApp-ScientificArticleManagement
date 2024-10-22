@@ -4,6 +4,10 @@ namespace ArticleManagement.BL.Domain;
 
 public class ScientificArticle : IValidatableObject
 {
+    private ScienceJournal _journal;
+    private IEnumerable<Scientist> _authors;
+    
+    // scalar-properties
     [Key]
     public int ArticleId { get; set; }
     
@@ -11,26 +15,51 @@ public class ScientificArticle : IValidatableObject
     public string Title { get; init; }
     public DateOnly DateOfPublication { get; set; }
     public int NumberOfPages { get; set; }
-    public ScienceJournal Journal { get; set; }
     public ArticleCategory Category { get; set; }
-    public IEnumerable<Scientist> Authors { get; set; }
+    
+    // navigation-properties
+    public ScienceJournal Journal
+    {
+        get
+        {
+            return _journal;
+        }
+        set
+        {
+            _journal = value;
+            RelateJournal();
+        }
+    }
 
-    public ScientificArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal = null)
+    public IEnumerable<Scientist> Authors
+    {
+        get
+        {
+            return _authors;
+        }
+        set
+        {
+            _authors = value;
+            RelateAuthors();
+        }
+    }
+
+    public ScientificArticle(string title)
     {
         Title = title;
-        Authors = authors;
+        /*Authors = authors;
         DateOfPublication = dateOfPublication;
         NumberOfPages = numberOfPages;
         Category = category;
         Journal = journal;
-        SetRelations();
+        SetRelations();*/
     }
 
-    private void SetRelations()
+    /*private void SetRelations()
     {
         RelateAuthors();
         RelateJournal();
-    }
+    }*/
 
     private void RelateAuthors()
     {
@@ -53,7 +82,6 @@ public class ScientificArticle : IValidatableObject
             authorsList += author.Name + ", ";
         }
         return authorsList.Trim().Trim(',');
-        // return String.Join(", ", ArticleAuthors);
     }
 
     public override string ToString()
@@ -67,11 +95,12 @@ public class ScientificArticle : IValidatableObject
     {
         List<ValidationResult> errors = new List<ValidationResult>();
         
-        // 1ste check
         if (!Enum.IsDefined(Category))
         {
             errors.Add(new ValidationResult("Article category unknown!", new string[] { nameof(Category) }));
         }
         
-        return errors;    }
+        return errors;    
+    }
+    
 }   

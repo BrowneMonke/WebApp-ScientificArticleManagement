@@ -56,7 +56,7 @@ public class ConsoleUi
         Console.Write("Choose category number: ");
         string categoryChoiceString = Console.ReadLine();
         int categoryChoice;
-        while (!(Int32.TryParse(categoryChoiceString, out categoryChoice) /*&& categoryChoice <= Enum.GetValues(typeof(ArticleCategory)).Cast<int>().Max()*/)) //condition commented because custom enum validation with IValidatableObject preferred
+        while (!Int32.TryParse(categoryChoiceString, out categoryChoice))
         {
             Console.Write("\nPlease enter a valid value.\nChoose category number: ");
             categoryChoiceString = Console.ReadLine();
@@ -168,20 +168,12 @@ public class ConsoleUi
         }
     }
 
-    private /*bool*/ string InputArticleTitle(/*out string title*/)
+    private string InputArticleTitle()
     {
         string articleTitle = null;
         Console.Write("Enter article title: ");
         articleTitle = Console.ReadLine();
-        /*if (articleTitle == null || articleTitle.Trim() == "")
-        {
-            Console.WriteLine("--Operation Terminated--");
-            title = null;
-            return false;
-        }*/
 
-        // title = articleTitle;
-        // return true;
         return articleTitle;
     }
 
@@ -238,25 +230,15 @@ public class ConsoleUi
 
         return numberOfPages;
     }
-
-    /*
-    private ArticleCategory InputArticleCategory()
-    {
-        ShowCategories();
-        int categoryNumber = InputCategoryChoice();
-        return (ArticleCategory)categoryNumber;
-    }
-    */
     
     private void ActionCreateArticle()
     {
         Console.WriteLine();
-        // if(!InputArticleTitle(out string title)) return;
         string title = InputArticleTitle();
         IEnumerable<Scientist> authors = InputArticleAuthors();
         DateOnly dateOfPublication = InputArticleDateOfPublication();
         int numberOfPages = InputArticleNumberOfPages();
-        /*ArticleCategory*/int category = /*InputArticleCategory()*/InputCategoryChoice();
+        int category = InputCategoryChoice();
         try
         {
             ScientificArticle article = _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, category);

@@ -39,7 +39,14 @@ public class Manager : IManager
     public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, /*ArticleCategory*/int categoryChoice, ScienceJournal journal)
     {
         ArticleCategory category = (ArticleCategory)categoryChoice;
-        ScientificArticle article = new ScientificArticle(title, authors, dateOfPublication, numberOfPages, category, journal);
+        ScientificArticle article = new ScientificArticle(title)
+        {
+            Authors = authors,
+            DateOfPublication = dateOfPublication,
+            NumberOfPages = numberOfPages,
+            Category = category,
+            Journal = journal
+        };
         ICollection<ValidationResult> errors = new List<ValidationResult>();
         bool isValid = Validator.TryValidateObject(article, new ValidationContext(article), errors, validateAllProperties:true);
         if (!isValid)

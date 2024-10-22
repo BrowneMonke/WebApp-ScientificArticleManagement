@@ -1,4 +1,4 @@
-﻿/*using ArticleManagement.BL.Domain;
+﻿using ArticleManagement.BL.Domain;
 
 namespace ArticleManagement.DAL.EF;
 
@@ -7,75 +7,84 @@ public static class DataSeeder
     private static void SeedScientists(CatalogueDbContext catalogueDbContext)
     {
         Scientist walterLewin = new Scientist("Walter H. G. Lewin", "Physics", "MIT", new DateOnly(1936, 1, 29));
-        catalogueDbContext.Scientists.Add(walterLewin);
-        
         Scientist janVanParadijs = new Scientist("Jan Van Paradijs", "Physics", "University Of Amsterdam", new DateOnly(1946, 6, 9));
-        catalogueDbContext.Scientists.Add(janVanParadijs);
-        
         Scientist holgerPedersen = new Scientist("Holger Pedersen", "Physics", "Niels Bohr Institute", new DateOnly(1946, 11, 3));
-        catalogueDbContext.Scientists.Add(holgerPedersen);
-        
         Scientist paulJoss = new Scientist("Paul C. Joss", "Physics", "MIT");
-        catalogueDbContext.Scientists.Add(paulJoss);
-
         Scientist charlesWarwick = new Scientist("Charles Warwick", "Neuroscience", "University of Pittsburgh");
-        catalogueDbContext.Scientists.Add(charlesWarwick);
-
         Scientist anelaChoy = new Scientist("Anela Choy", "Oceanography", "UC San Diego");
-        catalogueDbContext.Scientists.Add(anelaChoy);
-        
         Scientist robSherlock = new Scientist("Robert E. Sherlock", "Research", "MBARI", new DateOnly(1966, 11, 1));
-        catalogueDbContext.Scientists.Add(robSherlock);
 
+        catalogueDbContext.Scientists.AddRange(walterLewin, janVanParadijs, holgerPedersen, paulJoss, charlesWarwick, anelaChoy, robSherlock);
+        
+        int id = 1;
         foreach (Scientist scientist in catalogueDbContext.Scientists)
         {
-            scientist.ScientistId = catalogueDbContext.Scientists.IndexOf(scientist) + 1;
+            scientist.ScientistId = id++; //catalogueDbContext.Scientists.IndexOf(scientist) + 1;
         }
     }
 
     private static void SeedJournals(CatalogueDbContext catalogueDbContext)
     {
         ScienceJournal journalNature = new ScienceJournal("Nature");
-        catalogueDbContext.Journals.Add(journalNature);
-
         ScienceJournal journalScAdvances = new ScienceJournal("Science Advances", 15.00);
-        catalogueDbContext.Journals.Add(journalScAdvances);
+
+        catalogueDbContext.Journals.AddRange(journalNature, journalScAdvances);
         
+        int id = 1;
         foreach (ScienceJournal journal in catalogueDbContext.Journals)
         {
-            journal.JournalId = catalogueDbContext.Journals.IndexOf(journal) + 1;
+            journal.JournalId = id++;
         }
     }
 
     private static void SeedArticles(CatalogueDbContext catalogueDbContext)
     {
+        List<Scientist> authorsList = catalogueDbContext.Scientists.ToList();
+        List<ScienceJournal> journalsList = catalogueDbContext.Journals.ToList();
+        
         ScientificArticle articleOrbitalPeriodXRayBurster =
-            new ScientificArticle("A four-hour orbital period of the X-ray burster 4U/MXB1636—53",
-                [catalogueDbContext.Scientists[0], catalogueDbContext.Scientists[1], catalogueDbContext.Scientists[2]], // TODO: ask teacher about collection expression
-                new DateOnly(1981, 12, 31), 3,
-                ArticleCategory.Astrophysics, catalogueDbContext.Journals[0]);
-        catalogueDbContext.Articles.Add(articleOrbitalPeriodXRayBurster);
-
+            new ScientificArticle("A four-hour orbital period of the X-ray burster 4U/MXB1636—53")
+            {
+                Authors = [authorsList[0], authorsList[1], authorsList[2]],
+                DateOfPublication = new DateOnly(1981, 12, 31),
+                NumberOfPages = 3,
+                Category = ArticleCategory.Astrophysics,
+                Journal = journalsList[0]
+            };
         ScientificArticle articleXRayBurstSources =
-            new ScientificArticle("X-ray burst sources", [catalogueDbContext.Scientists[0], catalogueDbContext.Scientists[3]],
-                new DateOnly(1977, 11, 17), 6, ArticleCategory.Astrophysics, catalogueDbContext.Journals[0]);
-        catalogueDbContext.Articles.Add(articleXRayBurstSources);
-        
+            new ScientificArticle("X-ray burst sources")
+            {
+                Authors = [authorsList[0], authorsList[3]],
+                DateOfPublication = new DateOnly(1977, 11, 17),
+                NumberOfPages = 6,
+                Category = ArticleCategory.Astrophysics,
+                Journal = journalsList[0]
+            };
         ScientificArticle articleKappa =
-            new ScientificArticle("Kappa opioids inhibit spinal output neurons to suppress itch", [catalogueDbContext.Scientists[4]],
-                new DateOnly(2024, 09, 25), 18, ArticleCategory.Neuroscience, catalogueDbContext.Journals[1]);
-        catalogueDbContext.Articles.Add(articleKappa);
-
+            new ScientificArticle("Kappa opioids inhibit spinal output neurons to suppress itch")
+            {
+                Authors = [authorsList[4]],
+                DateOfPublication = new DateOnly(2024, 09, 25),
+                NumberOfPages = 18,
+                Category = ArticleCategory.Neuroscience,
+                Journal = journalsList[1]
+            };
         ScientificArticle articleLarvaceans =
-            new ScientificArticle(
-                "From the surface to the seafloor: How giant larvaceans transport microplastics into the deep sea",
-                [catalogueDbContext.Scientists[5], catalogueDbContext.Scientists[6]], new DateOnly(2017, 8, 16), 5,
-                ArticleCategory.MarineEcology, catalogueDbContext.Journals[1]);
-        catalogueDbContext.Articles.Add(articleLarvaceans);
+            new ScientificArticle("From the surface to the seafloor: How giant larvaceans transport microplastics into the deep sea")
+            {
+                Authors = [authorsList[5], authorsList[6]],
+                DateOfPublication = new DateOnly(2017, 8, 16),
+                NumberOfPages = 5,
+                Category = ArticleCategory.MarineEcology,
+                Journal = journalsList[1]
+            };
+
+        catalogueDbContext.Articles.AddRange(articleOrbitalPeriodXRayBurster, articleXRayBurstSources, articleKappa, articleLarvaceans);
         
+        int id = 1;
         foreach (ScientificArticle article in catalogueDbContext.Articles)
         {
-            article.ArticleId = catalogueDbContext.Articles.IndexOf(article) + 1;
+            article.ArticleId = id++;
         }
     }
 
@@ -87,4 +96,4 @@ public static class DataSeeder
         catalogueDbContext.SaveChanges();
         
     }
-}*/
+}

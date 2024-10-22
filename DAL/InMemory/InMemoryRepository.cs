@@ -142,26 +142,15 @@ public class InMemoryRepository : IRepository
     private static void SeedScientists()
     {
         Scientist walterLewin = new Scientist("Walter H. G. Lewin", "Physics", "MIT", new DateOnly(1936, 1, 29));
-        Scientists.Add(walterLewin);
-        
         Scientist janVanParadijs = new Scientist("Jan Van Paradijs", "Physics", "University Of Amsterdam", new DateOnly(1946, 6, 9));
-        Scientists.Add(janVanParadijs);
-        
         Scientist holgerPedersen = new Scientist("Holger Pedersen", "Physics", "Niels Bohr Institute", new DateOnly(1946, 11, 3));
-        Scientists.Add(holgerPedersen);
-        
         Scientist paulJoss = new Scientist("Paul C. Joss", "Physics", "MIT");
-        Scientists.Add(paulJoss);
-
         Scientist charlesWarwick = new Scientist("Charles Warwick", "Neuroscience", "University of Pittsburgh");
-        Scientists.Add(charlesWarwick);
-
         Scientist anelaChoy = new Scientist("Anela Choy", "Oceanography", "UC San Diego");
-        Scientists.Add(anelaChoy);
-        
         Scientist robSherlock = new Scientist("Robert E. Sherlock", "Research", "MBARI", new DateOnly(1966, 11, 1));
-        Scientists.Add(robSherlock);
 
+        Scientists.AddRange([walterLewin, janVanParadijs, holgerPedersen, paulJoss, charlesWarwick, anelaChoy, robSherlock]);
+        
         foreach (Scientist scientist in Scientists)
         {
             scientist.ScientistId = Scientists.IndexOf(scientist) + 1;
@@ -185,27 +174,47 @@ public class InMemoryRepository : IRepository
     private static void SeedArticles()
     {
         ScientificArticle articleOrbitalPeriodXRayBurster =
-            new ScientificArticle("A four-hour orbital period of the X-ray burster 4U/MXB1636—53",
-                [Scientists[0], Scientists[1], Scientists[2]], // TODO: ask teacher about collection expression
-                new DateOnly(1981, 12, 31), 3,
-                ArticleCategory.Astrophysics, Journals[0]);
+            new ScientificArticle("A four-hour orbital period of the X-ray burster 4U/MXB1636—53")
+            {
+                Authors = [Scientists[0], Scientists[1], Scientists[2]],
+                DateOfPublication = new DateOnly(1981, 12, 31),
+                NumberOfPages = 3,
+                Category = ArticleCategory.Astrophysics,
+                Journal = Journals[0]
+            };
         Articles.Add(articleOrbitalPeriodXRayBurster);
 
         ScientificArticle articleXRayBurstSources =
-            new ScientificArticle("X-ray burst sources", [Scientists[0], Scientists[3]],
-                new DateOnly(1977, 11, 17), 6, ArticleCategory.Astrophysics, Journals[0]);
+            new ScientificArticle("X-ray burst sources")
+            {
+                Authors = [Scientists[0], Scientists[3]],
+                DateOfPublication = new DateOnly(1977, 11, 17),
+                NumberOfPages = 6,
+                Category = ArticleCategory.Astrophysics,
+                Journal = Journals[0]
+            };
         Articles.Add(articleXRayBurstSources);
-        
+
         ScientificArticle articleKappa =
-            new ScientificArticle("Kappa opioids inhibit spinal output neurons to suppress itch", [Scientists[4]],
-                new DateOnly(2024, 09, 25), 18, ArticleCategory.Neuroscience, Journals[1]);
+            new ScientificArticle("Kappa opioids inhibit spinal output neurons to suppress itch")
+            {
+                Authors = [Scientists[4]],
+                DateOfPublication = new DateOnly(2024, 09, 25),
+                NumberOfPages = 18,
+                Category = ArticleCategory.Neuroscience,
+                Journal = Journals[1]
+            };
         Articles.Add(articleKappa);
 
         ScientificArticle articleLarvaceans =
-            new ScientificArticle(
-                "From the surface to the seafloor: How giant larvaceans transport microplastics into the deep sea",
-                [Scientists[5], Scientists[6]], new DateOnly(2017, 8, 16), 5,
-                ArticleCategory.MarineEcology, Journals[1]);
+            new ScientificArticle("From the surface to the seafloor: How giant larvaceans transport microplastics into the deep sea")
+            {
+                Authors = [Scientists[5], Scientists[6]],
+                DateOfPublication = new DateOnly(2017, 8, 16),
+                NumberOfPages = 5,
+                Category = ArticleCategory.MarineEcology,
+                Journal = Journals[1]
+            };
         Articles.Add(articleLarvaceans);
         
         foreach (ScientificArticle article in Articles)
