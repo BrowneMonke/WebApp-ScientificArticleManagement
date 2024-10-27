@@ -64,6 +64,7 @@ public class Manager : IManager
 
     public IEnumerable<Scientist> GetScientistsByNameAndDateOfBirth(string nameString, string dobString)
     {
+        if (nameString.Trim() == "" && dobString.Trim() == "") return _repository.ReadAllScientists();
         return _repository.ReadScientistsByNameAndDateOfBirth(nameString, dobString);
     }
 

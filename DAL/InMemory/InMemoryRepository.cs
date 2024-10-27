@@ -1,7 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using ArticleManagement.BL.Domain;
+﻿using ArticleManagement.BL.Domain;
 
-namespace ArticleManagement.DAL;
+namespace ArticleManagement.DAL.InMemory;
 
 public class InMemoryRepository : IRepository
 {

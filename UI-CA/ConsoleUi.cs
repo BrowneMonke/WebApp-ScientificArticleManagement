@@ -67,7 +67,6 @@ public class ConsoleUi
 
     private void ShowArticlesPerCategory()
     {
-        ShowCategories();
         int categoryChoice = InputCategoryChoice();
 
         try

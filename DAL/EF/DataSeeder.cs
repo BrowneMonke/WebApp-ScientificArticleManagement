@@ -15,12 +15,14 @@ public static class DataSeeder
         Scientist robSherlock = new Scientist("Robert E. Sherlock", "Research", "MBARI", new DateOnly(1966, 11, 1));
 
         catalogueDbContext.Scientists.AddRange(walterLewin, janVanParadijs, holgerPedersen, paulJoss, charlesWarwick, anelaChoy, robSherlock);
-        
+
         int id = 1;
         foreach (Scientist scientist in catalogueDbContext.Scientists)
         {
-            scientist.ScientistId = id++; //catalogueDbContext.Scientists.IndexOf(scientist) + 1;
+            scientist.ScientistId = id++;
         }
+
+        catalogueDbContext.SaveChanges();
     }
 
     private static void SeedJournals(CatalogueDbContext catalogueDbContext)
@@ -35,6 +37,8 @@ public static class DataSeeder
         {
             journal.JournalId = id++;
         }
+
+        catalogueDbContext.SaveChanges();
     }
 
     private static void SeedArticles(CatalogueDbContext catalogueDbContext)
@@ -60,6 +64,7 @@ public static class DataSeeder
                 Category = ArticleCategory.Astrophysics,
                 Journal = journalsList[0]
             };
+      
         ScientificArticle articleKappa =
             new ScientificArticle("Kappa opioids inhibit spinal output neurons to suppress itch")
             {
@@ -86,6 +91,8 @@ public static class DataSeeder
         {
             article.ArticleId = id++;
         }
+
+        catalogueDbContext.SaveChanges();
     }
 
     public static void Seed(CatalogueDbContext catalogueDbContext)
@@ -93,7 +100,6 @@ public static class DataSeeder
         SeedScientists(catalogueDbContext);
         SeedJournals(catalogueDbContext);
         SeedArticles(catalogueDbContext);
-        catalogueDbContext.SaveChanges();
-        
+        catalogueDbContext.ChangeTracker.Clear();
     }
 }

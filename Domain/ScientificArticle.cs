@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArticleManagement.BL.Domain;
 
@@ -18,25 +19,21 @@ public class ScientificArticle : IValidatableObject
     public ArticleCategory Category { get; set; }
     
     // navigation-properties
+    [NotMapped]
     public ScienceJournal Journal
     {
-        get
-        {
-            return _journal;
-        }
+        get => _journal;
         set
         {
             _journal = value;
             RelateJournal();
         }
     }
-
+    
+    [NotMapped]
     public IEnumerable<Scientist> Authors
     {
-        get
-        {
-            return _authors;
-        }
+        get => _authors;
         set
         {
             _authors = value;
@@ -47,19 +44,8 @@ public class ScientificArticle : IValidatableObject
     public ScientificArticle(string title)
     {
         Title = title;
-        /*Authors = authors;
-        DateOfPublication = dateOfPublication;
-        NumberOfPages = numberOfPages;
-        Category = category;
-        Journal = journal;
-        SetRelations();*/
+        Authors = [];
     }
-
-    /*private void SetRelations()
-    {
-        RelateAuthors();
-        RelateJournal();
-    }*/
 
     private void RelateAuthors()
     {
@@ -76,12 +62,12 @@ public class ScientificArticle : IValidatableObject
     
     private string PrintAuthors()
     {   
-        string authorsList = "";
+        string authorNamesString = "";
         foreach (Scientist author in Authors)
         {
-            authorsList += author.Name + ", ";
+            authorNamesString += author.Name + ", ";
         }
-        return authorsList.Trim().Trim(',');
+        return authorNamesString.Trim().Trim(',');
     }
 
     public override string ToString()

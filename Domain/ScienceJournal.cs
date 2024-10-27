@@ -1,21 +1,40 @@
-﻿namespace ArticleManagement.BL.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ArticleManagement.BL.Domain;
 
 public class ScienceJournal
 {
+    // scalar-properties
+    [Key]
     public int JournalId { get; set; }
     public string JournalName { get; set; }
-    public ICollection<ScientificArticle> Articles { get; set; }
     public double? Price { get; set; }
+    public bool HasValue { get; set; }
+    
+    // navigation-property
+    [NotMapped]
+    public ICollection<ScientificArticle> Articles { get; set; }
 
-    public ScienceJournal(string name, double? price = null)
+    /*private ScienceJournal()
     {
-        JournalName = name;
+        // EF needs this constructor even though it is never called by 
+        // my code in the application. EF needs it to set up the contexts
+
+        // Failure to have it will result in a 
+        //  No suitable constructor found for entity type 'ScienceJournal' exception   
+    }*/
+
+    public ScienceJournal(string journalName, double? price = null)
+    {
+        JournalName = journalName;
         Price = price;
+        if (Price > 0) HasValue = true;
         Articles = new List<ScientificArticle>();
     }
 
     public override string ToString()
     {
-        return $"{JournalName}{(Price != null ? $" [${Price}]" : "")}";
+        return $"{JournalName}{(Price.HasValue ? $" [${Price}]" : "")}";
     }
 }

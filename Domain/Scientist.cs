@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArticleManagement.BL.Domain;
 
@@ -10,13 +11,16 @@ public class Scientist //: IValidatableObject
     [Required] [MaxLength(50)]
     public string Name { get; set; }
     public DateOnly? DateOfBirth { get; set; }
-    public ICollection<ScientificArticle> Articles { get; set; }
-    
+
     [Required]
     public string Faculty { get; set; }
-    
+
     [Required]
     public string University { get; set; }
+
+    // navigation-property
+    [NotMapped]
+    public ICollection<ScientificArticle> Articles { get; set; }
 
     public Scientist(string name, string faculty, string university, DateOnly? dateOfBirth = null)
     {
