@@ -31,15 +31,6 @@ public class EfRepository : IRepository
 
     public void CreateArticle(ScientificArticle articleToInsert)
     {
-        if (_catalogueDbContext.Articles == null || !_catalogueDbContext.Articles.Any())
-        {
-            articleToInsert.ArticleId = 1;
-        }
-        else
-        {
-            articleToInsert.ArticleId = _catalogueDbContext.Articles.ToList().Last().ArticleId + 1;
-        }
-
         _catalogueDbContext.Articles.Add(articleToInsert);
         _catalogueDbContext.SaveChanges();
     }
@@ -47,17 +38,6 @@ public class EfRepository : IRepository
     public IEnumerable<Scientist> ReadAllScientists()
     {
         return _catalogueDbContext.Scientists.ToList();
-    }
-
-    private IQueryable<Scientist> GetDobQuery(string dobString /*, List<Scientist> filteredScientistsList*/)
-    {
-        IQueryable<Scientist> query = _catalogueDbContext.Scientists;
-
-        if (!DateOnly.TryParse(dobString, out DateOnly dateOfBirth)) return query;
-
-        query = query.Where(scientist => scientist.DateOfBirth == dateOfBirth);
-        return query;
-        // filteredScientistsList.AddRange(query.ToList());
     }
 
     public bool MatchScientistName(string nameString, Scientist scientist)
@@ -73,38 +53,46 @@ public class EfRepository : IRepository
         return true;
     }
 
+    /*
     private void FilterOnName(string nameString, IQueryable<Scientist> query, List<Scientist> filteredScientistsList)
     {
-        /*if (nameString == null || nameString.Trim() == "")
-        {
-            filteredScientistsList.AddRange(query);
-            return;
-        }*/
-
         foreach (Scientist scientist in query)
         {
             bool isMatching = MatchScientistName(nameString, scientist);
 
-            if (isMatching) filteredScientistsList.Add(scientist);
+            if (isMatching) filteredScientistsList.Add(scientist);  
         }
     }
+    */
 
-    public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, string dobString)
+    public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth)
     {
         List<Scientist> filteredScientistsList = [];
 
-        IQueryable<Scientist> query = GetDobQuery(dobString);
+        IQueryable<Scientist> query = _catalogueDbContext.Scientists;
+
+        if (dateOfBirth != null && dateOfBirth < DateOnly.FromDateTime(DateTime.Now))
+        {
+            query = query.Where(scientist => scientist.DateOfBirth == dateOfBirth);
+        }
         
-        string firstNamePart = nameString.Split(' ')[0];
+        string[] scientistNameParts = nameString.Split(" ");////////////////////////////
+        string firstNamePart = scientistNameParts[0];
         if (!String.IsNullOrEmpty(firstNamePart))
         {
-            query = query.Where(s => s.Name.ToLower().Contains(firstNamePart.ToLower()));
-            FilterOnName(nameString, query, filteredScientistsList);
+            // query = query.Where(s => s.Name.ToLower().Contains(firstNamePart.ToLower()));
+            foreach (var namePart in scientistNameParts)
+            {
+                query = query.Where(s =>s.Name.ToLower().Contains(namePart.ToLower()));
+                // if (!isMatching) return false;
+            }
+            
+            // FilterOnName(nameString, query, filteredScientistsList);
+            
         }
-        else
-        {
-            filteredScientistsList.AddRange(query);
-        }
+        
+        filteredScientistsList.AddRange(query);
+        
 
         return filteredScientistsList;
     }
@@ -116,15 +104,6 @@ public class EfRepository : IRepository
 
     public void CreateScientist(Scientist scientistToInsert)
     {
-        if (_catalogueDbContext.Scientists == null || !_catalogueDbContext.Scientists.Any())
-        {
-            scientistToInsert.ScientistId = 1;
-        }
-        else
-        {
-            scientistToInsert.ScientistId = _catalogueDbContext.Scientists.ToList().Last().ScientistId + 1;
-        }
-
         _catalogueDbContext.Scientists.Add(scientistToInsert);
         _catalogueDbContext.SaveChanges();
     }
