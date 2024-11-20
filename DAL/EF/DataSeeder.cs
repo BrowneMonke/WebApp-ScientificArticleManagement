@@ -15,13 +15,6 @@ public static class DataSeeder
         Scientist robSherlock = new Scientist("Robert E. Sherlock", "Research", "MBARI", new DateOnly(1966, 11, 1));
 
         catalogueDbContext.Scientists.AddRange(walterLewin, janVanParadijs, holgerPedersen, paulJoss, charlesWarwick, anelaChoy, robSherlock);
-
-        int id = 1;
-        foreach (Scientist scientist in catalogueDbContext.Scientists)
-        {
-            scientist.ScientistId = id++;
-        }
-
         catalogueDbContext.SaveChanges();
     }
 
@@ -31,13 +24,6 @@ public static class DataSeeder
         ScienceJournal journalScAdvances = new ScienceJournal("Science Advances", 15.00);
 
         catalogueDbContext.Journals.AddRange(journalNature, journalScAdvances);
-        
-        int id = 1;
-        foreach (ScienceJournal journal in catalogueDbContext.Journals)
-        {
-            journal.JournalId = id++;
-        }
-
         catalogueDbContext.SaveChanges();
     }
 
@@ -85,13 +71,6 @@ public static class DataSeeder
             };
 
         catalogueDbContext.Articles.AddRange(articleOrbitalPeriodXRayBurster, articleXRayBurstSources, articleKappa, articleLarvaceans);
-        
-        int id = 1;
-        foreach (ScientificArticle article in catalogueDbContext.Articles)
-        {
-            article.ArticleId = id++;
-        }
-
         catalogueDbContext.SaveChanges();
     }
 

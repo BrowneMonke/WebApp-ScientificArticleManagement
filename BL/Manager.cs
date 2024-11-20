@@ -18,14 +18,6 @@ public class Manager : IManager
         return _repository.ReadAllArticles();
     }
 
-    public void VerifyCategoryChoice(int categoryChoice)
-    {
-        if (!Enum.IsDefined((ArticleCategory)categoryChoice))
-        {
-            throw new ArithmeticException("Invalid Category Number! Please try again.");
-        }
-    }
-
     public IEnumerable<ScientificArticle> GetArticlesByCategory(ArticleCategory categoryChoice)
     {
         return _repository.ReadArticlesByCategory(categoryChoice);
@@ -35,18 +27,45 @@ public class Manager : IManager
     {
         return _repository.ReadArticle(articleId);
     }
-
-    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, /*ArticleCategory*/int categoryChoice, ScienceJournal journal)
+    
+    private static void RelateAuthors(ScientificArticle article)
     {
-        ArticleCategory category = (ArticleCategory)categoryChoice;
+        foreach (ArticleScientist articleScientist in article.Authors)
+        {
+            ArticleScientist connectingInstance = new ArticleScientist();
+            connectingInstance.Article = article;
+            connectingInstance.Scientist = articleScientist.Scientist;
+            articleScientist.Scientist.Articles.Add(connectingInstance);
+            articleScientist.Article = article;
+        }
+    }       
+
+    private static void RelateJournal(ScientificArticle article)
+    {
+        article.Journal?.Articles.Add(article);
+    }
+
+    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory categoryChoice, ScienceJournal journal)
+    {
+        List<ArticleScientist> articleScientists = [];
+        foreach (Scientist scientist in authors)
+        {
+            ArticleScientist authorInstance = new ArticleScientist
+            {
+                Scientist = scientist
+            };
+            articleScientists.Add(authorInstance);
+        }
+
         ScientificArticle article = new ScientificArticle(title)
         {
-            Authors = authors,
+            Authors = articleScientists,
             DateOfPublication = dateOfPublication,
             NumberOfPages = numberOfPages,
-            Category = category,
+            Category = categoryChoice,
             Journal = journal
         };
+        
         ICollection<ValidationResult> errors = new List<ValidationResult>();
         bool isValid = Validator.TryValidateObject(article, new ValidationContext(article), errors, validateAllProperties:true);
         if (!isValid)
@@ -54,6 +73,9 @@ public class Manager : IManager
             throw new ValidationException(String.Join("|", errors.Select(err => err.ErrorMessage)));
         }
         _repository.CreateArticle(article);
+        RelateAuthors(article);
+        RelateJournal(article);
+        
         return article;
     }
 
@@ -62,10 +84,10 @@ public class Manager : IManager
         return _repository.ReadAllScientists();
     }
 
-    public IEnumerable<Scientist> GetScientistsByNameAndDateOfBirth(string nameString, string dobString)
+    public IEnumerable<Scientist> GetScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth)
     {
-        if (nameString.Trim() == "" && dobString.Trim() == "") return _repository.ReadAllScientists();
-        return _repository.ReadScientistsByNameAndDateOfBirth(nameString, dobString);
+        if (nameString.Trim() == "" && dateOfBirth == null) return _repository.ReadAllScientists();
+        return _repository.ReadScientistsByNameAndDateOfBirth(nameString, dateOfBirth);
     }
 
     public Scientist GetScientist(int scientistId)
@@ -84,23 +106,6 @@ public class Manager : IManager
         }
         _repository.CreateScientist(scientist);
         return scientist;
-    }
-
-    public bool TryParseScientist(string scientistNameString, out Scientist existingScientist)
-    {
-        if (!(scientistNameString == null || scientistNameString.Trim() == ""))
-        {
-            foreach (Scientist scientist in GetAllScientists())
-            {
-                if (_repository.MatchScientistName(scientistNameString, scientist))
-                {
-                    existingScientist = scientist;
-                    return true;
-                }
-            }
-        }
-        existingScientist = null;
-        return false;
     }
 
     

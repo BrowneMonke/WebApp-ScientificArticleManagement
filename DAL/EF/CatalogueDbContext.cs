@@ -27,7 +27,7 @@ public class CatalogueDbContext : DbContext
         if (!optionsBuilder.IsConfigured)
         {
             // Configurations if no options are provided via the constructor (fall back to...)
-            optionsBuilder.UseSqlite("Data Source=CatalogueDatabase.sqlite");
+            optionsBuilder.UseSqlite("Data Source=../../../../CatalogueDatabase.db");
         }
         //...
         optionsBuilder.LogTo(logMsg => Debug.WriteLine(logMsg), LogLevel.Information);

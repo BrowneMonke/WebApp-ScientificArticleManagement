@@ -15,17 +15,37 @@ public class ConsoleUi
         _manager = mgr;
     }
     
-    private void PrintHeader(string header)
+    private static void PrintHeader(string header)
     {
         Console.WriteLine($"\n{header}\n{new String('=', header.Length)}");
     }
 
-    private void PrintList(IEnumerable<object> objectList)
+    private static string SumArticleAuthors(ScientificArticle article)
+    {   
+        string authorNamesString = "";
+        foreach (ArticleScientist articleScientist in article.Authors)
+        {
+            authorNamesString += articleScientist.Scientist.Name + ", ";
+        }
+        return authorNamesString.Trim().Trim(',');
+    }
+    private static void PrintArticlesList(IEnumerable<ScientificArticle> scientificArticles)
     {
         int index = 0;
-        foreach (var obj in objectList)
+        foreach (var article in scientificArticles)
         {
-            Console.WriteLine($"{++index}. {obj}\n");
+            string authors = SumArticleAuthors(article);
+            Console.WriteLine($"{++index}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal == null ? "UNKNOWN" : article.Journal.JournalName)}\" on {article.DateOfPublication}] (Article ID: {article.ArticleId})\n");
+        }
+        if (index == 0) Console.WriteLine("None Found\n");
+    }
+
+    private static void PrintScientistsList(IEnumerable<Scientist> scientists)
+    {
+        int index = 0;
+        foreach (var scientist in scientists)
+        {
+            Console.WriteLine($"{++index}. {scientist.Name} (ID: {scientist.ScientistId}), Faculty of {scientist.Faculty} at {scientist.University} {(scientist.DateOfBirth != null? $"(born {scientist.DateOfBirth})" : "" )}\n");
         }
         if (index == 0) Console.WriteLine("None Found\n");
     }
@@ -34,10 +54,10 @@ public class ConsoleUi
     {
         PrintHeader("All articles");
   
-        PrintList(_manager.GetAllArticles());
+        PrintArticlesList(_manager.GetAllArticles());
     }
 
-    private void ShowCategories()
+    private static void ShowCategories()
     {
         Console.WriteLine();
         ArticleCategory[] categories = Enum.GetValues<ArticleCategory>();
@@ -48,6 +68,37 @@ public class ConsoleUi
             Console.Write(", ");
         }
         Console.WriteLine();
+    }
+    
+    private bool MatchScientistName(string nameString, Scientist scientist)
+    {
+        string[] scientistNameParts = nameString.Split(" ");
+
+        foreach (var namePart in scientistNameParts)
+        {
+            bool isMatching = scientist.Name.ToLower().Contains(namePart.ToLower());
+            if (!isMatching) return false;
+        }
+
+        return true;
+    }
+
+    
+    private bool TryParseScientist(string scientistNameString, out Scientist existingScientist)
+    {
+        if (!(scientistNameString == null || scientistNameString.Trim() == ""))
+        {
+            foreach (Scientist scientist in _manager.GetAllScientists())
+            {
+                if (MatchScientistName(scientistNameString, scientist))
+                {
+                    existingScientist = scientist;
+                    return true;
+                }
+            }
+        }
+        existingScientist = null;
+        return false;
     }
 
     private int InputCategoryChoice()
@@ -64,6 +115,14 @@ public class ConsoleUi
 
         return categoryChoice;
     }
+    
+    private void VerifyCategoryChoice(int categoryChoice)
+    {
+        if (!Enum.IsDefined((ArticleCategory)categoryChoice))
+        {
+            throw new ArithmeticException("Invalid Category Number! Please try again.");
+        }
+    }
 
     private void ShowArticlesPerCategory()
     {
@@ -71,7 +130,7 @@ public class ConsoleUi
 
         try
         {
-            _manager.VerifyCategoryChoice(categoryChoice);
+            VerifyCategoryChoice(categoryChoice);
         }
         catch (ArithmeticException exception)
         {
@@ -82,7 +141,7 @@ public class ConsoleUi
         ArticleCategory selectedCategory = (ArticleCategory)categoryChoice;
         PrintHeader($"Articles on {selectedCategory.GetString()}");
         
-        PrintList(_manager.GetArticlesByCategory(selectedCategory));
+        PrintArticlesList(_manager.GetArticlesByCategory(selectedCategory));
        
     }
 
@@ -90,18 +149,19 @@ public class ConsoleUi
     {
         PrintHeader("All scientists");
 
-        PrintList(_manager.GetAllScientists());
+        PrintScientistsList(_manager.GetAllScientists());
     }
 
     private void ShowFilteredScientists()
     {
         Console.Write("\nEnter (part of) a name or leave blank: ");
         string nameString = Console.ReadLine();
-        Console.Write("Enter a full date (yyyy/mm/dd) or leave blank: ");
+        Console.Write("Enter a full date (dd/mm/yyyy) or leave blank: ");
         string dobString = Console.ReadLine();
+        bool isDateValid = DateOnly.TryParse(dobString, out DateOnly dateOfBirth);
         
         PrintHeader("Scientists By Name / DoB");
-        PrintList(_manager.GetScientistsByNameAndDateOfBirth(nameString, dobString));
+        PrintScientistsList(_manager.GetScientistsByNameAndDateOfBirth(nameString, isDateValid? dateOfBirth : null));
     }
 
     private string InputScientistName(string name)
@@ -130,7 +190,7 @@ public class ConsoleUi
 
         if (articleAuthorEntry) return true;
         
-        if (!_manager.TryParseScientist(scientistName, out Scientist existingScientist)) return true;
+        if (!TryParseScientist(scientistName, out Scientist existingScientist)) return true;
         Console.WriteLine($"{existingScientist.Name} already in the list!");
         return false;
 
@@ -187,7 +247,7 @@ public class ConsoleUi
             authorNameString = Console.ReadLine();
             bool isInvalidName = !CheckScientistName(authorNameString, true);
             if (isInvalidName) return articleAuthors;
-            bool scientistExists = _manager.TryParseScientist(authorNameString, out Scientist scientist);
+            bool scientistExists = TryParseScientist(authorNameString, out Scientist scientist);
             if (scientistExists)
             {
                 articleAuthors.Add(scientist);
@@ -198,7 +258,7 @@ public class ConsoleUi
                 string choice = Console.ReadLine();
                 if (choice == null || choice.ToLower() != "y") continue;
                 ActionCreateScientist(authorNameString);
-                _manager.TryParseScientist(authorNameString, out Scientist newScientist);
+                TryParseScientist(authorNameString, out Scientist newScientist);
                 articleAuthors.Add(newScientist);
             }
         }
@@ -240,7 +300,7 @@ public class ConsoleUi
         int category = InputCategoryChoice();
         try
         {
-            ScientificArticle article = _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, category);
+            ScientificArticle article = _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, (ArticleCategory) category);
             Console.WriteLine("\nArticle added successfully.");
         }
         catch (ValidationException exception)

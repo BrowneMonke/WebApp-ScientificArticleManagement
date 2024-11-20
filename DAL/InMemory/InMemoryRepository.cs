@@ -50,7 +50,7 @@ public class InMemoryRepository : IRepository
         return Scientists;
     }
 
-    public bool MatchScientistName(string nameString, Scientist scientist)
+    private bool MatchScientistName(string nameString, Scientist scientist)
     {
         string[] scientistNameParts = nameString.Split(" ");
 
@@ -75,9 +75,9 @@ public class InMemoryRepository : IRepository
         }
     }
     
-    private void CheckDobFilter(string dobString, List<Scientist> filteredScientistsList)
+    private void CheckDobFilter(DateOnly? dateOfBirth, List<Scientist> filteredScientistsList)
     {
-        if (!DateOnly.TryParse(dobString, out DateOnly dateOfBirth)) return;
+        if (dateOfBirth == null) return;
         foreach (Scientist scientist in Scientists)
         {
             if (scientist.DateOfBirth == dateOfBirth)
@@ -87,12 +87,11 @@ public class InMemoryRepository : IRepository
         }
     }
     
-    public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, string dobString)
+    public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth)
     {
-        if (nameString.Trim() == "" && dobString.Trim() == "") return ReadAllScientists();
         List<Scientist> filteredScientistsList = [];
         CheckNameFilter(nameString, filteredScientistsList);
-        CheckDobFilter(dobString, filteredScientistsList);
+        CheckDobFilter(dateOfBirth, filteredScientistsList);
         return filteredScientistsList;
     }
 

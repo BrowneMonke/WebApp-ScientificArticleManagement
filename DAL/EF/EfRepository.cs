@@ -40,31 +40,6 @@ public class EfRepository : IRepository
         return _catalogueDbContext.Scientists.ToList();
     }
 
-    public bool MatchScientistName(string nameString, Scientist scientist)
-    {
-        string[] scientistNameParts = nameString.Split(" ");
-
-        foreach (var namePart in scientistNameParts)
-        {
-            bool isMatching = scientist.Name.ToLower().Contains(namePart.ToLower());
-            if (!isMatching) return false;
-        }
-
-        return true;
-    }
-
-    /*
-    private void FilterOnName(string nameString, IQueryable<Scientist> query, List<Scientist> filteredScientistsList)
-    {
-        foreach (Scientist scientist in query)
-        {
-            bool isMatching = MatchScientistName(nameString, scientist);
-
-            if (isMatching) filteredScientistsList.Add(scientist);  
-        }
-    }
-    */
-
     public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth)
     {
         List<Scientist> filteredScientistsList = [];
@@ -76,19 +51,13 @@ public class EfRepository : IRepository
             query = query.Where(scientist => scientist.DateOfBirth == dateOfBirth);
         }
         
-        string[] scientistNameParts = nameString.Split(" ");////////////////////////////
-        string firstNamePart = scientistNameParts[0];
-        if (!String.IsNullOrEmpty(firstNamePart))
+        string[] scientistNameParts = nameString.Split(" ");
+        if (!String.IsNullOrEmpty(scientistNameParts[0]))
         {
-            // query = query.Where(s => s.Name.ToLower().Contains(firstNamePart.ToLower()));
             foreach (var namePart in scientistNameParts)
             {
                 query = query.Where(s =>s.Name.ToLower().Contains(namePart.ToLower()));
-                // if (!isMatching) return false;
             }
-            
-            // FilterOnName(nameString, query, filteredScientistsList);
-            
         }
         
         filteredScientistsList.AddRange(query);

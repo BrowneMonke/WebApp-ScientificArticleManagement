@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 // database storage
 DbContextOptionsBuilder dbContextOptionsBuilder = new DbContextOptionsBuilder<CatalogueDbContext>();
-dbContextOptionsBuilder.UseSqlite("Data Source=CatalogueDatabase.sqlite");
+dbContextOptionsBuilder.UseSqlite("Data Source=../../../../CatalogueDatabase.db");
 
 CatalogueDbContext catalogueDbContext = new CatalogueDbContext(dbContextOptionsBuilder.Options);
 IRepository repository = new EfRepository(catalogueDbContext);

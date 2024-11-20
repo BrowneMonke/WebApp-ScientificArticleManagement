@@ -28,13 +28,16 @@ public class ScienceJournal
     public ScienceJournal(string journalName, double? price = null)
     {
         JournalName = journalName;
-        Price = price;
-        if (Price > 0) HasValue = true;
         Articles = new List<ScientificArticle>();
+        Price = price;
+        if (Price > 0)
+            HasValue = true;
+        else 
+            Price = null;
     }
 
-    public override string ToString()
+    /*public override string ToString()
     {
-        return $"{JournalName}{(Price.HasValue ? $" [${Price}]" : "")}";
-    }
+        return $"{JournalName}{(HasValue ? $" [${Price}]" : "")}";
+    }*/
 }

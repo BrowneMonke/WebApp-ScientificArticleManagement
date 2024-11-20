@@ -10,8 +10,8 @@ public interface IRepository
     void CreateArticle(ScientificArticle articleToInsert);
 
     IEnumerable<Scientist> ReadAllScientists();
-    bool MatchScientistName(string nameString, Scientist scientist);
-    IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, string dobString);
+    // bool MatchScientistName(string nameString, Scientist scientist);
+    IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth);
     Scientist ReadScientist(int id);
     void CreateScientist(Scientist scientistToInsert);
 }
