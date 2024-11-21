@@ -2,12 +2,12 @@
 
 namespace ArticleManagement.BL.Domain;
 
-public class ArticleScientist
+public class LinkArticleScientist
 {
     [Required]
-    public ScientificArticle Article { get; set; }
+    public virtual ScientificArticle Article { get; set; }
     [Required]
-    public Scientist Scientist { get; set; }
+    public virtual Scientist Scientist { get; set; }
 
     public int ContributionOrder { get; set; }
     public bool IsLeadResearcher { get; set; }

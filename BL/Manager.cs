@@ -30,13 +30,10 @@ public class Manager : IManager
     
     private static void RelateAuthors(ScientificArticle article)
     {
-        foreach (ArticleScientist articleScientist in article.Authors)
+        foreach (LinkArticleScientist linkArticleScientist in article.AuthorLinks)
         {
-            ArticleScientist connectingInstance = new ArticleScientist();
-            connectingInstance.Article = article;
-            connectingInstance.Scientist = articleScientist.Scientist;
-            articleScientist.Scientist.Articles.Add(connectingInstance);
-            articleScientist.Article = article;
+            linkArticleScientist.Article = article;
+            linkArticleScientist.Scientist.ArticleLinks.Add(linkArticleScientist);
         }
     }       
 
@@ -47,19 +44,19 @@ public class Manager : IManager
 
     public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory categoryChoice, ScienceJournal journal)
     {
-        List<ArticleScientist> articleScientists = [];
+        List<LinkArticleScientist> linkArticleScientistsList = [];
         foreach (Scientist scientist in authors)
         {
-            ArticleScientist authorInstance = new ArticleScientist
+            LinkArticleScientist authorInstance = new LinkArticleScientist
             {
                 Scientist = scientist
             };
-            articleScientists.Add(authorInstance);
+            linkArticleScientistsList.Add(authorInstance);
         }
 
         ScientificArticle article = new ScientificArticle(title)
         {
-            Authors = articleScientists,
+            AuthorLinks = linkArticleScientistsList,
             DateOfPublication = dateOfPublication,
             NumberOfPages = numberOfPages,
             Category = categoryChoice,
@@ -72,10 +69,11 @@ public class Manager : IManager
         {
             throw new ValidationException(String.Join("|", errors.Select(err => err.ErrorMessage)));
         }
-        _repository.CreateArticle(article);
+
         RelateAuthors(article);
         RelateJournal(article);
-        
+        _repository.CreateArticle(article);
+
         return article;
     }
 

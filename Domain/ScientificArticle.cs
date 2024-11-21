@@ -20,13 +20,13 @@ public class ScientificArticle : IValidatableObject
     public ScienceJournal Journal { get; set; }
     
     // [NotMapped]
-    // public IEnumerable<Scientist> Authors { get; set; }
-    public IEnumerable<ArticleScientist> Authors { get; set; }
+    // public ICollection<Scientist> Authors { get; set; }
+    public ICollection<LinkArticleScientist> AuthorLinks { get; set; }
 
     public ScientificArticle(string title)
     {
         Title = title;
-        Authors = [];
+        AuthorLinks = [];
     }
     
     /*

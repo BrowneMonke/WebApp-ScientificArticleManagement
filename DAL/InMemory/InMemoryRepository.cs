@@ -171,10 +171,16 @@ public class InMemoryRepository : IRepository
 
     private static void SeedArticles()
     {
+        List<LinkArticleScientist> authorsList = [];
+        
+        foreach (var scientist in Scientists)
+        {
+            authorsList.Add(new LinkArticleScientist{Scientist = scientist});
+        }
         ScientificArticle articleOrbitalPeriodXRayBurster =
             new ScientificArticle("A four-hour orbital period of the X-ray burster 4U/MXB1636—53")
             {
-                Authors = [Scientists[0], Scientists[1], Scientists[2]],
+                AuthorLinks = [authorsList[0], authorsList[1], authorsList[2]],
                 DateOfPublication = new DateOnly(1981, 12, 31),
                 NumberOfPages = 3,
                 Category = ArticleCategory.Astrophysics,
@@ -185,7 +191,7 @@ public class InMemoryRepository : IRepository
         ScientificArticle articleXRayBurstSources =
             new ScientificArticle("X-ray burst sources")
             {
-                Authors = [Scientists[0], Scientists[3]],
+                AuthorLinks = [authorsList[0], authorsList[3]],
                 DateOfPublication = new DateOnly(1977, 11, 17),
                 NumberOfPages = 6,
                 Category = ArticleCategory.Astrophysics,
@@ -196,7 +202,7 @@ public class InMemoryRepository : IRepository
         ScientificArticle articleKappa =
             new ScientificArticle("Kappa opioids inhibit spinal output neurons to suppress itch")
             {
-                Authors = [Scientists[4]],
+                AuthorLinks = [authorsList[4]],
                 DateOfPublication = new DateOnly(2024, 09, 25),
                 NumberOfPages = 18,
                 Category = ArticleCategory.Neuroscience,
@@ -207,7 +213,7 @@ public class InMemoryRepository : IRepository
         ScientificArticle articleLarvaceans =
             new ScientificArticle("From the surface to the seafloor: How giant larvaceans transport microplastics into the deep sea")
             {
-                Authors = [Scientists[5], Scientists[6]],
+                AuthorLinks = [authorsList[5], authorsList[6]],
                 DateOfPublication = new DateOnly(2017, 8, 16),
                 NumberOfPages = 5,
                 Category = ArticleCategory.MarineEcology,

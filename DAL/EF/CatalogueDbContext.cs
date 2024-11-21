@@ -32,4 +32,35 @@ public class CatalogueDbContext : DbContext
         //...
         optionsBuilder.LogTo(logMsg => Debug.WriteLine(logMsg), LogLevel.Information);
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ScientificArticle>()
+            .HasOne(art => art.Journal)
+            .WithMany(j => j.Articles)
+            .IsRequired(false); // 0..1 ipv 1
+
+        modelBuilder.Entity<LinkArticleScientist>().Property<int>("fkScientistId"); // shadow properties
+        modelBuilder.Entity<LinkArticleScientist>().Property<int>("fkArticleId");
+
+        modelBuilder.Entity<LinkArticleScientist>()
+            .HasOne(artSc => artSc.Scientist)
+            .WithMany(sc => sc.ArticleLinks)
+            .HasForeignKey("fkScientistId")
+            .IsRequired();
+
+        modelBuilder.Entity<LinkArticleScientist>()
+            .HasOne(artSc => artSc.Article)
+            .WithMany(art => art.AuthorLinks)
+            .HasForeignKey("fkArticleId")
+            .IsRequired();
+
+        modelBuilder.Entity<LinkArticleScientist>()
+            .HasKey("fkScientistId", "fkArticleId");
+        
+        
+    }
+    
 }

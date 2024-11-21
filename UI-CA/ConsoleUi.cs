@@ -23,7 +23,7 @@ public class ConsoleUi
     private static string SumArticleAuthors(ScientificArticle article)
     {   
         string authorNamesString = "";
-        foreach (ArticleScientist articleScientist in article.Authors)
+        foreach (LinkArticleScientist articleScientist in article.AuthorLinks)
         {
             authorNamesString += articleScientist.Scientist.Name + ", ";
         }
@@ -101,7 +101,7 @@ public class ConsoleUi
         return false;
     }
 
-    private int InputCategoryChoice()
+    private static int InputCategoryChoice()
     {
         ShowCategories();
         Console.Write("Choose category number: ");
@@ -116,7 +116,7 @@ public class ConsoleUi
         return categoryChoice;
     }
     
-    private void VerifyCategoryChoice(int categoryChoice)
+    private static void VerifyCategoryChoice(int categoryChoice)
     {
         if (!Enum.IsDefined((ArticleCategory)categoryChoice))
         {
@@ -164,7 +164,7 @@ public class ConsoleUi
         PrintScientistsList(_manager.GetScientistsByNameAndDateOfBirth(nameString, isDateValid? dateOfBirth : null));
     }
 
-    private string InputScientistName(string name)
+    private static string InputScientistName(string name)
     {
         string scientistName = null;
         if (name != null)
@@ -182,7 +182,7 @@ public class ConsoleUi
 
     private bool CheckScientistName(string scientistName, bool articleAuthorEntry = false)
     {
-        if ((articleAuthorEntry && scientistName == "") || scientistName.Trim().ToLower() == "exit")
+        if ((articleAuthorEntry && scientistName.Trim() == "") || scientistName.Trim().ToLower() == "exit")
         {
             if (!articleAuthorEntry) Console.WriteLine("--Operation Terminated--");
             return false;
@@ -227,7 +227,7 @@ public class ConsoleUi
         }
     }
 
-    private string InputArticleTitle()
+    private static string InputArticleTitle()
     {
         string articleTitle = null;
         Console.Write("Enter article title: ");
@@ -243,7 +243,7 @@ public class ConsoleUi
         while (true)
         {
             string authorNameString = null;
-            Console.Write("Enter author name (enter \'exit\' to quit): ");
+            Console.Write("Enter author name (leave blank for next step): ");
             authorNameString = Console.ReadLine();
             bool isInvalidName = !CheckScientistName(authorNameString, true);
             if (isInvalidName) return articleAuthors;
@@ -258,8 +258,7 @@ public class ConsoleUi
                 string choice = Console.ReadLine();
                 if (choice == null || choice.ToLower() != "y") continue;
                 ActionCreateScientist(authorNameString);
-                TryParseScientist(authorNameString, out Scientist newScientist);
-                articleAuthors.Add(newScientist);
+                if (TryParseScientist(authorNameString, out Scientist newScientist)) articleAuthors.Add(newScientist);
             }
         }
     }
@@ -277,7 +276,7 @@ public class ConsoleUi
         return dateOfPublication;
     }
 
-    private int InputArticleNumberOfPages()
+    private static int InputArticleNumberOfPages()
     {
         string numOfPagesString;
         int numberOfPages;
