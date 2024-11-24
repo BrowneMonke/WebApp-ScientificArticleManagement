@@ -48,3 +48,16 @@ SELECT "s"."ScientistId", "s"."DateOfBirth", "s"."Faculty", "s"."Name", "s"."Uni
 FROM "Scientists" AS "s"
 ```
 
+## Sprint 4
+
+```mermaid
+classDiagram
+  class Scientist
+  class ArticleScientistLink
+  class ScientificArticle
+  class ScienceJournal
+
+  Scientist "1" -- "*" ArticleScientistLink
+  ArticleScientistLink "*" -- "1" ScientificArticle
+  ScientificArticle "*" -- "1" ScienceJournal
+```
