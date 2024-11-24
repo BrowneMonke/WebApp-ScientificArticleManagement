@@ -21,7 +21,7 @@ public class Scientist //: IValidatableObject
     // navigation-property
     // [NotMapped]
     // public ICollection<ScientificArticle> Articles { get; set; }
-    public virtual ICollection<ArticleScientistLink> ArticleLinks { get; set; }
+    public ICollection<ArticleScientistLink> ArticleLinks { get; set; }
 
     public Scientist(string name, string faculty, string university, DateOnly? dateOfBirth = null)
     {
@@ -31,14 +31,6 @@ public class Scientist //: IValidatableObject
         DateOfBirth = dateOfBirth;
         ArticleLinks = new List<ArticleScientistLink>();
     }
-    
-
-    /*
-    public override string ToString()
-    {
-        return $"{Name} (ID: {ScientistId}), Faculty of {Faculty} at {University} {(DateOfBirth != null? $"(born {DateOfBirth})" : "" )}";
-    }
-    */
 
     /*public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

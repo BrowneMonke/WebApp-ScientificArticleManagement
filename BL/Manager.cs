@@ -18,9 +18,23 @@ public class Manager : IManager
         return _repository.ReadAllArticles();
     }
 
+    public IEnumerable<ScientificArticle> GetAllArticlesWithAuthorsAndJournals()
+    {
+        return _repository.ReadAllArticlesWithAuthorsAndJournals();
+    }
+
     public IEnumerable<ScientificArticle> GetArticlesByCategory(ArticleCategory categoryChoice)
     {
         return _repository.ReadArticlesByCategory(categoryChoice);
+    }
+    public IEnumerable<ScientificArticle> GetArticlesByCategoryWithAuthorsAndJournals(ArticleCategory categoryChoice)
+    {
+        return _repository.ReadArticlesByCategoryWithAuthorsAndJournals(categoryChoice);
+    }
+
+    public IEnumerable<ScientificArticle> GetArticlesOfScientist(int scientistId)
+    {
+        return _repository.ReadArticlesOfScientist(scientistId);
     }
 
     public ScientificArticle GetArticle(int articleId)
@@ -85,6 +99,11 @@ public class Manager : IManager
         return _repository.ReadAllScientists();
     }
 
+    public IEnumerable<Scientist> GetAllScientistsWithArticles()
+    {
+        return _repository.ReadAllScientistsWithArticles();
+    }
+
     public IEnumerable<Scientist> GetScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth)
     {
         if (nameString.Trim() == "" && dateOfBirth == null) return _repository.ReadAllScientists();
@@ -109,5 +128,26 @@ public class Manager : IManager
         return scientist;
     }
 
-    
+    public ArticleScientistLink AddArticleToScientist(int articleId, int scientistId, bool isLeadResearcher = false)
+    {
+        ArticleScientistLink articleScientistLinkToAdd = _repository.ReadArticleScientistLinkByArticleIdAndScientistId(articleId, scientistId);
+        if (articleScientistLinkToAdd != null)
+        {
+            return articleScientistLinkToAdd;
+        }
+        articleScientistLinkToAdd = new ArticleScientistLink
+        {
+            Article = _repository.ReadArticle(articleId),
+            Scientist = _repository.ReadScientist(scientistId),
+            // IsLeadResearcher = isLeadResearcher
+        };
+        
+        _repository.CreateArticleScientistLink(articleScientistLinkToAdd);
+        return articleScientistLinkToAdd;
+    }
+
+    public void RemoveArticleFromScientist(int articleId, int scientistId)
+    {
+        _repository.DeleteArticleScientistLink(articleId, scientistId);
+    }
 }

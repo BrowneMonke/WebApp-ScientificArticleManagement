@@ -14,16 +14,7 @@ public class ScienceJournal
     
     // navigation-property
     [NotMapped]
-    public virtual ICollection<ScientificArticle> Articles { get; set; }
-
-    /*private ScienceJournal()
-    {
-        // EF needs this constructor even though it is never called by 
-        // my code in the application. EF needs it to set up the contexts
-
-        // Failure to have it will result in a 
-        //  No suitable constructor found for entity type 'ScienceJournal' exception   
-    }*/
+    public ICollection<ScientificArticle> Articles { get; set; }
 
     public ScienceJournal(string journalName, double? price = null)
     {

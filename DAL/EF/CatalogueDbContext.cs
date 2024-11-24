@@ -31,8 +31,8 @@ public class CatalogueDbContext : DbContext
             optionsBuilder.UseSqlite("Data Source=../../../../CatalogueDatabase.db");
         }
 
-        // lazy-loading
-        // optionsBuilder.UseLazyLoadingProxies();
+        // lazy-loading => nav-props must be made virtual
+        optionsBuilder.UseLazyLoadingProxies(false); // use 'false' as argument to disable!
         
         optionsBuilder.LogTo(logMsg => Debug.WriteLine(logMsg), LogLevel.Information);
     }

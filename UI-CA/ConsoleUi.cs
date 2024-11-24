@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
 using ArticleManagement.BL.Domain.Extensions;
@@ -34,8 +35,9 @@ public class ConsoleUi
         int index = 0;
         foreach (var article in scientificArticles)
         {
+            index++;
             string authors = SumArticleAuthors(article);
-            Console.WriteLine($"{++index}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal?.JournalName ?? "UNKNOWN")}\" on {article.DateOfPublication}] (Article ID: {article.ArticleId})\n");
+            Console.WriteLine($"{article.ArticleId}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal?.JournalName ?? "UNKNOWN")}\" on {article.DateOfPublication}]\n");
         }
         if (index == 0) Console.WriteLine("None Found\n");
     }
@@ -45,14 +47,15 @@ public class ConsoleUi
         int index = 0;
         foreach (var scientist in scientists)
         {
+            index++;
             string articlesOverview = null;
             foreach (var articleLink in scientist.ArticleLinks)
             {
-                articlesOverview += $"\t\tArticle: {articleLink.Article.Title}\n";
+                articlesOverview += $"\t\t<Article> {articleLink.Article.Title}\n";
             }
-            Console.WriteLine($"{++index}. {scientist.Name} (ID: {scientist.ScientistId}), Faculty of {scientist.Faculty} at {scientist.University} {(scientist.DateOfBirth != null? $"(born {scientist.DateOfBirth})" : "" )}\n" +
+            Console.WriteLine($"{scientist.ScientistId}. {scientist.Name}, Faculty of {scientist.Faculty} at {scientist.University} {(scientist.DateOfBirth != null? $"(born {scientist.DateOfBirth})" : "" )}\n" +
                               $"\tHas contributed to:\n" +
-                              $"{articlesOverview ?? "\t\tNo articles found in database.\n" }");
+                              $"{articlesOverview ?? "\t\tNo articles found in database.\n"}");
         }
         if (index == 0) Console.WriteLine("None Found\n");
     }
@@ -61,7 +64,7 @@ public class ConsoleUi
     {
         PrintHeader("All articles");
   
-        PrintArticlesList(_manager.GetAllArticles());
+        PrintArticlesList(_manager.GetAllArticlesWithAuthorsAndJournals());
     }
 
     private static void ShowCategories()
@@ -148,7 +151,7 @@ public class ConsoleUi
         ArticleCategory selectedCategory = (ArticleCategory)categoryChoice;
         PrintHeader($"Articles on {selectedCategory.GetString()}");
         
-        PrintArticlesList(_manager.GetArticlesByCategory(selectedCategory));
+        PrintArticlesList(_manager.GetArticlesByCategoryWithAuthorsAndJournals(selectedCategory));
        
     }
 
@@ -156,7 +159,7 @@ public class ConsoleUi
     {
         PrintHeader("All scientists");
 
-        PrintScientistsList(_manager.GetAllScientists());
+        PrintScientistsList(_manager.GetAllScientistsWithArticles());
     }
 
     private void ShowFilteredScientists()
@@ -318,6 +321,77 @@ public class ConsoleUi
             }
         }
     }
+
+    private void PrintScientistsWitId(IEnumerable<Scientist> scientists)
+    {
+        foreach (var scientist in scientists)
+        {
+            Console.WriteLine($"[{scientist.ScientistId}] {scientist.Name}");
+        }
+        Console.Write("Please enter a scientist ID: ");
+    }
+    
+    private void PrintArticlesWitId(IEnumerable<ScientificArticle> articles)
+    {
+        foreach (var article in articles)
+        {
+            Console.WriteLine($"[{article.ArticleId}] {article.Title}");
+        }
+        Console.Write("Please enter an article ID: ");
+    }
+
+    private bool CheckIdString(string idString, out int selectedId)
+    {
+        if (!Int32.TryParse(idString, out int convertedId))
+        {
+            Console.WriteLine("Please enter a valid value");
+            selectedId = convertedId;
+            return false;
+        }
+
+        selectedId = convertedId;
+        return true;
+    }
+    
+    private void ShowScientistSelectionMenu(string chooseScientistString, out int scientistId)
+    {
+        Console.WriteLine(chooseScientistString);
+        PrintScientistsWitId(_manager.GetAllScientists());
+        string scientistChoice = Console.ReadLine();
+        bool isValidScientistIdFormat = CheckIdString(scientistChoice, out int selectedScientistId);
+        scientistId = isValidScientistIdFormat? selectedScientistId : Int32.MaxValue;
+    }
+
+    private void ShowArticleScientistLinkEditMenu(string chooseScientistString, string chooseArticleString, out int scientistId, out int articleId)
+    {
+        ShowScientistSelectionMenu(chooseScientistString, out int selectedScientistId);
+        scientistId = selectedScientistId;
+        
+        Console.WriteLine("\n" + chooseArticleString);
+        PrintArticlesWitId(_manager.GetAllArticles());
+        string articleChoice = Console.ReadLine();
+        bool isValidArticleIdFormat = CheckIdString(articleChoice, out int selectedArticleId);
+        articleId = isValidArticleIdFormat? selectedArticleId : Int32.MaxValue;
+    }
+    
+    private void ActionCreateArticleScientistLink()
+    {
+        PrintHeader("Adding article to scientist");
+       ShowArticleScientistLinkEditMenu("Which scientist would you like to add an article to?", "Which article would you like to assign to this scientist?", out int selectedScientistId, out int selectedArticleId);
+        // TODO: add validation
+        _manager.AddArticleToScientist(selectedArticleId, selectedScientistId);
+    }
+    
+    private void ActionDeleteArticleScientistLink()
+    {
+        PrintHeader("Removing article from scientist");
+        ShowScientistSelectionMenu("Which author would you like to remove an article from?", out int selectedScientistId);
+        Console.WriteLine("\n" + "Which article would you like to remove from this scientist?");
+        PrintArticlesWitId(_manager.GetArticlesOfScientist(selectedScientistId));
+        string articleChoice = Console.ReadLine();
+        bool isValidArticleIdFormat = CheckIdString(articleChoice, out int selectedArticleId);
+        _manager.RemoveArticleFromScientist(selectedArticleId, selectedScientistId);
+    }
     
     private static void WaitToContinue(int inputChoice)
     {
@@ -354,6 +428,12 @@ public class ConsoleUi
                 case 6:
                     ActionCreateScientist();
                     break;
+                case 7:
+                    ActionCreateArticleScientistLink();
+                    break;
+                case 8:
+                    ActionDeleteArticleScientistLink();
+                    break;
                 default:
                     Console.WriteLine("\nPlease select a valid option.");
                     break;
@@ -373,7 +453,8 @@ public class ConsoleUi
         List<string> options =
         [
             "Quit", "Show all articles", "Show articles of category", "Show all scientists",
-            "Show scientists with name and/or date of birth", "Add an article", "Add a scientist"
+            "Show scientists with name and/or date of birth", "Add an article", "Add a scientist",
+            "Add article to scientist", "Remove article from scientist"
         ];
         PrintHeader("What would you like to do?");
         for (int i = 0; i < options.Count; i++)

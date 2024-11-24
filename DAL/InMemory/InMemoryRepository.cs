@@ -13,6 +13,11 @@ public class InMemoryRepository : IRepository
         return Articles;
     }
 
+    public IEnumerable<ScientificArticle> ReadAllArticlesWithAuthorsAndJournals()
+    {
+        throw new NotImplementedException();
+    }
+
     public IEnumerable<ScientificArticle> ReadArticlesByCategory(ArticleCategory categoryChoice)
     {
         List<ScientificArticle> articlesOfCategory = [];
@@ -25,6 +30,16 @@ public class InMemoryRepository : IRepository
         }
 
         return articlesOfCategory;
+    }
+
+    public IEnumerable<ScientificArticle> ReadArticlesByCategoryWithAuthorsAndJournals(ArticleCategory categoryChoice)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<ScientificArticle> ReadArticlesOfScientist(int scientistId)
+    {
+        throw new NotImplementedException();
     }
 
     public ScientificArticle ReadArticle(int articleId)
@@ -48,6 +63,11 @@ public class InMemoryRepository : IRepository
     public IEnumerable<Scientist> ReadAllScientists()
     {
         return Scientists;
+    }
+
+    public IEnumerable<Scientist> ReadAllScientistsWithArticles()
+    {
+        throw new NotImplementedException();
     }
 
     private bool MatchScientistName(string nameString, Scientist scientist)
@@ -111,6 +131,21 @@ public class InMemoryRepository : IRepository
             scientistToInsert.ScientistId = Scientists.Last().ScientistId + 1;
         }
         Scientists.Add(scientistToInsert);
+    }
+
+    public void CreateArticleScientistLink(ArticleScientistLink articleScientistLink)
+    {
+        throw new NotImplementedException();
+    }
+    
+    public void DeleteArticleScientistLink(int articleId, int scientistId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId)
+    {
+        throw new NotImplementedException();
     }
 
     public IEnumerable<ScienceJournal> ReadAllJournals()

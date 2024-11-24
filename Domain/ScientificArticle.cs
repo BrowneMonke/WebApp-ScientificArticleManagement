@@ -17,36 +17,17 @@ public class ScientificArticle : IValidatableObject
     
     // navigation-properties
     // [NotMapped]
-    public virtual ScienceJournal Journal { get; set; }
+    public ScienceJournal Journal { get; set; }
     
     // [NotMapped]
     // public ICollection<Scientist> Authors { get; set; }
-    public virtual ICollection<ArticleScientistLink> AuthorLinks { get; set; }
+    public ICollection<ArticleScientistLink> AuthorLinks { get; set; }
 
     public ScientificArticle(string title)
     {
         Title = title;
         AuthorLinks = [];
     }
-    
-    /*
-    private string PrintAuthors()
-    {   
-        string authorNamesString = "";
-        foreach (Scientist author in Authors)
-        {
-            authorNamesString += author.Name + ", ";
-        }
-        return authorNamesString.Trim().Trim(',');
-    }
-
-    public override string ToString()
-    {
-        string authors = PrintAuthors();
-        
-        return $"{Title} ({NumberOfPages} {(NumberOfPages == 1 ? "page" : "pages")}){(authors==""? "" : $"; by {authors}")} [published in \"{(Journal == null? "UNKNOWN" : Journal.JournalName)}\" on {DateOfPublication}] (Article ID: {ArticleId})";
-    }
-    */
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
