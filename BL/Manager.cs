@@ -30,7 +30,7 @@ public class Manager : IManager
     
     private static void RelateAuthors(ScientificArticle article)
     {
-        foreach (LinkArticleScientist linkArticleScientist in article.AuthorLinks)
+        foreach (ArticleScientistLink linkArticleScientist in article.AuthorLinks)
         {
             linkArticleScientist.Article = article;
             linkArticleScientist.Scientist.ArticleLinks.Add(linkArticleScientist);
@@ -44,14 +44,17 @@ public class Manager : IManager
 
     public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory categoryChoice, ScienceJournal journal)
     {
-        List<LinkArticleScientist> linkArticleScientistsList = [];
+        List<ArticleScientistLink> linkArticleScientistsList = [];
+        int leadResearcherToggle = 0;
         foreach (Scientist scientist in authors)
         {
-            LinkArticleScientist authorInstance = new LinkArticleScientist
+            ArticleScientistLink authorInstance = new ArticleScientistLink
             {
-                Scientist = scientist
+                Scientist = scientist,
+                IsLeadResearcher = (leadResearcherToggle == 0)
             };
             linkArticleScientistsList.Add(authorInstance);
+            leadResearcherToggle++;
         }
 
         ScientificArticle article = new ScientificArticle(title)

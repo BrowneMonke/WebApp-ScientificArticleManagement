@@ -23,9 +23,9 @@ public class ConsoleUi
     private static string SumArticleAuthors(ScientificArticle article)
     {   
         string authorNamesString = "";
-        foreach (LinkArticleScientist articleScientist in article.AuthorLinks)
+        foreach (ArticleScientistLink articleScientistLink in article.AuthorLinks)
         {
-            authorNamesString += articleScientist.Scientist.Name + ", ";
+            authorNamesString += articleScientistLink.Scientist.Name + ", ";
         }
         return authorNamesString.Trim().Trim(',');
     }
@@ -35,7 +35,7 @@ public class ConsoleUi
         foreach (var article in scientificArticles)
         {
             string authors = SumArticleAuthors(article);
-            Console.WriteLine($"{++index}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal == null ? "UNKNOWN" : article.Journal.JournalName)}\" on {article.DateOfPublication}] (Article ID: {article.ArticleId})\n");
+            Console.WriteLine($"{++index}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal?.JournalName ?? "UNKNOWN")}\" on {article.DateOfPublication}] (Article ID: {article.ArticleId})\n");
         }
         if (index == 0) Console.WriteLine("None Found\n");
     }
@@ -45,7 +45,14 @@ public class ConsoleUi
         int index = 0;
         foreach (var scientist in scientists)
         {
-            Console.WriteLine($"{++index}. {scientist.Name} (ID: {scientist.ScientistId}), Faculty of {scientist.Faculty} at {scientist.University} {(scientist.DateOfBirth != null? $"(born {scientist.DateOfBirth})" : "" )}\n");
+            string articlesOverview = null;
+            foreach (var articleLink in scientist.ArticleLinks)
+            {
+                articlesOverview += $"\t\tArticle: {articleLink.Article.Title}\n";
+            }
+            Console.WriteLine($"{++index}. {scientist.Name} (ID: {scientist.ScientistId}), Faculty of {scientist.Faculty} at {scientist.University} {(scientist.DateOfBirth != null? $"(born {scientist.DateOfBirth})" : "" )}\n" +
+                              $"\tHas contributed to:\n" +
+                              $"{articlesOverview ?? "\t\tNo articles found in database.\n" }");
         }
         if (index == 0) Console.WriteLine("None Found\n");
     }
@@ -214,7 +221,7 @@ public class ConsoleUi
         try
         {
             Scientist scientist = _manager.AddScientist(scientistName, scientistFaculty, scientistUniversity, nullableDob);
-            Console.WriteLine("\nScientist added successfully.\n");
+            Console.WriteLine($"\nScientist added successfully: {scientist.Name}\n");
         }
         catch (ValidationException exception)
         {
@@ -300,7 +307,7 @@ public class ConsoleUi
         try
         {
             ScientificArticle article = _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, (ArticleCategory) category);
-            Console.WriteLine("\nArticle added successfully.");
+            Console.WriteLine($"\nArticle added successfully: {article.Title}");
         }
         catch (ValidationException exception)
         {

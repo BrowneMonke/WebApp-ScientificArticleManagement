@@ -14,7 +14,7 @@ public class ScienceJournal
     
     // navigation-property
     [NotMapped]
-    public ICollection<ScientificArticle> Articles { get; set; }
+    public virtual ICollection<ScientificArticle> Articles { get; set; }
 
     /*private ScienceJournal()
     {

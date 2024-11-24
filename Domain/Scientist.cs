@@ -21,7 +21,7 @@ public class Scientist //: IValidatableObject
     // navigation-property
     // [NotMapped]
     // public ICollection<ScientificArticle> Articles { get; set; }
-    public ICollection<LinkArticleScientist> ArticleLinks { get; set; }
+    public virtual ICollection<ArticleScientistLink> ArticleLinks { get; set; }
 
     public Scientist(string name, string faculty, string university, DateOnly? dateOfBirth = null)
     {
@@ -29,7 +29,7 @@ public class Scientist //: IValidatableObject
         Faculty = faculty;
         University = university;
         DateOfBirth = dateOfBirth;
-        ArticleLinks = new List<LinkArticleScientist>();
+        ArticleLinks = new List<ArticleScientistLink>();
     }
     
 

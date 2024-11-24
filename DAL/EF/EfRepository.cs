@@ -18,10 +18,7 @@ public class EfRepository : IRepository
 
     public IEnumerable<ScientificArticle> ReadArticlesByCategory(ArticleCategory categoryChoice)
     {
-        List<ScientificArticle> articlesOfCategory = [];
-        articlesOfCategory.AddRange(_catalogueDbContext.Articles.Where(article => article.Category == categoryChoice));
-
-        return articlesOfCategory;
+        return _catalogueDbContext.Articles.Where(article => article.Category == categoryChoice).ToList();
     }
 
     public ScientificArticle ReadArticle(int id)
@@ -42,8 +39,6 @@ public class EfRepository : IRepository
 
     public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth)
     {
-        List<Scientist> filteredScientistsList = [];
-
         IQueryable<Scientist> query = _catalogueDbContext.Scientists;
 
         if (dateOfBirth != null && dateOfBirth < DateOnly.FromDateTime(DateTime.Now))
@@ -59,11 +54,8 @@ public class EfRepository : IRepository
                 query = query.Where(s =>s.Name.ToLower().Contains(namePart.ToLower()));
             }
         }
-        
-        filteredScientistsList.AddRange(query);
-        
 
-        return filteredScientistsList;
+        return query.ToList();
     }
 
     public Scientist ReadScientist(int id)

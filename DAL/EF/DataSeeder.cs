@@ -26,9 +26,9 @@ public static class DataSeeder
             Category = ArticleCategory.Astrophysics,
             Journal = journalNature
         };
-        LinkArticleScientist orbitalPeriodWalterLewin = new LinkArticleScientist() { Article = articleOrbitalPeriodXRayBurster, Scientist = walterLewin };
-        LinkArticleScientist orbitalPeriodJanVanParadijs = new LinkArticleScientist() { Article = articleOrbitalPeriodXRayBurster, Scientist = janVanParadijs };
-        LinkArticleScientist orbitalPeriodHolgerPederson = new LinkArticleScientist() { Article = articleOrbitalPeriodXRayBurster, Scientist = holgerPedersen };
+        ArticleScientistLink orbitalPeriodWalterLewin = new ArticleScientistLink() { Article = articleOrbitalPeriodXRayBurster, Scientist = walterLewin, IsLeadResearcher = true};
+        ArticleScientistLink orbitalPeriodJanVanParadijs = new ArticleScientistLink() { Article = articleOrbitalPeriodXRayBurster, Scientist = janVanParadijs };
+        ArticleScientistLink orbitalPeriodHolgerPederson = new ArticleScientistLink() { Article = articleOrbitalPeriodXRayBurster, Scientist = holgerPedersen };
         articleOrbitalPeriodXRayBurster.AuthorLinks = [orbitalPeriodWalterLewin, orbitalPeriodJanVanParadijs, orbitalPeriodHolgerPederson];        
 
         ScientificArticle articleXRayBurstSources = new ScientificArticle("X-ray burst sources") 
@@ -38,8 +38,8 @@ public static class DataSeeder
             Category = ArticleCategory.Astrophysics,
             Journal = journalNature
         };
-        LinkArticleScientist xRayBurstSourcesWalterLewin = new LinkArticleScientist() { Article = articleXRayBurstSources, Scientist = walterLewin };
-        LinkArticleScientist xRayBurstSourcesPaulJoss = new LinkArticleScientist() { Article = articleXRayBurstSources, Scientist = paulJoss };
+        ArticleScientistLink xRayBurstSourcesWalterLewin = new ArticleScientistLink() { Article = articleXRayBurstSources, Scientist = walterLewin, IsLeadResearcher = true};
+        ArticleScientistLink xRayBurstSourcesPaulJoss = new ArticleScientistLink() { Article = articleXRayBurstSources, Scientist = paulJoss };
         articleXRayBurstSources.AuthorLinks = [xRayBurstSourcesWalterLewin, xRayBurstSourcesPaulJoss];
 
         ScientificArticle articleKappa = new ScientificArticle("Kappa opioids inhibit spinal output neurons to suppress itch")
@@ -49,8 +49,9 @@ public static class DataSeeder
             Category = ArticleCategory.Neuroscience,
             Journal = journalScAdvances
         };
-        LinkArticleScientist kappaCharlesWar = new LinkArticleScientist() { Article = articleKappa, Scientist = charlesWarwick };
-        articleKappa.AuthorLinks.Add(kappaCharlesWar);
+        ArticleScientistLink kappaCharlesWar = new ArticleScientistLink() { Article = articleKappa, Scientist = charlesWarwick, IsLeadResearcher = true};
+        ArticleScientistLink kappaHolgerPeder = new ArticleScientistLink() { Article = articleKappa, Scientist = holgerPedersen};
+        articleKappa.AuthorLinks = [kappaCharlesWar, kappaHolgerPeder];
         
         ScientificArticle articleLarvaceans = new ScientificArticle("From the surface to the seafloor: How giant larvaceans transport microplastics into the deep sea")
         {
@@ -59,8 +60,8 @@ public static class DataSeeder
             Category = ArticleCategory.MarineEcology,
             Journal = journalScAdvances
         };
-        LinkArticleScientist larvaceansAnelaChoy = new LinkArticleScientist() { Article = articleLarvaceans, Scientist = anelaChoy };
-        LinkArticleScientist larvaceansRobSherlock = new LinkArticleScientist() { Article = articleLarvaceans, Scientist = robSherlock };
+        ArticleScientistLink larvaceansAnelaChoy = new ArticleScientistLink() { Article = articleLarvaceans, Scientist = anelaChoy };
+        ArticleScientistLink larvaceansRobSherlock = new ArticleScientistLink() { Article = articleLarvaceans, Scientist = robSherlock, IsLeadResearcher = true};
         articleLarvaceans.AuthorLinks = [larvaceansAnelaChoy, larvaceansRobSherlock];
         
         ScientificArticle[] seedArticles = [articleOrbitalPeriodXRayBurster, articleXRayBurstSources, articleKappa, articleLarvaceans];
@@ -69,13 +70,13 @@ public static class DataSeeder
             foreach (var linkArticleScientist in article.AuthorLinks)
             {
                 linkArticleScientist.Scientist.ArticleLinks.Add(linkArticleScientist);
+                catalogueDbContext.ArticleScientistLinks.Add(linkArticleScientist);
             }
         }
-
         catalogueDbContext.Scientists.AddRange(walterLewin, janVanParadijs, holgerPedersen, paulJoss, charlesWarwick, anelaChoy, robSherlock);
         catalogueDbContext.Journals.AddRange(journalNature, journalScAdvances);
         catalogueDbContext.Articles.AddRange(seedArticles);
-        
+
         catalogueDbContext.SaveChanges();
         catalogueDbContext.ChangeTracker.Clear();
     }

@@ -171,11 +171,11 @@ public class InMemoryRepository : IRepository
 
     private static void SeedArticles()
     {
-        List<LinkArticleScientist> authorsList = [];
+        List<ArticleScientistLink> authorsList = [];
         
         foreach (var scientist in Scientists)
         {
-            authorsList.Add(new LinkArticleScientist{Scientist = scientist});
+            authorsList.Add(new ArticleScientistLink{Scientist = scientist});
         }
         ScientificArticle articleOrbitalPeriodXRayBurster =
             new ScientificArticle("A four-hour orbital period of the X-ray burster 4U/MXB1636—53")

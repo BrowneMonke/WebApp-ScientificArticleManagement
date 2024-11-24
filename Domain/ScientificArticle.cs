@@ -17,11 +17,11 @@ public class ScientificArticle : IValidatableObject
     
     // navigation-properties
     // [NotMapped]
-    public ScienceJournal Journal { get; set; }
+    public virtual ScienceJournal Journal { get; set; }
     
     // [NotMapped]
     // public ICollection<Scientist> Authors { get; set; }
-    public ICollection<LinkArticleScientist> AuthorLinks { get; set; }
+    public virtual ICollection<ArticleScientistLink> AuthorLinks { get; set; }
 
     public ScientificArticle(string title)
     {

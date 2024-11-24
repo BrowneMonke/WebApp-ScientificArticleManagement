@@ -9,6 +9,7 @@ public class CatalogueDbContext : DbContext
 {
     public DbSet<Scientist> Scientists { get; set; }
     public DbSet<ScientificArticle> Articles { get; set; }
+    public DbSet<ArticleScientistLink> ArticleScientistLinks { get; set; }
     public DbSet<ScienceJournal> Journals { get; set; }
     
     public CatalogueDbContext(DbContextOptions options) : base(options)
@@ -29,7 +30,10 @@ public class CatalogueDbContext : DbContext
             // Configurations if no options are provided via the constructor (fall back to...)
             optionsBuilder.UseSqlite("Data Source=../../../../CatalogueDatabase.db");
         }
-        //...
+
+        // lazy-loading
+        // optionsBuilder.UseLazyLoadingProxies();
+        
         optionsBuilder.LogTo(logMsg => Debug.WriteLine(logMsg), LogLevel.Information);
     }
 
@@ -41,26 +45,28 @@ public class CatalogueDbContext : DbContext
             .HasOne(art => art.Journal)
             .WithMany(j => j.Articles)
             .IsRequired(false); // 0..1 ipv 1
+        modelBuilder.Entity<ScienceJournal>()
+            .HasMany(j => j.Articles)
+            .WithOne(art => art.Journal)
+            .IsRequired(false);
 
-        modelBuilder.Entity<LinkArticleScientist>().Property<int>("fkScientistId"); // shadow properties
-        modelBuilder.Entity<LinkArticleScientist>().Property<int>("fkArticleId");
-
-        modelBuilder.Entity<LinkArticleScientist>()
+        modelBuilder.Entity<ArticleScientistLink>().Property<int>("fkArticleId");
+        modelBuilder.Entity<ArticleScientistLink>().Property<int>("fkScientistId"); // shadow properties
+        
+        modelBuilder.Entity<ArticleScientistLink>()
+            .HasOne(artSc => artSc.Article)
+            .WithMany(art => art.AuthorLinks)
+            .HasForeignKey("fkArticleId")
+            .IsRequired();
+        
+        modelBuilder.Entity<ArticleScientistLink>()
             .HasOne(artSc => artSc.Scientist)
             .WithMany(sc => sc.ArticleLinks)
             .HasForeignKey("fkScientistId")
             .IsRequired();
 
-        modelBuilder.Entity<LinkArticleScientist>()
-            .HasOne(artSc => artSc.Article)
-            .WithMany(art => art.AuthorLinks)
-            .HasForeignKey("fkArticleId")
-            .IsRequired();
-
-        modelBuilder.Entity<LinkArticleScientist>()
-            .HasKey("fkScientistId", "fkArticleId");
-        
-        
+        modelBuilder.Entity<ArticleScientistLink>()
+            .HasKey("fkArticleId", "fkScientistId");
     }
     
 }
