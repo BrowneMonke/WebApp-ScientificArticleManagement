@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
 using ArticleManagement.BL.Domain.Extensions;
+using Castle.Components.DictionaryAdapter.Xml;
 
 namespace ArticleManagement.UI.CA;
 
@@ -344,7 +345,7 @@ public class ConsoleUi
     {
         if (!Int32.TryParse(idString, out int convertedId))
         {
-            Console.WriteLine("Please enter a valid value");
+            Console.WriteLine("\nPlease enter a valid value.");
             selectedId = convertedId;
             return false;
         }
@@ -362,7 +363,7 @@ public class ConsoleUi
         scientistId = isValidScientistIdFormat? selectedScientistId : Int32.MaxValue;
     }
 
-    private void ShowArticleScientistLinkEditMenu(string chooseScientistString, string chooseArticleString, out int scientistId, out int articleId)
+    private void ShowArticleScientistLinkEditMenu(string chooseScientistString, string chooseArticleString, out int scientistId, out int articleId, out bool isLeadResearcher)
     {
         ShowScientistSelectionMenu(chooseScientistString, out int selectedScientistId);
         scientistId = selectedScientistId;
@@ -370,6 +371,11 @@ public class ConsoleUi
         Console.WriteLine("\n" + chooseArticleString);
         PrintArticlesWitId(_manager.GetAllArticles());
         string articleChoice = Console.ReadLine();
+        
+        Console.Write("Is this scientist the lead researcher? Enter Y/N: ");
+        string leadResearcherReply = Console.ReadLine();
+        isLeadResearcher = leadResearcherReply?.ToLower() == "y";
+        
         bool isValidArticleIdFormat = CheckIdString(articleChoice, out int selectedArticleId);
         articleId = isValidArticleIdFormat? selectedArticleId : Int32.MaxValue;
     }
@@ -377,20 +383,37 @@ public class ConsoleUi
     private void ActionCreateArticleScientistLink()
     {
         PrintHeader("Adding article to scientist");
-       ShowArticleScientistLinkEditMenu("Which scientist would you like to add an article to?", "Which article would you like to assign to this scientist?", out int selectedScientistId, out int selectedArticleId);
+       ShowArticleScientistLinkEditMenu("Which scientist would you like to add an article to?", "Which article would you like to assign to this scientist?", 
+           out int selectedScientistId, out int selectedArticleId, out bool isLeadResearcher);
         // TODO: add validation
-        _manager.AddArticleToScientist(selectedArticleId, selectedScientistId);
+        try
+        {
+            ArticleScientistLink articleScientistLink = _manager.AddArticleScientistLink(selectedArticleId, selectedScientistId, isLeadResearcher);
+            Console.WriteLine("\nArticle-Scientist link created successfully!\n");
+        } catch (ValidationException exception)
+        {
+            Console.WriteLine("\n" + exception.Message + "\n");
+        }
     }
     
     private void ActionDeleteArticleScientistLink()
     {
         PrintHeader("Removing article from scientist");
-        ShowScientistSelectionMenu("Which author would you like to remove an article from?", out int selectedScientistId);
+        ShowScientistSelectionMenu("Which scientist would you like to remove an article from?", out int selectedScientistId);
         Console.WriteLine("\n" + "Which article would you like to remove from this scientist?");
         PrintArticlesWitId(_manager.GetArticlesOfScientist(selectedScientistId));
         string articleChoice = Console.ReadLine();
         bool isValidArticleIdFormat = CheckIdString(articleChoice, out int selectedArticleId);
-        _manager.RemoveArticleFromScientist(selectedArticleId, selectedScientistId);
+        if (!isValidArticleIdFormat) return;
+        
+        try
+        {
+            _manager.RemoveArticleScientistLink(selectedArticleId, selectedScientistId);
+            Console.WriteLine("\nArticle removed successfully!\n");
+        } catch (ValidationException exception)
+        {
+            Console.WriteLine("\n" + exception.Message + "\n");
+        }
     }
     
     private static void WaitToContinue(int inputChoice)

@@ -1,4 +1,4 @@
-﻿# Science Journal Catalogue - Project .NET Framework
+﻿# Scientific Article Management - Project .NET Framework
 
 * Naam: Akshat Verma
 * Studentennummer: 0171120-12

@@ -119,6 +119,11 @@ public class EfRepository : IRepository
         _catalogueDbContext.SaveChanges();
     }
 
+    public IEnumerable<ArticleScientistLink> ReadArticleScientistLinksByArticleId(int articleId)
+    {
+        return _catalogueDbContext.ArticleScientistLinks.Where(asLk => asLk.Article.ArticleId == articleId).ToList();
+    }
+
     public ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId)
     {
         return _catalogueDbContext.ArticleScientistLinks.Find(articleId, scientistId);

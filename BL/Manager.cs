@@ -128,26 +128,47 @@ public class Manager : IManager
         return scientist;
     }
 
-    public ArticleScientistLink AddArticleToScientist(int articleId, int scientistId, bool isLeadResearcher = false)
+    private void CheckLinkValidity(int articleId, int scientistId)
     {
+        if (articleId == Int32.MaxValue || scientistId == Int32.MaxValue || _repository.ReadArticle(articleId) == null || _repository.ReadScientist(scientistId) == null)
+        {
+            throw new ValidationException("Invalid ID values.\nPlease try again with valid values.");
+        }
         ArticleScientistLink articleScientistLinkToAdd = _repository.ReadArticleScientistLinkByArticleIdAndScientistId(articleId, scientistId);
         if (articleScientistLinkToAdd != null)
         {
-            return articleScientistLinkToAdd;
+            throw new ValidationException("Article-Scientist relation already exists!");
         }
-        articleScientistLinkToAdd = new ArticleScientistLink
+    }
+    
+    public ArticleScientistLink AddArticleScientistLink(int articleId, int scientistId, bool isLeadResearcher = false)
+    {
+        CheckLinkValidity(articleId, scientistId);
+        if (isLeadResearcher)
+        {
+            foreach (var asLink in _repository.ReadArticleScientistLinksByArticleId(articleId))
+            {
+                asLink.IsLeadResearcher = false;
+            }
+        }
+        ArticleScientistLink articleScientistLinkToAdd = new ArticleScientistLink
         {
             Article = _repository.ReadArticle(articleId),
             Scientist = _repository.ReadScientist(scientistId),
-            // IsLeadResearcher = isLeadResearcher
+            IsLeadResearcher = isLeadResearcher
         };
-        
         _repository.CreateArticleScientistLink(articleScientistLinkToAdd);
         return articleScientistLinkToAdd;
     }
 
-    public void RemoveArticleFromScientist(int articleId, int scientistId)
+    public void RemoveArticleScientistLink(int articleId, int scientistId)
     {
+        ArticleScientistLink articleScientistLink =
+            _repository.ReadArticleScientistLinkByArticleIdAndScientistId(articleId, scientistId);
+        if (articleScientistLink == null)
+        {
+            throw new ValidationException("Invalid ID values!");
+        }
         _repository.DeleteArticleScientistLink(articleId, scientistId);
     }
 }

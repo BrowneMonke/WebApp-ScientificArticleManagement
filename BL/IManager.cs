@@ -18,7 +18,7 @@ public interface IManager
     Scientist GetScientist(int scientistId);
     Scientist AddScientist(string name, string faculty, string university, DateOnly? dateOfBirth = null);
     
-    ArticleScientistLink AddArticleToScientist(int articleId, int scientistId, bool isLeadResearcher = false);
-    void RemoveArticleFromScientist(int articleId, int scientistId);
+    ArticleScientistLink AddArticleScientistLink(int articleId, int scientistId, bool isLeadResearcher = false);
+    void RemoveArticleScientistLink(int articleId, int scientistId);
 
 }

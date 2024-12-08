@@ -20,5 +20,6 @@ public interface IRepository
 
     void CreateArticleScientistLink(ArticleScientistLink articleScientistLink);
     void DeleteArticleScientistLink(int articleId, int scientistId);
+    IEnumerable<ArticleScientistLink> ReadArticleScientistLinksByArticleId(int articleId);
     ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId);
 }

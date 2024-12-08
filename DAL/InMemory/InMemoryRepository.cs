@@ -143,6 +143,11 @@ public class InMemoryRepository : IRepository
         throw new NotImplementedException();
     }
 
+    public IEnumerable<ArticleScientistLink> ReadArticleScientistLinksByArticleId(int articleId)
+    {
+        throw new NotImplementedException();
+    }
+
     public ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId)
     {
         throw new NotImplementedException();
