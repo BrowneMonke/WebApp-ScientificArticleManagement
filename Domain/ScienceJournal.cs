@@ -7,7 +7,7 @@ public class ScienceJournal
 {
     // scalar-properties
     [Key]
-    public int JournalId { get; set; }
+    public int Id { get; set; }
     public string JournalName { get; set; }
     public double? Price { get; set; }
     public bool HasValue { get; set; }

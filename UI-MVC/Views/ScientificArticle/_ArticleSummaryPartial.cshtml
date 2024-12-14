@@ -1,0 +1,12 @@
+﻿@model ScientificArticle
+
+
+<h2>Article '@Model.Title'</h2>
+<p>Published: @Model.DateOfPublication in @(Model.Journal?.JournalName ?? "UNKNOWN")</p>
+<p>Authors:</p>
+<ul>
+    @foreach (var asLk in @Model.AuthorLinks)
+    {
+        <li>@asLk.Scientist.Name @(asLk.IsLeadResearcher? " (Lead researcher)" : "")</li>
+    }
+</ul>

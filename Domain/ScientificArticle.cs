@@ -7,7 +7,7 @@ public class ScientificArticle : IValidatableObject
 {
     // scalar-properties
     [Key]
-    public int ArticleId { get; set; }
+    public int Id { get; set; }
     
     [Required] [StringLength(150)]
     public string Title { get; init; }

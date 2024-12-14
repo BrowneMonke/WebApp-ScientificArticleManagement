@@ -38,7 +38,7 @@ public class ConsoleUi
         {
             index++;
             string authors = SumArticleAuthors(article);
-            Console.WriteLine($"{article.ArticleId}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal?.JournalName ?? "UNKNOWN")}\" on {article.DateOfPublication}]\n");
+            Console.WriteLine($"{article.Id}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal?.JournalName ?? "UNKNOWN")}\" on {article.DateOfPublication}]\n");
         }
         if (index == 0) Console.WriteLine("None Found\n");
     }
@@ -54,7 +54,7 @@ public class ConsoleUi
             {
                 articlesOverview += $"\t\t<Article> {articleLink.Article.Title}\n";
             }
-            Console.WriteLine($"{scientist.ScientistId}. {scientist.Name}, Faculty of {scientist.Faculty} at {scientist.University} {(scientist.DateOfBirth != null? $"(born {scientist.DateOfBirth})" : "" )}\n" +
+            Console.WriteLine($"{scientist.Id}. {scientist.Name}, Faculty of {scientist.Faculty} at {scientist.University} {(scientist.DateOfBirth != null? $"(born {scientist.DateOfBirth})" : "" )}\n" +
                               $"\tHas contributed to:\n" +
                               $"{articlesOverview ?? "\t\tNo articles found in database.\n"}");
         }
@@ -327,7 +327,7 @@ public class ConsoleUi
     {
         foreach (var scientist in scientists)
         {
-            Console.WriteLine($"[{scientist.ScientistId}] {scientist.Name}");
+            Console.WriteLine($"[{scientist.Id}] {scientist.Name}");
         }
         Console.Write("Please enter a scientist ID: ");
     }
@@ -336,7 +336,7 @@ public class ConsoleUi
     {
         foreach (var article in articles)
         {
-            Console.WriteLine($"[{article.ArticleId}] {article.Title}");
+            Console.WriteLine($"[{article.Id}] {article.Title}");
         }
         Console.Write("Please enter an article ID: ");
     }

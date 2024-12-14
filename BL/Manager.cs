@@ -42,6 +42,11 @@ public class Manager : IManager
         return _repository.ReadArticle(articleId);
     }
     
+    public ScientificArticle GetArticleByIdWithAuthorsAndJournal(int articleId)
+    {
+        return _repository.ReadArticleWithAuthorsAndJournal(articleId);
+    }
+    
     private static void RelateAuthors(ScientificArticle article)
     {
         foreach (ArticleScientistLink linkArticleScientist in article.AuthorLinks)

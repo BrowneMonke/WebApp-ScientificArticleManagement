@@ -6,7 +6,7 @@ namespace ArticleManagement.BL.Domain;
 public class Scientist //: IValidatableObject
 {
     [Key]
-    public int ScientistId { get; set; }
+    public int Id { get; set; }
     
     [Required] [MaxLength(50)]
     public string Name { get; set; }

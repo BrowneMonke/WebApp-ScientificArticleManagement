@@ -10,6 +10,7 @@ public interface IRepository
     public IEnumerable<ScientificArticle> ReadArticlesByCategoryWithAuthorsAndJournals(ArticleCategory categoryChoice);
     public IEnumerable<ScientificArticle> ReadArticlesOfScientist(int scientistId);
     ScientificArticle ReadArticle(int id);
+    public ScientificArticle ReadArticleWithAuthorsAndJournal(int id);
     void CreateArticle(ScientificArticle articleToInsert);
 
     IEnumerable<Scientist> ReadAllScientists();

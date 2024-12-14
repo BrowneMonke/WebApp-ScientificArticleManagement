@@ -1,0 +1,32 @@
+﻿@model IEnumerable<ScientificArticle>
+
+@{
+    ViewData["Title"] = "Article List";
+}
+
+<link rel="stylesheet" href="./css/ArticlesIndex.css">
+
+<h2>All articles</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th># Pages</th>
+        <th>Genre</th>
+        <th>Details</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var article in Model)
+    {
+        <tr>
+            <td>@article.Title</td>
+            <td>@article.NumberOfPages</td>
+            <td>@article.Category</td>
+            <td>
+                <a asp-controller="ScientificArticle" asp-action="Details" asp-route-id="@article.Id">Details</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -42,7 +42,7 @@ public class EfRepository : IRepository
     public IEnumerable<ScientificArticle> ReadArticlesOfScientist(int scientistId)
     {
         var articles = _catalogueDbContext.Articles
-            .Where(article => article.AuthorLinks.Any(authLk => authLk.Scientist.ScientistId == scientistId));
+            .Where(article => article.AuthorLinks.Any(authLk => authLk.Scientist.Id == scientistId));
 
         return articles.ToList();
     }
@@ -50,6 +50,16 @@ public class EfRepository : IRepository
     public ScientificArticle ReadArticle(int id)
     {
         return _catalogueDbContext.Articles.Find(id);
+    }
+    
+    public ScientificArticle ReadArticleWithAuthorsAndJournal(int id)
+    {
+        var article = _catalogueDbContext.Articles.Where(art => art.Id == id)
+            .Include(art => art.Journal)
+            .Include(art => art.AuthorLinks)
+            .ThenInclude(authLk => authLk.Scientist)
+            .SingleOrDefault();
+        return article;
     }
 
     public void CreateArticle(ScientificArticle articleToInsert)
@@ -112,8 +122,8 @@ public class EfRepository : IRepository
     public void DeleteArticleScientistLink(int articleId, int scientistId)
     {
         ArticleScientistLink linkToDelete = _catalogueDbContext.ArticleScientistLinks
-            .Where(artScLk => artScLk.Article.ArticleId == articleId)
-            .SingleOrDefault(artScLk => artScLk.Scientist.ScientistId == scientistId);
+            .Where(artScLk => artScLk.Article.Id == articleId)
+            .SingleOrDefault(artScLk => artScLk.Scientist.Id == scientistId);
 
         if (linkToDelete != null) _catalogueDbContext.ArticleScientistLinks.Remove(linkToDelete);
         _catalogueDbContext.SaveChanges();
@@ -121,7 +131,7 @@ public class EfRepository : IRepository
 
     public IEnumerable<ArticleScientistLink> ReadArticleScientistLinksByArticleId(int articleId)
     {
-        return _catalogueDbContext.ArticleScientistLinks.Where(asLk => asLk.Article.ArticleId == articleId).ToList();
+        return _catalogueDbContext.ArticleScientistLinks.Where(asLk => asLk.Article.Id == articleId).ToList();
     }
 
     public ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId)

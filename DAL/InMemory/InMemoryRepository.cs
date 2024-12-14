@@ -4,6 +4,7 @@ namespace ArticleManagement.DAL.InMemory;
 
 public class InMemoryRepository : IRepository
 {
+    private IRepository _repositoryImplementation;
     private static readonly List<Scientist> Scientists = [];
     private static readonly List<ScientificArticle> Articles = [];
     private static readonly List<ScienceJournal> Journals = [];
@@ -47,15 +48,20 @@ public class InMemoryRepository : IRepository
         return Articles[articleId - 1];
     }
 
+    public ScientificArticle ReadArticleWithAuthorsAndJournal(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public void CreateArticle(ScientificArticle articleToInsert)
     {
         if (Articles == null || Articles.Count == 0)
         {
-            articleToInsert.ArticleId = 1;
+            articleToInsert.Id = 1;
         }
         else
         {
-            articleToInsert.ArticleId = Articles.Last().ArticleId + 1;
+            articleToInsert.Id = Articles.Last().Id + 1;
         }
         Articles.Add(articleToInsert);
     }
@@ -124,11 +130,11 @@ public class InMemoryRepository : IRepository
     {
         if (Scientists == null || Scientists.Count == 0)
         {
-            scientistToInsert.ScientistId = 1;
+            scientistToInsert.Id = 1;
         }
         else
         {
-            scientistToInsert.ScientistId = Scientists.Last().ScientistId + 1;
+            scientistToInsert.Id = Scientists.Last().Id + 1;
         }
         Scientists.Add(scientistToInsert);
     }
@@ -167,11 +173,11 @@ public class InMemoryRepository : IRepository
     {
         if (Journals == null || Journals.Count == 0)
         {
-            journalToInsert.JournalId = 1;
+            journalToInsert.Id = 1;
         }
         else
         {
-            journalToInsert.JournalId = Journals.Last().JournalId + 1;
+            journalToInsert.Id = Journals.Last().Id + 1;
         }
         Journals.Add(journalToInsert);
     }
@@ -191,7 +197,7 @@ public class InMemoryRepository : IRepository
         
         foreach (Scientist scientist in Scientists)
         {
-            scientist.ScientistId = Scientists.IndexOf(scientist) + 1;
+            scientist.Id = Scientists.IndexOf(scientist) + 1;
         }
     }
 
@@ -205,7 +211,7 @@ public class InMemoryRepository : IRepository
         
         foreach (ScienceJournal journal in Journals)
         {
-            journal.JournalId = Journals.IndexOf(journal) + 1;
+            journal.Id = Journals.IndexOf(journal) + 1;
         }
     }
 
@@ -263,7 +269,7 @@ public class InMemoryRepository : IRepository
         
         foreach (ScientificArticle article in Articles)
         {
-            article.ArticleId = Articles.IndexOf(article) + 1;
+            article.Id = Articles.IndexOf(article) + 1;
         }
     }
 
