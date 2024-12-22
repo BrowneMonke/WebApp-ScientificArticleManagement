@@ -256,9 +256,9 @@ public class ConsoleUi
             string authorNameString = null;
             Console.Write("Enter author name (leave blank for next step): ");
             authorNameString = Console.ReadLine();
-            bool isInvalidName = !CheckScientistName(authorNameString, true);
+            var isInvalidName = !CheckScientistName(authorNameString, true);
             if (isInvalidName) return articleAuthors;
-            bool scientistExists = TryParseScientist(authorNameString, out Scientist scientist);
+            var scientistExists = TryParseScientist(authorNameString, out Scientist scientist);
             if (scientistExists)
             {
                 articleAuthors.Add(scientist);
@@ -276,27 +276,24 @@ public class ConsoleUi
 
     private static DateOnly InputArticleDateOfPublication()
     {
-        string dateOfPubString;
-        DateOnly dateOfPublication;
-        do
+        Console.Write("Enter the date of publication (yyyy/mm/dd): ");
+        var dateOfPubString = Console.ReadLine();
+        var isValidDateFormat = DateOnly.TryParse(dateOfPubString, out var dateOfPublication);
+
+        if (!isValidDateFormat)
         {
-            Console.Write("Enter the date of publication (yyyy/mm/dd): ");
-            dateOfPubString = Console.ReadLine();
-        } while (!DateOnly.TryParse(dateOfPubString, out dateOfPublication));
+            dateOfPublication = DateOnly.FromDateTime(DateTime.Today).AddDays(1);
+        }
 
         return dateOfPublication;
     }
 
     private static int InputArticleNumberOfPages()
     {
-        string numOfPagesString;
-        int numberOfPages;
-        do
-        {
-            Console.Write("Enter the number of pages: ");
-            numOfPagesString = Console.ReadLine();
-        } while (!Int32.TryParse(numOfPagesString, out numberOfPages));
-
+        Console.Write("Enter the number of pages: ");
+        var numOfPagesString = Console.ReadLine();
+        var isInteger = Int32.TryParse(numOfPagesString, out var numberOfPages);
+        // if !isInteger, default Int value = 0. Extra validation unnecessary
         return numberOfPages;
     }
     

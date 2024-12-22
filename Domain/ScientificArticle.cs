@@ -11,7 +11,6 @@ public class ScientificArticle : IValidatableObject
     
     [Required] [StringLength(256, MinimumLength = 5)]
     public string Title { get; init; }
-    [Required]
     public DateOnly DateOfPublication { get; set; }
     public int NumberOfPages { get; set; } // TODO: Add validation for date of pub and number of pages (can't be negative)
     public ArticleCategory Category { get; set; }
@@ -38,6 +37,19 @@ public class ScientificArticle : IValidatableObject
         if (!Enum.IsDefined(Category))
         {
             errors.Add(new ValidationResult("Article category unknown!", new string[] { nameof(Category) }));
+        }
+        
+        //DoP check
+        if (DateOfPublication > DateOnly.FromDateTime(DateTime.Today))
+        {
+            errors.Add(new ValidationResult("Please enter a valid date. The date may not be in the future.", 
+                new string[]{ nameof(DateOfPublication) }));
+        }
+        
+        // NoP check
+        if (NumberOfPages < 1)
+        {
+            errors.Add(new ValidationResult("Please enter a valid number of pages!", new string[] { nameof(NumberOfPages) }));
         }
         
         return errors;    
