@@ -23,7 +23,7 @@
     {
         <tr>
             <td>@article.Title</td>
-            <td>@article.DateOfPublication</td>
+            <td>@article.DateOfPublication.ToString("MMM dd, yyyy")</td>
             <td>@article.NumberOfPages</td>
             <td>@article.Category.GetString()</td>
             <td>
