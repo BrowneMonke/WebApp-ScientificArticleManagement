@@ -9,10 +9,11 @@ public class ScientificArticle : IValidatableObject
     [Key]
     public int Id { get; set; }
     
-    [Required] [StringLength(150)]
+    [Required] [StringLength(256, MinimumLength = 5)]
     public string Title { get; init; }
+    [Required]
     public DateOnly DateOfPublication { get; set; }
-    public int NumberOfPages { get; set; }
+    public int NumberOfPages { get; set; } // TODO: Add validation for date of pub and number of pages (can't be negative)
     public ArticleCategory Category { get; set; }
     
     // navigation-properties

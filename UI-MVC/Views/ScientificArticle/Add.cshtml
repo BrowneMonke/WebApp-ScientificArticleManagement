@@ -1,18 +1,60 @@
-﻿@model ScientificArticle
+﻿@model NewScientificArticleViewModel
 
 @{
-    Layout = "_Layout";
+    ViewBag.Title = "New scientific article";
 }
 
-<!DOCTYPE html>
+<h2>Add article</h2>
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
+<form asp-controller="ScientificArticle" asp-action="Add" method="post">
+    <div class="form-group mb-3">
+        <div class="row">
+            <label asp-for="Title" class="col-lg-2"></label>
+            <input asp-for="Title" class="form-control col-lg"/>
+            @* <span asp-validation-for="Title" class="text-danger col-lg-4"></span> *@
+        </div>
+        <span class="col-lg-2"></span>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <div class="row">
+            <label asp-for="DateOfPublication" class="col-lg-2">Date of Publication</label>
+            <input asp-for="DateOfPublication" type="date" class="form-control col-lg"/>
+            @* <span asp-validation-for="DateOfPublication" class="text-danger col-lg-4"></span> *@
+        </div>
+        <span class="col-lg-2"></span>
+        <span asp-validation-for="DateOfPublication" class="text-danger col-lg"></span>
+    </div>
+    <div class="form-group mb-3">
+        <div class="row">
+            <label asp-for="NumberOfPages" class="col-lg-2">Pages</label>
+            <input asp-for="NumberOfPages" type="number" min="1" step="1" class="form-control col-lg"/>
+            @* <span asp-validation-for="NumberOfPages" class="text-danger col-lg-4"></span> *@
+        </div>
+        <span class="col-lg-2"></span>
+        <span asp-validation-for="NumberOfPages" class="text-danger col-lg"></span>
+    </div>
+    <div class="form-group mb-3">
+        <div class="row">
+            <label asp-for="Category" class="col-lg-2"></label>
+            <select name="categories" asp-for="Category" class="form-control col-lg">
+                <option value="">Select an option</option>
+                <option value="astrophysics">Astrophysics</option>
+                <option value="neuroscience">Neuroscience</option>
+                <option value="marine">Marine Ecology</option>
+                <option value="quantum">Quantum Physics</option>
+                <option value="electromagnetism">Electromagnetism</option>
+                <option value="chemistry">Chemistry</option>
+                <option value="biology">Biology</option>
+            </select>
+            
+        </div>
+        <span class="col-lg-2"></span>
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+    <button type="submit" class=" btn btn-primary btn-lg">Save</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

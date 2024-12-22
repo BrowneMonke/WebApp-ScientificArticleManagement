@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ArticleManagement.UI.Web.Controllers;
 
-// /ScientificArticle/<actionmethod>
+// /ScientificArticle/<actionMethod>
 public class ScientificArticleController : Controller
 {
     private readonly IManager _manager;
@@ -15,22 +15,36 @@ public class ScientificArticleController : Controller
     {
         _manager = manager;
     }
-    
-    // GET: /Book/Index
-    /*public string Index()
-    {
-        var articles = _manager.GetAllArticles();
-        return $"Hello world! Aantal artikelen: {articles.Count()}";
-    }*/
 
     public ViewResult Index()
     {
         var articles = _manager.GetAllArticles();
         return View(articles);
     }
-    public void Add()
+    
+    [HttpGet]
+    public ViewResult Add()
     {
-        throw new NotImplementedException();
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Add(NewScientificArticleViewModel newArticle)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(newArticle);
+        }
+
+        var article = new ScientificArticle(newArticle.Title)
+        {
+            DateOfPublication = newArticle.DateOfPublication,
+            NumberOfPages = newArticle.NumberOfPages,
+            Category = newArticle.Category
+        };
+        var addedArticle = _manager.AddArticle(article);
+        
+        return RedirectToAction("Index");
     }
     
     public ViewResult Details(int id)

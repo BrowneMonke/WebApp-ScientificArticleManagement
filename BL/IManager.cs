@@ -12,6 +12,7 @@ public interface IManager
     ScientificArticle GetArticle(int articleId);
     public ScientificArticle GetArticleByIdWithAuthorsAndJournal(int articleId);
     ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal = null);
+    ScientificArticle AddArticle(ScientificArticle article);
     
     IEnumerable<Scientist> GetAllScientists();
     IEnumerable<Scientist> GetAllScientistsWithArticles();

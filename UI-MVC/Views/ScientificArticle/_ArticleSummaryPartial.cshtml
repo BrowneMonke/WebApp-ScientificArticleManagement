@@ -1,12 +1,51 @@
-﻿@model ScientificArticle
+﻿@using ArticleManagement.BL.Domain.Extensions
+@model ScientificArticle
 
 
-<h2>Article '@Model.Title'</h2>
-<p>Published: @Model.DateOfPublication in @(Model.Journal?.JournalName ?? "UNKNOWN")</p>
-<p>Authors:</p>
-<ul>
+@* <link rel="stylesheet" href="~/css/ArticleDetails.css"> *@
+
+<h2>Article Details</h2>
+<div class="container-fluid">
+    <div class="row">
+        <span class="col-lg-1 fw-bold">Title</span>
+        <p class="col-lg-8">@Model.Title</p>
+    </div>
+    <div class="row">
+        <span class="col-lg-1 fw-bold"># Pages</span>
+        <p class="col-lg-8">@Model.NumberOfPages</p>
+    </div>
+    <div class="row">
+        <span class="col-lg-1 fw-bold">Genre</span>
+        <p class="col-lg-8">@Model.Category.GetString()</p>
+    </div>
+    <div class="row">
+        <span class="col-lg-1 fw-bold">Published</span>
+        <p class="col-lg-8">@Model.DateOfPublication.ToString("MMM dd, yyyy") in @(Model.Journal?.JournalName ?? "UNKNOWN")</p>
+    </div>
+</div>
+<h3>Authors</h3>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <td>Lead Researcher?</td>
+        <td>Name</td>
+        <td>Date of Birth</td>
+        <td>Affiliation</td>
+        <td></td>
+    </tr>
+    </thead>
+    <tbody>
     @foreach (var asLk in @Model.AuthorLinks)
     {
-        <li>@asLk.Scientist.Name @(asLk.IsLeadResearcher? " (Lead researcher)" : "")</li>
+        <tr>
+            <td>@(asLk.IsLeadResearcher ? "Yes" : "No")</td>
+            <td>@asLk.Scientist.Name</td>
+            <td>@(asLk.Scientist.DateOfBirth.HasValue ? asLk.Scientist.DateOfBirth.Value.ToString("MMM dd, yyyy") : "UNKNOWN")</td>
+            <td>Faculty of @asLk.Scientist.Faculty, @asLk.Scientist.University</td>
+            <td>
+                <a asp-controller="Scientist" asp-action="Details" asp-route-id="@asLk.Scientist.Id">Details</a>
+            </td>
+        </tr>
     }
-</ul>
+    </tbody>
+</table>

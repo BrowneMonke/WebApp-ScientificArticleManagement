@@ -1,19 +1,21 @@
-﻿@model IEnumerable<ScientificArticle>
+﻿@using ArticleManagement.BL.Domain.Extensions
+@model IEnumerable<ScientificArticle>
 
 @{
-    ViewData["Title"] = "Article List";
+    ViewBag.Title = "Article List";
 }
 
-<link rel="stylesheet" href="./css/ArticlesIndex.css">
+@* <link rel="stylesheet" href="~/css/ArticleIndex.css"> *@
 
 <h2>All articles</h2>
-<table>
+<table class="table">
     <thead>
     <tr>
         <th>Title</th>
+        <th>Published</th>
         <th># Pages</th>
         <th>Genre</th>
-        <th>Details</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -21,8 +23,9 @@
     {
         <tr>
             <td>@article.Title</td>
+            <td>@article.DateOfPublication</td>
             <td>@article.NumberOfPages</td>
-            <td>@article.Category</td>
+            <td>@article.Category.GetString()</td>
             <td>
                 <a asp-controller="ScientificArticle" asp-action="Details" asp-route-id="@article.Id">Details</a>
             </td>

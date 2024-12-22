@@ -81,7 +81,7 @@ public class ConsoleUi
         Console.WriteLine();
     }
     
-    private bool MatchScientistName(string nameString, Scientist scientist)
+    private static bool MatchScientistName(string nameString, Scientist scientist)
     {
         string[] scientistNameParts = nameString.Split(" ");
 
@@ -274,7 +274,7 @@ public class ConsoleUi
         }
     }
 
-    private DateOnly InputArticleDateOfPublication()
+    private static DateOnly InputArticleDateOfPublication()
     {
         string dateOfPubString;
         DateOnly dateOfPublication;
@@ -323,7 +323,7 @@ public class ConsoleUi
         }
     }
 
-    private void PrintScientistsWitId(IEnumerable<Scientist> scientists)
+    private static void PrintScientistsWitId(IEnumerable<Scientist> scientists)
     {
         foreach (var scientist in scientists)
         {
@@ -332,7 +332,7 @@ public class ConsoleUi
         Console.Write("Please enter a scientist ID: ");
     }
     
-    private void PrintArticlesWitId(IEnumerable<ScientificArticle> articles)
+    private static void PrintArticlesWitId(IEnumerable<ScientificArticle> articles)
     {
         foreach (var article in articles)
         {
@@ -341,7 +341,7 @@ public class ConsoleUi
         Console.Write("Please enter an article ID: ");
     }
 
-    private bool CheckIdString(string idString, out int selectedId)
+    private static bool CheckIdString(string idString, out int selectedId)
     {
         if (!Int32.TryParse(idString, out int convertedId))
         {

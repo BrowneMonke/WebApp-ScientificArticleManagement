@@ -99,6 +99,12 @@ public class Manager : IManager
         return article;
     }
 
+    public ScientificArticle AddArticle(ScientificArticle article)
+    {
+        _repository.CreateArticle(article);
+        return article;
+    }
+
     public IEnumerable<Scientist> GetAllScientists()
     {
         return _repository.ReadAllScientists();

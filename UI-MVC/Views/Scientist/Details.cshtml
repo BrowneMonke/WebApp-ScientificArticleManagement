@@ -1,0 +1,19 @@
+﻿@model Scientist
+
+
+<h2>Scientist Details</h2>
+
+<div class=".container-fluid">
+    <div class="row">
+        <span class="col-lg-1 fw-bold">Name</span>
+        <p class="col-lg-8">@Model.Name</p>
+    </div>
+    <div class="row">
+        <span class="col-lg-1 fw-bold">Date of Birth</span>
+        <p class="col-lg-8">@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("MMM dd, yyyy") : "UNKNOWN")</p>
+    </div>
+    <div class="row">
+        <span class="col-lg-1 fw-bold">Affiliation</span>
+        <p class="col-lg-8">Faculty of @Model.Faculty, @Model.University</p>
+    </div>
+</div>
