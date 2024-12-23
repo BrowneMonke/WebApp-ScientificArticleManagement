@@ -11,16 +11,13 @@ public class ScientificArticle : IValidatableObject
     
     [Required] [StringLength(256, MinimumLength = 5)]
     public string Title { get; init; }
-    public DateOnly DateOfPublication { get; set; }
-    public int NumberOfPages { get; set; } // TODO: Add validation for date of pub and number of pages (can't be negative)
-    public ArticleCategory Category { get; set; }
+    public DateOnly DateOfPublication { get; init; }
+    public int NumberOfPages { get; init; }
+    public ArticleCategory Category { get; init; }
     
     // navigation-properties
-    // [NotMapped]
     public ScienceJournal Journal { get; set; }
     
-    // [NotMapped]
-    // public ICollection<Scientist> Authors { get; set; }
     public ICollection<ArticleScientistLink> AuthorLinks { get; set; }
 
     public ScientificArticle(string title)

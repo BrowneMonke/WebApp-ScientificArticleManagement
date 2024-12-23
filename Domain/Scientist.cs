@@ -3,24 +3,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArticleManagement.BL.Domain;
 
-public class Scientist //: IValidatableObject
+public class Scientist 
 {
     [Key]
     public int Id { get; set; }
     
     [Required] [MaxLength(50)]
-    public string Name { get; set; }
-    public DateOnly? DateOfBirth { get; set; }
+    public string Name { get; init; }
+    public DateOnly? DateOfBirth { get; init; }
 
     [Required]
-    public string Faculty { get; set; }
+    public string Faculty { get; init; }
 
     [Required]
-    public string University { get; set; }
+    public string University { get; init; }
 
     // navigation-property
-    // [NotMapped]
-    // public ICollection<ScientificArticle> Articles { get; set; }
     public ICollection<ArticleScientistLink> ArticleLinks { get; set; }
 
     public Scientist(string name, string faculty, string university, DateOnly? dateOfBirth = null)
@@ -31,15 +29,5 @@ public class Scientist //: IValidatableObject
         DateOfBirth = dateOfBirth;
         ArticleLinks = new List<ArticleScientistLink>();
     }
-
-    /*public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-    {
-        List<ValidationResult> errors = new List<ValidationResult>();
-        
-        // 1ste check
-        if (!)
-        {
-            errors.Add(new ValidationResult("Article category unknown!", new string[] { nameof(Category) }));
-        }
-    }*/
+    
 }

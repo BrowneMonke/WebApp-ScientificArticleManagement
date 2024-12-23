@@ -2,7 +2,6 @@
 using ArticleManagement.BL.Domain;
 using ArticleManagement.UI.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ArticleManagement.UI.Web.Controllers;
 
@@ -44,7 +43,7 @@ public class ScientificArticleController : Controller
         };
         var addedArticle = _manager.AddArticle(article);
         
-        return RedirectToAction("Index");
+        return RedirectToAction("Details", new{id = addedArticle.Id});
     }
     
     public ViewResult Details(int id)

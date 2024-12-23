@@ -8,9 +8,9 @@ public class ScienceJournal
     // scalar-properties
     [Key]
     public int Id { get; set; }
-    public string JournalName { get; set; }
-    public double? Price { get; set; }
-    public bool HasValue { get; set; }
+    public string JournalName { get; init; }
+    public double? Price { get; init; }
+    public bool HasPrice { get; private set; }
     
     // navigation-property
     [NotMapped]
@@ -22,13 +22,13 @@ public class ScienceJournal
         Articles = new List<ScientificArticle>();
         Price = price;
         if (Price > 0)
-            HasValue = true;
+            HasPrice = true;
         else 
             Price = null;
     }
 
     /*public override string ToString()
     {
-        return $"{JournalName}{(HasValue ? $" [${Price}]" : "")}";
+        return $"{JournalName}{(HasPrice ? $" [${Price}]" : "")}";
     }*/
 }
