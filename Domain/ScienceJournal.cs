@@ -28,8 +28,4 @@ public class ScienceJournal
             Price = null;
     }
 
-    /*public override string ToString()
-    {
-        return $"{JournalName}{(HasPrice ? $" [${Price}]" : "")}";
-    }*/
 }
