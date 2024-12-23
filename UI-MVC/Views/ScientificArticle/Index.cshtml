@@ -1,11 +1,10 @@
-﻿@using ArticleManagement.BL.Domain.Extensions
+﻿@using ArticleManagement.BL.Domain.Extensions;
+
 @model IEnumerable<ScientificArticle>
 
 @{
     ViewBag.Title = "Article List";
 }
-
-@* <link rel="stylesheet" href="~/css/ArticleIndex.css"> *@
 
 <h2>All articles</h2>
 <table class="table">
@@ -14,7 +13,7 @@
         <th>Title</th>
         <th>Published</th>
         <th># Pages</th>
-        <th>Genre</th>
+        <th>Category</th>
         <th></th>
     </tr>
     </thead>

@@ -5,6 +5,7 @@ namespace ArticleManagement.BL.Domain;
 
 public class ScienceJournal
 {
+    //TODO: Minstens 5 instanties door de dataseeder laten aangemaakt worden (en die dan ook koppelen aan article instanties!!)
     // scalar-properties
     [Key]
     public int Id { get; set; }

@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
 using ArticleManagement.BL.Domain.Extensions;
-using Castle.Components.DictionaryAdapter.Xml;
 
 namespace ArticleManagement.UI.CA;
 
