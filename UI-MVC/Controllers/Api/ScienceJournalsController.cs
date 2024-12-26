@@ -48,4 +48,7 @@ public class ScienceJournalsController : ControllerBase
         
         return Ok(journalDto); // 200
     }
+    
+    // [HttpPost]
+    // public IActionResult Post
 }

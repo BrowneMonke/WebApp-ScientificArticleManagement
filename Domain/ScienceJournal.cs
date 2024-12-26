@@ -9,8 +9,9 @@ public class ScienceJournal
     // scalar-properties
     [Key]
     public int Id { get; set; }
-    public string Name { get; init; }
+    public string Name { get; private set; }
     public double? Price { get; init; }
+    public int YearFounded { get; init; }
     public Country CountryOfOrigin { get; init; }
     
     // navigation-property

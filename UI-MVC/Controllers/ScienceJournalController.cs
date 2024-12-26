@@ -16,8 +16,7 @@ public class ScienceJournalController : Controller
     
     public ViewResult Index()
     {
-        var journals = _manager.GetAllJournals();
-        return View(journals);
+        return View();
     }
     
 }

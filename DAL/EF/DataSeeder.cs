@@ -17,11 +17,13 @@ public static class DataSeeder
 
         ScienceJournal journalNature = new ScienceJournal("Nature")
         {
-            CountryOfOrigin = Country.Uk
+            CountryOfOrigin = Country.Uk,
+            YearFounded = 1869
         };
         ScienceJournal journalScAdvances = new ScienceJournal("Science Advances", 15.00)
         {
-            CountryOfOrigin = Country.Usa
+            CountryOfOrigin = Country.Usa,
+            YearFounded = 2015
         };
 
 

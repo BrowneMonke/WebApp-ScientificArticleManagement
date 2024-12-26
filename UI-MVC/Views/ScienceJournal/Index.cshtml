@@ -1,30 +1,28 @@
 ﻿@model IEnumerable<ScienceJournal>
 
 @{
-    ViewBag.Title = "Journal List";
+    ViewBag.Title = "Journals";
 }
 
 <h2>All journals</h2>
-<table class="table">
+
+<table class="table" id="journalsTable">
     <thead>
     <tr>
         <th>Name</th>
         <th>Price (€)</th>
+        <th>Year Founded</th>
         <th>Country of origin</th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var journal in Model)
-    {
-        <tr>
-            <td>@journal.Name</td>
-            <td>@(journal.Price == null? "UNKNOWN" : journal.Price.Value.ToString("0.00"))</td>
-            <td>@journal.CountryOfOrigin.ToString().ToUpper()</td>
-            <td>
-                <a asp-controller="ScienceJournal" asp-action="Details" asp-route-id="@journal.Id">Details</a>
-            </td>
-        </tr>
-    }
+
     </tbody>
 </table>
+
+<p><button id="loadJournals" class="btn btn-primary mt-3">Refresh Journals List</button></p>
+
+@section Scripts
+{
+    <script src="~/js/scienceJournal/index.js" defer=""></script>
+}
