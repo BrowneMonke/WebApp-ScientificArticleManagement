@@ -9,23 +9,20 @@ public class ScienceJournal
     // scalar-properties
     [Key]
     public int Id { get; set; }
-    public string JournalName { get; init; }
+    public string Name { get; init; }
     public double? Price { get; init; }
-    public bool HasPrice { get; private set; }
+    public Country CountryOfOrigin { get; init; }
     
     // navigation-property
     [NotMapped]
     public ICollection<ScientificArticle> Articles { get; set; }
 
-    public ScienceJournal(string journalName, double? price = null)
+    public ScienceJournal(string name, double? price = null)
     {
-        JournalName = journalName;
+        Name = name;
         Articles = new List<ScientificArticle>();
-        Price = price;
-        if (Price > 0)
-            HasPrice = true;
-        else 
-            Price = null;
+        if (price > 0)
+            Price = price;
     }
 
 }
