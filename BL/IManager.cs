@@ -23,4 +23,7 @@ public interface IManager
     ArticleScientistLink AddArticleScientistLink(int articleId, int scientistId, bool isLeadResearcher = false);
     void RemoveArticleScientistLink(int articleId, int scientistId);
 
+    IEnumerable<ScienceJournal> GetAllJournals();
+    ScienceJournal GetJournalByIdWithArticles(int id);
+
 }

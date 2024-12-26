@@ -1,0 +1,17 @@
+﻿@model ScienceJournal
+
+<h2>Science Journal Details</h2>
+<div class="container-fluid">
+    <div class="row">
+        <span class="col-lg-1 fw-bold">Journal Name</span>
+        <p class="col-lg-8">@Model.Name</p>
+    </div>
+    <div class="row">
+        <span class="col-lg-1 fw-bold">Price (€)</span>
+        <p class="col-lg-8">@Model.Price</p>
+    </div>
+    <div class="row">
+        <span class="col-lg-1 fw-bold">Country of origin</span>
+        <p class="col-lg-8">@Model.CountryOfOrigin.ToString().ToUpper()</p>
+    </div>
+</div>

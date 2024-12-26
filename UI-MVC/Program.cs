@@ -6,20 +6,21 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<CatalogueDbContext>(optionsBuillder =>
+builder.Services.AddDbContext<ArticleDbContext>(optionsBuillder =>
 {
-    optionsBuillder.UseSqlite("Data Source=../CatalogueDatabase.db");
+    optionsBuillder.UseSqlite("Data Source=../ArticleDatabase.db");
 });
 builder.Services.AddScoped<IRepository, EfRepository>();
 builder.Services.AddScoped<IManager, Manager>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers().AddXmlSerializerFormatters();
 
 var app = builder.Build();
 
 // database storage: EF Code First Trigger
 using (var scope = app.Services.CreateScope())
 {
-    var catalogueDbContext = scope.ServiceProvider.GetService<CatalogueDbContext>(); 
+    var catalogueDbContext = scope.ServiceProvider.GetService<ArticleDbContext>(); 
     const bool doDropDatabase = true;
     bool isDbCreated = catalogueDbContext.CreateDatabase(doDropDatabase);
     if (isDbCreated) DataSeeder.Seed(catalogueDbContext);

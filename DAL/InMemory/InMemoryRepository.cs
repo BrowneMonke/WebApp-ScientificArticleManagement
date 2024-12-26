@@ -48,7 +48,7 @@ public class InMemoryRepository : IRepository
         return Articles[articleId - 1];
     }
 
-    public ScientificArticle ReadArticleWithAuthorsAndJournal(int id)
+    public ScientificArticle ReadArticleByIdWithAuthorsAndJournal(int id)
     {
         throw new NotImplementedException();
     }
@@ -162,6 +162,11 @@ public class InMemoryRepository : IRepository
     public IEnumerable<ScienceJournal> ReadAllJournals()
     {
         return Journals;
+    }
+
+    public ScienceJournal ReadJournalByIdWithArticles(int id)
+    {
+        throw new NotImplementedException();
     }
 
     public ScienceJournal ReadJournal(int journalId)

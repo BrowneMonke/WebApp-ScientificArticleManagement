@@ -36,7 +36,7 @@ public class ConsoleUi
         {
             index++;
             string authors = SumArticleAuthors(article);
-            Console.WriteLine($"{article.Id}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal?.JournalName ?? "UNKNOWN")}\" on {article.DateOfPublication}]\n");
+            Console.WriteLine($"{article.Id}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal?.Name ?? "UNKNOWN")}\" on {article.DateOfPublication}]\n");
         }
         if (index == 0) Console.WriteLine("None Found\n");
     }

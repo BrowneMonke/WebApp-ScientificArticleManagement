@@ -44,7 +44,7 @@ public class Manager : IManager
     
     public ScientificArticle GetArticleByIdWithAuthorsAndJournal(int articleId)
     {
-        return _repository.ReadArticleWithAuthorsAndJournal(articleId);
+        return _repository.ReadArticleByIdWithAuthorsAndJournal(articleId);
     }
     
     private static void RelateAuthors(ScientificArticle article)
@@ -181,5 +181,15 @@ public class Manager : IManager
             throw new ValidationException("Invalid ID values!");
         }
         _repository.DeleteArticleScientistLink(articleId, scientistId);
+    }
+
+    public IEnumerable<ScienceJournal> GetAllJournals()
+    {
+        return _repository.ReadAllJournals();
+    }
+
+    public ScienceJournal GetJournalByIdWithArticles(int id)
+    {
+        return _repository.ReadJournalByIdWithArticles(id);
     }
 }

@@ -4,7 +4,7 @@ namespace ArticleManagement.DAL.EF;
 
 public static class DataSeeder
 {
-    public static void Seed(CatalogueDbContext catalogueDbContext)
+    public static void Seed(ArticleDbContext articleDbContext)
     {
         Scientist walterLewin = new Scientist("Walter H. G. Lewin", "Physics", "MIT", new DateOnly(1936, 1, 29));
         Scientist janVanParadijs = new Scientist("Jan Van Paradijs", "Physics", "University Of Amsterdam", new DateOnly(1946, 6, 9));
@@ -15,8 +15,14 @@ public static class DataSeeder
         Scientist robSherlock = new Scientist("Robert E. Sherlock", "Research", "MBARI", new DateOnly(1966, 11, 1));
 
 
-        ScienceJournal journalNature = new ScienceJournal("Nature");
-        ScienceJournal journalScAdvances = new ScienceJournal("Science Advances", 15.00);
+        ScienceJournal journalNature = new ScienceJournal("Nature")
+        {
+            CountryOfOrigin = Country.Uk
+        };
+        ScienceJournal journalScAdvances = new ScienceJournal("Science Advances", 15.00)
+        {
+            CountryOfOrigin = Country.Usa
+        };
 
 
         ScientificArticle articleOrbitalPeriodXRayBurster = new ScientificArticle("A four-hour orbital period of the X-ray burster 4U/MXB1636—53")
@@ -70,14 +76,14 @@ public static class DataSeeder
             foreach (var linkArticleScientist in article.AuthorLinks)
             {
                 linkArticleScientist.Scientist.ArticleLinks.Add(linkArticleScientist);
-                catalogueDbContext.ArticleScientistLinks.Add(linkArticleScientist);
+                articleDbContext.ArticleScientistLinks.Add(linkArticleScientist);
             }
         }
-        catalogueDbContext.Scientists.AddRange(walterLewin, janVanParadijs, holgerPedersen, paulJoss, charlesWarwick, anelaChoy, robSherlock);
-        catalogueDbContext.Journals.AddRange(journalNature, journalScAdvances);
-        catalogueDbContext.Articles.AddRange(seedArticles);
+        articleDbContext.Scientists.AddRange(walterLewin, janVanParadijs, holgerPedersen, paulJoss, charlesWarwick, anelaChoy, robSherlock);
+        articleDbContext.Journals.AddRange(journalNature, journalScAdvances);
+        articleDbContext.Articles.AddRange(seedArticles);
 
-        catalogueDbContext.SaveChanges();
-        catalogueDbContext.ChangeTracker.Clear();
+        articleDbContext.SaveChanges();
+        articleDbContext.ChangeTracker.Clear();
     }
 }

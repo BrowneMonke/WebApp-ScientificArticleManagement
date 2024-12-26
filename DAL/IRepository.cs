@@ -10,7 +10,7 @@ public interface IRepository
     public IEnumerable<ScientificArticle> ReadArticlesByCategoryWithAuthorsAndJournals(ArticleCategory categoryChoice);
     public IEnumerable<ScientificArticle> ReadArticlesOfScientist(int scientistId);
     ScientificArticle ReadArticle(int id);
-    public ScientificArticle ReadArticleWithAuthorsAndJournal(int id);
+    public ScientificArticle ReadArticleByIdWithAuthorsAndJournal(int id);
     void CreateArticle(ScientificArticle articleToInsert);
 
     IEnumerable<Scientist> ReadAllScientists();
@@ -23,4 +23,7 @@ public interface IRepository
     void DeleteArticleScientistLink(int articleId, int scientistId);
     IEnumerable<ArticleScientistLink> ReadArticleScientistLinksByArticleId(int articleId);
     ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId);
+
+    IEnumerable<ScienceJournal> ReadAllJournals();
+    ScienceJournal ReadJournalByIdWithArticles(int id);
 }

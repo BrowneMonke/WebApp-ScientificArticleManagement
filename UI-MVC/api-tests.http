@@ -1,0 +1,11 @@
+﻿### View all journals in json
+GET https://localhost:7176/api/ScienceJournals HTTP/1.1
+Accept: application/json
+
+### View all journals in xml
+GET https://localhost:7176/api/ScienceJournals HTTP/1.1
+Accept: application/xml
+
+### View Specific journal by id
+GET https://localhost:7176/api/ScienceJournals/2 HTTP/1.1
+Accept: application/xml
