@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 // database storage
 DbContextOptionsBuilder dbContextOptionsBuilder = new DbContextOptionsBuilder<ArticleDbContext>();
-dbContextOptionsBuilder.UseSqlite("Data Source=../../../../CatalogueDatabase.db");
+dbContextOptionsBuilder.UseSqlite("Data Source=../../../../ArticleDatabase.db");
 
 ArticleDbContext articleDbContext = new ArticleDbContext(dbContextOptionsBuilder.Options);
 IRepository repository = new EfRepository(articleDbContext);

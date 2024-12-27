@@ -35,13 +35,8 @@ public class ScientificArticleController : Controller
             return View(newArticle);
         }
 
-        var article = new ScientificArticle(newArticle.Title)
-        {
-            DateOfPublication = newArticle.DateOfPublication,
-            NumberOfPages = newArticle.NumberOfPages,
-            Category = newArticle.Category
-        };
-        var addedArticle = _manager.AddArticle(article);
+        var addedArticle = _manager.AddArticle(newArticle.Title, new List<Scientist>(), newArticle.DateOfPublication,
+            newArticle.NumberOfPages, newArticle.Category);
         
         return RedirectToAction("Details", new{id = addedArticle.Id});
     }

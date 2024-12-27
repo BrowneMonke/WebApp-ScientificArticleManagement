@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ArticleManagement.BL;
 using ArticleManagement.DAL;
 using ArticleManagement.DAL.EF;
@@ -12,18 +13,20 @@ builder.Services.AddDbContext<ArticleDbContext>(optionsBuillder =>
 });
 builder.Services.AddScoped<IRepository, EfRepository>();
 builder.Services.AddScoped<IManager, Manager>();
-builder.Services.AddControllersWithViews();
-builder.Services.AddControllers().AddXmlSerializerFormatters();
-
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 var app = builder.Build();
 
 // database storage: EF Code First Trigger
 using (var scope = app.Services.CreateScope())
 {
-    var catalogueDbContext = scope.ServiceProvider.GetService<ArticleDbContext>(); 
+    var articleDbContext = scope.ServiceProvider.GetService<ArticleDbContext>(); 
     const bool doDropDatabase = true;
-    bool isDbCreated = catalogueDbContext.CreateDatabase(doDropDatabase);
-    if (isDbCreated) DataSeeder.Seed(catalogueDbContext);
+    bool isDbCreated = articleDbContext.CreateDatabase(doDropDatabase);
+    if (isDbCreated) DataSeeder.Seed(articleDbContext);
 }
 
 // Configure the HTTP request pipeline.

@@ -26,4 +26,6 @@ public interface IRepository
 
     IEnumerable<ScienceJournal> ReadAllJournals();
     ScienceJournal ReadJournalByIdWithArticles(int id);
+    void CreateJournal(ScienceJournal journalToInsert);
+    
 }

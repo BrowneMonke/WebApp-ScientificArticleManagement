@@ -61,3 +61,37 @@ classDiagram
   ArticleScientistLink "*" -- "1" ScientificArticle
   ScientificArticle "*" -- "1" ScienceJournal
 ```
+
+## Sprint 6
+
+### Nieuwe science journal
+
+#### Request
+
+```http request
+POST https://localhost:7176/api/ScienceJournals HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{"name":"Bio+", "price":null, "yearFounded": 2012, "countryOfOrigin": 0}
+```
+
+#### Response
+
+```http request
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+Date: Fri, 27 Dec 2024 01:26:32 GMT
+Server: Kestrel
+Location: https://localhost:7176/api/ScienceJournals/3
+Transfer-Encoding: chunked
+
+{
+  "id": 3,
+  "name": "Bio+",
+  "price": null,
+  "yearFounded": 2012,
+  "countryOfOrigin": 0,
+  "articles": []
+}
+```

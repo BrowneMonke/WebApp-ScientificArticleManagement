@@ -2,10 +2,13 @@
 GET https://localhost:7176/api/ScienceJournals HTTP/1.1
 Accept: application/json
 
-### View all journals in xml
-GET https://localhost:7176/api/ScienceJournals HTTP/1.1
-Accept: application/xml
+### View Specific journal by id 
+GET https://localhost:7176/api/ScienceJournals/1 HTTP/1.1
+Accept: application/json
 
-### View Specific journal by id in xml
-GET https://localhost:7176/api/ScienceJournals/2 HTTP/1.1
-Accept: application/xml
+### Create new journal
+POST https://localhost:7176/api/ScienceJournals HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{"name":"Bio+", "price":null, "yearFounded": 2012, "countryOfOrigin": 0}

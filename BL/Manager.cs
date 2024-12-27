@@ -61,7 +61,13 @@ public class Manager : IManager
         article.Journal?.Articles.Add(article);
     }
 
-    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory categoryChoice, ScienceJournal journal)
+    /*private void FillAuthorsList(IEnumerable<Scientist> authors,
+        List<ArticleScientistLink> articleScientistLinksList)
+    {
+        
+    } */
+    
+    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory categoryChoice, ScienceJournal journal = null)
     {
         List<ArticleScientistLink> linkArticleScientistsList = [];
         int leadResearcherToggle = 0;
@@ -96,12 +102,6 @@ public class Manager : IManager
         RelateJournal(article);
         _repository.CreateArticle(article);
 
-        return article;
-    }
-
-    public ScientificArticle AddArticle(ScientificArticle article)
-    {
-        _repository.CreateArticle(article);
         return article;
     }
 
@@ -191,5 +191,18 @@ public class Manager : IManager
     public ScienceJournal GetJournalByIdWithArticles(int id)
     {
         return _repository.ReadJournalByIdWithArticles(id);
+    }
+
+    public ScienceJournal AddJournal(String name, int yearFounded, Country countryOfOrigin, double? price = null)
+    {
+        var journal = new ScienceJournal(name, price)
+        {
+            YearFounded = yearFounded,
+            CountryOfOrigin = countryOfOrigin
+        };
+        
+        _repository.CreateJournal(journal);
+
+        return journal;
     }
 }

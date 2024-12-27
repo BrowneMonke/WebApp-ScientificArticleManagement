@@ -12,7 +12,6 @@ public interface IManager
     ScientificArticle GetArticle(int articleId);
     public ScientificArticle GetArticleByIdWithAuthorsAndJournal(int articleId);
     ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal = null);
-    ScientificArticle AddArticle(ScientificArticle article);
     
     IEnumerable<Scientist> GetAllScientists();
     IEnumerable<Scientist> GetAllScientistsWithArticles();
@@ -25,5 +24,6 @@ public interface IManager
 
     IEnumerable<ScienceJournal> GetAllJournals();
     ScienceJournal GetJournalByIdWithArticles(int id);
+    ScienceJournal AddJournal(String name, int yearFounded, Country countryOfOrigin, double? price = null);
 
 }

@@ -151,4 +151,10 @@ public class EfRepository : IRepository
             .SingleOrDefault();
         return journal;
     }
+
+    public void CreateJournal(ScienceJournal journalToInsert)
+    {
+        _articleDbContext.Journals.Add(journalToInsert);
+        _articleDbContext.SaveChanges();
+    }
 }

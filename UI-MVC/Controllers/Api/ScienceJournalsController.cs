@@ -37,6 +37,7 @@ public class ScienceJournalsController : ControllerBase
             Id = journal.Id,
             Name = journal.Name,
             Price = journal.Price,
+            YearFounded = journal.YearFounded,
             CountryOfOrigin = journal.CountryOfOrigin,
             ArticleIds = new List<int>()
         };
@@ -48,7 +49,14 @@ public class ScienceJournalsController : ControllerBase
         
         return Ok(journalDto); // 200
     }
+
+    [HttpPost]
+    public IActionResult PostJournal(NewScienceJournalDto newScienceJournalDto)
+    {
+        ScienceJournal createdJournal = _manager.AddJournal(newScienceJournalDto.Name, newScienceJournalDto.YearFounded,
+            newScienceJournalDto.CountryOfOrigin, newScienceJournalDto.Price);
+
+        return CreatedAtAction("GetJournal", new { id = createdJournal.Id }, createdJournal);
+    }
     
-    // [HttpPost]
-    // public IActionResult Post
 }

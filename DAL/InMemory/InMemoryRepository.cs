@@ -169,22 +169,9 @@ public class InMemoryRepository : IRepository
         throw new NotImplementedException();
     }
 
-    public ScienceJournal ReadJournal(int journalId)
-    {
-        return Journals[journalId - 1];
-    }
-
     public void CreateJournal(ScienceJournal journalToInsert)
     {
-        if (Journals == null || Journals.Count == 0)
-        {
-            journalToInsert.Id = 1;
-        }
-        else
-        {
-            journalToInsert.Id = Journals.Last().Id + 1;
-        }
-        Journals.Add(journalToInsert);
+        throw new NotImplementedException();
     }
 
     
