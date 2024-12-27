@@ -12,3 +12,7 @@ Accept: application/json
 Content-Type: application/json
 
 {"name":"Bio+", "price":null, "yearFounded": 2012, "countryOfOrigin": 0}
+
+### View articles of scientist
+GET https://localhost:7176/api/ScientificArticles?scientistId=3 HTTP/1.1
+Accept: application/json

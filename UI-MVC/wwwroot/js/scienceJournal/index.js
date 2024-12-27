@@ -13,7 +13,7 @@ if (loadJournalsButton) {
 }
 
 function loadJournals() {
-    fetch('api/ScienceJournals', {
+    fetch('/api/ScienceJournals', {
         method: 'GET', headers: {'Accept': 'application/json'}
     })
         .then(response => {

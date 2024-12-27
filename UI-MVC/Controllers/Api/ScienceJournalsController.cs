@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleManagement.UI.Web.Controllers.Api;
 
-[ApiController] [Route("api/[controller]")]
+[ApiController] [Route("/api/[controller]")]
 public class ScienceJournalsController : ControllerBase
 {
     private readonly IManager _manager;

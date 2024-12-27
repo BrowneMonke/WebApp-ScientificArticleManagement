@@ -380,7 +380,6 @@ public class ConsoleUi
         PrintHeader("Adding article to scientist");
        ShowArticleScientistLinkEditMenu("Which scientist would you like to add an article to?", "Which article would you like to assign to this scientist?", 
            out int selectedScientistId, out int selectedArticleId, out bool isLeadResearcher);
-        // TODO: add validation
         try
         {
             ArticleScientistLink articleScientistLink = _manager.AddArticleScientistLink(selectedArticleId, selectedScientistId, isLeadResearcher);
