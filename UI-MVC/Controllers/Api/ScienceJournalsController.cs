@@ -46,7 +46,6 @@ public class ScienceJournalsController : ControllerBase
             journalDto.ArticleIds.Add(article.Id);
         }
         
-        
         return Ok(journalDto); // 200
     }
 

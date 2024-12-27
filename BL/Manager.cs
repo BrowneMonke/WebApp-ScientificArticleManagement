@@ -32,9 +32,14 @@ public class Manager : IManager
         return _repository.ReadArticlesByCategoryWithAuthorsAndJournals(categoryChoice);
     }
 
-    public IEnumerable<ScientificArticle> GetArticlesOfScientist(int scientistId)
+    public IEnumerable<ScientificArticle> GetArticlesByScientist(int scientistId)
     {
-        return _repository.ReadArticlesOfScientist(scientistId);
+        return _repository.ReadArticlesByScientist(scientistId);
+    }
+
+    public IEnumerable<ScientificArticle> GetArticlesNotByScientist(int scientistId)
+    {
+        return _repository.ReadArticlesNotByScientist(scientistId);
     }
 
     public ScientificArticle GetArticle(int articleId)
@@ -139,6 +144,12 @@ public class Manager : IManager
         return scientist;
     }
 
+
+    public ArticleScientistLink GetArticleScientistLink(int articleId, int scientistId)
+    {
+        return _repository.ReadArticleScientistLinkByArticleIdAndScientistId(articleId, scientistId);
+    }
+    
     private void CheckLinkValidity(int articleId, int scientistId)
     {
         if (articleId == Int32.MaxValue || scientistId == Int32.MaxValue || _repository.ReadArticle(articleId) == null || _repository.ReadScientist(scientistId) == null)

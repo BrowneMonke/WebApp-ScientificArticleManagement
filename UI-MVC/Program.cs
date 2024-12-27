@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using ArticleManagement.BL;
 using ArticleManagement.DAL;
 using ArticleManagement.DAL.EF;
+using AspNetCoreLiveMonitoring.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,7 @@ builder.Services.AddControllersWithViews()
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
+builder.Services.AddLiveMonitoring(); // KdG TI ASP.NET Live Monitoring
 var app = builder.Build();
 
 // database storage: EF Code First Trigger
@@ -41,6 +43,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+//KdG TI ASP.NET Live Monitoring
+app.UseAndMapLiveMonitoring();
 
 app.UseAuthorization();
 

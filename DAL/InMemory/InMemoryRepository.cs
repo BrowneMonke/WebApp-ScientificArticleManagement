@@ -38,7 +38,12 @@ public class InMemoryRepository : IRepository
         throw new NotImplementedException();
     }
 
-    public IEnumerable<ScientificArticle> ReadArticlesOfScientist(int scientistId)
+    public IEnumerable<ScientificArticle> ReadArticlesByScientist(int scientistId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<ScientificArticle> ReadArticlesNotByScientist(int scieintistId)
     {
         throw new NotImplementedException();
     }
@@ -153,6 +158,7 @@ public class InMemoryRepository : IRepository
     {
         throw new NotImplementedException();
     }
+    
 
     public ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId)
     {

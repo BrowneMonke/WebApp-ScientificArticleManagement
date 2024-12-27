@@ -39,14 +39,21 @@ public class EfRepository : IRepository
         return articles.Where(article => article.Category == categoryChoice).ToList();
     }
 
-    public IEnumerable<ScientificArticle> ReadArticlesOfScientist(int scientistId)
+    public IEnumerable<ScientificArticle> ReadArticlesByScientist(int scientistId)
     {
         var articles = _articleDbContext.Articles
             .Where(article => article.AuthorLinks.Any(authLk => authLk.Scientist.Id == scientistId));
 
         return articles.ToList();
     }
-    
+
+    public IEnumerable<ScientificArticle> ReadArticlesNotByScientist(int scieintistId)
+    {
+        var articles = _articleDbContext.Articles
+            .Where(article => article.AuthorLinks.All(authLk => authLk.Scientist.Id != scieintistId));
+        return articles.ToList();
+    }
+
     public ScientificArticle ReadArticle(int id)
     {
         return _articleDbContext.Articles.Find(id);

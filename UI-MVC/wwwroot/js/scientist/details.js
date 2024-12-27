@@ -1,6 +1,6 @@
-﻿const articleFeaturesSection = document.getElementById('articleFeatures');
-const articlesTable = document.createElement('table');
-const articlesTableBody = document.createElement('tbody');
+﻿const scientistId = Number(document.getElementById('scientistIdentification').innerText);
+const articlesTableBody = document.querySelector('#articlesTable tbody');
+const addArticleBtn = document.getElementById('addArticleBtn');
 
 const categoryEnum = {
     0: "Astrophysics",
@@ -11,37 +11,55 @@ const categoryEnum = {
     5: "Chemistry",
     6: "Biology"
 };
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+
+if (addArticleBtn) {
+    addArticleBtn.addEventListener('click', ev => {
+        ev.preventDefault();
+        submit();
+    });
+}
 window.addEventListener('load', init);
 
+
+function submit() {
+    const articleId = document.getElementById('articlesList').value;
+    const isLeadResearcher = document.getElementById('isLeadResearcherCheckbox').checked;
+    
+    fetch('/api/ArticleScientistLinks', {
+        method: 'POST', headers: {
+            'Accept': 'application/json', 'Content-Type': 'application/json'
+        }, body: JSON.stringify({
+            "articleId": articleId, "scientistId": scientistId, "isLeadResearcher": isLeadResearcher
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 204) {
+                    console.log("No articles available to assign.");
+                    return [];
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            }
+            console.log("Article assigned successfully!");
+            init();
+            return response.json();
+        })
+        .catch(error => {
+            console.error("Error assigning article:", error);
+        });
+}
+
 function init() {
-    loadStartingElements();
     loadArticlesOfScientist();
     loadArticleAssignmentForm();
 }
 
-function loadStartingElements() {
-    const allArticlesHeader = document.createElement('h3');
-    allArticlesHeader.textContent = "Articles";
-    articleFeaturesSection.appendChild(allArticlesHeader);
-
-    articlesTable.classList.add("table");
-    articlesTable.innerHTML = `
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Published</th>
-            <th># Pages</th>
-            <th>Category</th>
-        </tr>
-        </thead>
-        `;
-}
 
 function loadArticlesOfScientist() {
-    const scientistId = Number(document.getElementById('scientistIdentification').innerText);
-
-    fetch('/api/ScientificArticles?scientistId='+scientistId, {
+    fetch(`/api/ScientificArticles/${scientistId}`, {
         method: 'GET', headers: {'Accept': 'application/json'}
     })
         .then(response => {
@@ -55,8 +73,6 @@ function loadArticlesOfScientist() {
 function showArticles(articles) {
     articlesTableBody.innerHTML = '';
     articles.forEach(art => addArticleToList(art));
-    articlesTable.appendChild(articlesTableBody);
-    articleFeaturesSection.appendChild(articlesTable);
 }
 
 function addArticleToList(article) {
@@ -66,7 +82,6 @@ function addArticleToList(article) {
     titleCell.textContent = article.title;
     row.appendChild(titleCell);
 
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const dopCell = document.createElement('td');
     const dopValue = new Date(article.dateOfPublication);
     dopCell.textContent = `${months[dopValue.getMonth()]} ${dopValue.getDate()}, ${dopValue.getFullYear()}`;
@@ -83,13 +98,97 @@ function addArticleToList(article) {
     articlesTableBody.appendChild(row);
 }
 
-function loadArticleAssignmentForm(){
-    const addArticleHeader = document.createElement('h3');
-    addArticleHeader.textContent = "Articles";
-    articleFeaturesSection.appendChild(addArticleHeader);
-    const addArticleFormElem = document.createElement('form')
+function loadArticleAssignmentForm() {
+    fetch(`/api/ScientificArticles/articles/not-by/${scientistId}`, {
+        method: 'GET', headers: {'Accept': 'application/json'}
+    })
+        .then(response => {
+            if (response.ok) return response.json();
+        })
+        .then(data => {
+            let selectArticleElem = document.getElementById('articlesList');
+            selectArticleElem.innerHTML = '';
+            data.forEach(article => {
+                let option = document.createElement("option");
+                option.value = article.id;
+                option.innerText = article.title;
+                selectArticleElem.appendChild(option);
+            })
+        })
+        .catch(err => {
+            alert(`Something went wrong while loading article selection.. :-/
+                ${err.message}`);
+        });
 }
 
-function createAddArticleForm(addArticleFormElem) {
-    addArticleFormElem.classList.add('form');
+/*
+function saveArticleData(articles) {
+    articles.forEach(article => {
+        articlesInfo[article.id] = article.title; 
+    });
 }
+*/
+
+
+/*
+function createAddArticleForm() {
+    const addArticleFormElem = document.createElement('form');
+    addArticleFormElem.classList.add('form');
+
+    const articleSelectionDivElem = document.createElement('div');
+    articleSelectionDivElem.classList.add('form-group');
+    articleSelectionDivElem.classList.add('row');
+    
+    const selectArticleLabelElem = document.createElement('label');
+    selectArticleLabelElem.textContent = "Select article";
+    selectArticleLabelElem.setAttribute('asp-for', 'Category');
+    selectArticleLabelElem.classList.add('col-2');
+    
+    const selectArticleElem = document.createElement('select');
+    selectArticleElem.setAttribute('asp-for', 'Category');
+    selectArticleElem.classList.add('col-6');
+    
+    articleSelectionDivElem.appendChild(selectArticleLabelElem);
+    articleSelectionDivElem.appendChild(selectArticleElem);
+    
+    for (const articleId of Object.keys(articlesInfo)) {
+        console.log(`${Number(articleId)} : ${articlesInfo[Number(articleId)]}`);
+        const optionElem = document.createElement('option');
+        optionElem.value = articleId;
+        optionElem.textContent = articlesInfo[Number(articleId)];
+        selectArticleElem.appendChild(optionElem);
+    }
+    
+    const isLeadResearcherCheckboxElem = createCheckbox("Is Lead Researcher?", "isLeadResearcher", "leadResearcher", false);
+    
+    addArticleFormElem.appendChild(articleSelectionDivElem);
+    addArticleFormElem.appendChild(isLeadResearcherCheckboxElem);
+    
+    return addArticleFormElem;
+}
+
+function createCheckbox(label, name, id, isChecked) {
+    const container = document.createElement('div');
+    container.classList.add('form-check'); // For Bootstrap styling
+    container.classList.add('row');
+
+    const labelElement = document.createElement('label');
+    // labelElement.htmlFor = id; // Associate the label with the checkbox
+    labelElement.classList.add('form-check-label'); // For Bootstrap styling
+    labelElement.classList.add('col-1');
+    labelElement.textContent = label;
+    labelElement.setAttribute('asp-for', name); // Associate the label with the checkbox
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    // checkbox.id = id;       // Important for label association and JavaScript access
+    checkbox.classList.add('form-check-input'); // For Bootstrap styling 
+    checkbox.classList.add('col-1');
+    checkbox.checked = isChecked; // Set the initial checked state
+    checkbox.setAttribute('asp-for', name)
+
+    container.appendChild(labelElement);
+    container.appendChild(checkbox);
+
+    return container;
+}*/

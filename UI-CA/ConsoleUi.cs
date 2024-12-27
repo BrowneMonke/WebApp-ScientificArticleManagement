@@ -395,7 +395,7 @@ public class ConsoleUi
         PrintHeader("Removing article from scientist");
         ShowScientistSelectionMenu("Which scientist would you like to remove an article from?", out int selectedScientistId);
         Console.WriteLine("\n" + "Which article would you like to remove from this scientist?");
-        PrintArticlesWitId(_manager.GetArticlesOfScientist(selectedScientistId));
+        PrintArticlesWitId(_manager.GetArticlesByScientist(selectedScientistId));
         string articleChoice = Console.ReadLine();
         bool isValidArticleIdFormat = CheckIdString(articleChoice, out int selectedArticleId);
         if (!isValidArticleIdFormat) return;

@@ -2,9 +2,11 @@
 GET https://localhost:7176/api/ScienceJournals HTTP/1.1
 Accept: application/json
 
+
 ### View Specific journal by id 
 GET https://localhost:7176/api/ScienceJournals/1 HTTP/1.1
 Accept: application/json
+
 
 ### Create new journal
 POST https://localhost:7176/api/ScienceJournals HTTP/1.1
@@ -13,6 +15,20 @@ Content-Type: application/json
 
 {"name":"Bio+", "price":null, "yearFounded": 2012, "countryOfOrigin": 0}
 
+
 ### View articles of scientist
-GET https://localhost:7176/api/ScientificArticles?scientistId=3 HTTP/1.1
+GET https://localhost:7176/api/ScientificArticles/3 HTTP/1.1
 Accept: application/json
+
+
+### View all articles
+GET https://localhost:7176/api/ScientificArticles HTTP/1.1
+Accept: application/json
+
+
+### Create new Article-Scientist Link
+POST https://localhost:7176/api/ArticleScientistLinks HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{"articleId":3, "scientistId":3, "isLeadResearcher": true}

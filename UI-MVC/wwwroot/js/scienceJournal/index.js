@@ -37,7 +37,7 @@ function addJournalToList(journal) {
     row.appendChild(nameCell);
 
     const priceCell = document.createElement('td');
-    priceCell.textContent = journal.price == null ? "UNKNOWN" : journal.price.toFixed(2);
+    priceCell.textContent = journal.price == null ? "UNKNOWN" : "€"+journal.price.toFixed(2);
     row.appendChild(priceCell);
     
     const yearCell = document.createElement('td');
