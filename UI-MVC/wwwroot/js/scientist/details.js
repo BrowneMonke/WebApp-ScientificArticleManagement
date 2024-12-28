@@ -62,7 +62,7 @@ function init() {
 
 
 function loadArticlesByScientist() {
-    fetch(`/api/ScientificArticles/${scientistId}`, {
+    fetch(`/api/ScientificArticles/by-scientist/${scientistId}`, {
         method: 'GET', headers: {'Accept': 'application/json'}
     })
         .then(response => {
@@ -105,7 +105,7 @@ function addArticleToList(article) {
 }
 
 function loadArticleAssignmentForm() {
-    fetch(`/api/ScientificArticles/articles/not-by/${scientistId}`, {
+    fetch(`/api/ScientificArticles/not-by-scientist/${scientistId}`, {
         method: 'GET', headers: {'Accept': 'application/json'}
     })
         .then(response => {

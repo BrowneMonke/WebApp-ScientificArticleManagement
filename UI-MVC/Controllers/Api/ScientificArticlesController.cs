@@ -1,5 +1,4 @@
 ﻿using ArticleManagement.BL;
-using ArticleManagement.BL.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleManagement.UI.Web.Controllers.Api;
@@ -14,7 +13,7 @@ public class ScientificArticlesController : ControllerBase
         _manager = manager;
     }
 
-    [HttpGet("{scientistId}")]
+    [HttpGet("by-scientist/{scientistId}")]
     public IActionResult GetArticlesByScientist(int scientistId)
     {
         if (_manager.GetScientist(scientistId) is null) return NotFound(); // 404
@@ -27,7 +26,7 @@ public class ScientificArticlesController : ControllerBase
         return Ok(articlesByScientist); // 200
     }
     
-    [HttpGet("articles/not-by/{scientistId}")]
+    [HttpGet("not-by-scientist/{scientistId}")]
     public IActionResult GetArticlesNotByScientist(int scientistId)
     {
         if (_manager.GetScientist(scientistId) is null) return NotFound(); // 404

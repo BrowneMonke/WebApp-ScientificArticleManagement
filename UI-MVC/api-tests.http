@@ -16,8 +16,8 @@ Content-Type: application/json
 {"name":"Bio+", "price":null, "yearFounded": 2012, "countryOfOrigin": 0}
 
 
-### View articles of scientist
-GET https://localhost:7176/api/ScientificArticles/3 HTTP/1.1
+### View articles by scientist
+GET https://localhost:7176/api/ScientificArticles/by-scientist/3 HTTP/1.1
 Accept: application/json
 
 
@@ -31,4 +31,9 @@ POST https://localhost:7176/api/ArticleScientistLinks HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 
-{"articleId":3, "scientistId":3, "isLeadResearcher": true}
+{"articleId":4, "scientistId":3, "isLeadResearcher": true}
+
+
+### View articles NOT by scientist
+GET https://localhost:7176/api/ScientificArticles/not-by-scientist/2 HTTP/1.1
+Accept: application/json
