@@ -23,10 +23,11 @@ public class Manager : IManager
         return _repository.ReadAllArticlesWithAuthorsAndJournals();
     }
 
-    public IEnumerable<ScientificArticle> GetArticlesByCategory(ArticleCategory categoryChoice)
+    /*public IEnumerable<ScientificArticle> GetArticlesByCategory(ArticleCategory categoryChoice)
     {
         return _repository.ReadArticlesByCategory(categoryChoice);
-    }
+    }*/
+    
     public IEnumerable<ScientificArticle> GetArticlesByCategoryWithAuthorsAndJournals(ArticleCategory categoryChoice)
     {
         return _repository.ReadArticlesByCategoryWithAuthorsAndJournals(categoryChoice);
@@ -42,10 +43,10 @@ public class Manager : IManager
         return _repository.ReadArticlesNotByScientist(scientistId);
     }
 
-    public ScientificArticle GetArticle(int articleId)
+    /*public ScientificArticle GetArticle(int articleId)
     {
         return _repository.ReadArticle(articleId);
-    }
+    }*/
     
     public ScientificArticle GetArticleByIdWithAuthorsAndJournal(int articleId)
     {
@@ -211,6 +212,13 @@ public class Manager : IManager
             YearFounded = yearFounded,
             CountryOfOrigin = countryOfOrigin
         };
+        
+        List<ValidationResult> errors = [];
+        var journalIsValid = Validator.TryValidateObject(journal, new ValidationContext(journal), errors, true);
+        if (!journalIsValid)
+        {
+            throw new ValidationException(String.Join('|', errors.Select(error => error.ErrorMessage)));
+        }
         
         _repository.CreateJournal(journal);
 

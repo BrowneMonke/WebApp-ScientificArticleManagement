@@ -8,12 +8,12 @@ GET https://localhost:7176/api/ScienceJournals/1 HTTP/1.1
 Accept: application/json
 
 
-### Create new journal
+### Create new journal (change yearFounded for succesful creation!)
 POST https://localhost:7176/api/ScienceJournals HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 
-{"name":"Bio+", "price":null, "yearFounded": 2012, "countryOfOrigin": 0}
+{"name":"Bio+", "price":null, "yearFounded": 2032, "countryOfOrigin": 0}
 
 
 ### View articles by scientist

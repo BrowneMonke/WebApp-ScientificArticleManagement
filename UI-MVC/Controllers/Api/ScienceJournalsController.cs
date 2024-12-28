@@ -1,4 +1,5 @@
-﻿using ArticleManagement.BL;
+﻿using System.ComponentModel.DataAnnotations;
+using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
 using ArticleManagement.UI.Web.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
@@ -52,9 +53,23 @@ public class ScienceJournalsController : ControllerBase
     [HttpPost]
     public IActionResult PostJournal(NewScienceJournalDto newScienceJournalDto)
     {
-        ScienceJournal createdJournal = _manager.AddJournal(newScienceJournalDto.Name, newScienceJournalDto.YearFounded,
-            newScienceJournalDto.CountryOfOrigin, newScienceJournalDto.Price);
-
+        ScienceJournal createdJournal;
+        try
+        {
+            createdJournal = _manager.AddJournal(newScienceJournalDto.Name, newScienceJournalDto.YearFounded,
+                newScienceJournalDto.CountryOfOrigin, newScienceJournalDto.Price);
+        }
+        catch (ValidationException exception)
+        {
+            string errors = "";
+            int counter = 0;
+            foreach (var errorLine in exception.Message.Split('|'))
+            {
+                counter++;
+                errors += $"[{counter}. {errorLine}]       ";
+            }
+            return BadRequest(errors);
+        }
         return CreatedAtAction("GetJournal", new { id = createdJournal.Id }, createdJournal);
     }
     
