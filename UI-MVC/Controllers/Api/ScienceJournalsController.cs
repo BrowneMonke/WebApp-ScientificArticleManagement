@@ -61,14 +61,14 @@ public class ScienceJournalsController : ControllerBase
         }
         catch (ValidationException exception)
         {
-            string errors = "";
-            int counter = 0;
+            List<string> errorList = [];
+            int counter = 1;
             foreach (var errorLine in exception.Message.Split('|'))
             {
-                counter++;
-                errors += $"[{counter}. {errorLine}]       ";
+                string error = $"[{counter++}. {errorLine}]";
+                errorList.Add(error);
             }
-            return BadRequest(errors);
+            return BadRequest(errorList);
         }
         return CreatedAtAction("GetJournal", new { id = createdJournal.Id }, createdJournal);
     }
