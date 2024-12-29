@@ -26,6 +26,13 @@ public class ScienceJournal : IValidatableObject
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         List<ValidationResult> errors = [];
+        
+        // Country check
+        if (!Enum.IsDefined(CountryOfOrigin))
+        {
+            errors.Add(new ValidationResult("Country of origin unknown!", new string[] { nameof(CountryOfOrigin) }));
+        }
+        //Year check
         if (YearFounded < 0 || YearFounded > DateTime.Today.Year)
         {
             errors.Add(new ValidationResult("The year can neither be negative nor be in the future!", new[]{ nameof(YearFounded)}));

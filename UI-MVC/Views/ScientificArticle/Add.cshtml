@@ -9,53 +9,53 @@
 <form asp-controller="ScientificArticle" asp-action="Add" method="post">
     <div class="form-group mb-3">
         <div class="row">
-            <label asp-for="Title" class="col-lg-2 col-form-label"></label>
-            <input asp-for="Title" class="form-control col-lg"/>
+            <label asp-for="Title" class="col-md-2 col-form-label"></label>
+            <input asp-for="Title" class="form-control col-md"/>
         </div>
         <div class="row">
-            <span class="col-lg-2"></span>
-            <span asp-validation-for="Title" class="text-danger col-lg"></span>
+            <span class="col-md-2"></span>
+            <span asp-validation-for="Title" class="text-danger col-md"></span>
         </div>
     </div>
     <div class="form-group mb-3">
         <div class="row">
-            <label asp-for="DateOfPublication" class="col-lg-2 col-form-label">
+            <label asp-for="DateOfPublication" class="col-md-2 col-form-label">
                 Date of Publication
             </label>
-            <input asp-for="DateOfPublication" type="date" class="form-control col-lg"/>
+            <input asp-for="DateOfPublication" type="date" class="form-control col-md"/>
         </div>
         <div class="row">
-            <span class="col-lg-2"></span>
-            <span asp-validation-for="DateOfPublication" class="text-danger col-lg"></span>
+            <span class="col-md-2"></span>
+            <span asp-validation-for="DateOfPublication" class="text-danger col-md"></span>
         </div>
     </div>
     <div class="form-group mb-3">
         <div class="row">
-            <label asp-for="NumberOfPages" class="col-lg-2 col-form-label">
+            <label asp-for="NumberOfPages" class="col-md-2 col-form-label">
                 No. of Pages
             </label>
-            <input asp-for="NumberOfPages" min="1" step="1" class="form-control col-lg"/>
+            <input asp-for="NumberOfPages" min="1" step="1" class="form-control col-md"/>
         </div>
         <div class="row">
-            <span class="col-lg-2"></span>
-            <span asp-validation-for="NumberOfPages" class="text-danger col-lg"></span>
+            <span class="col-md-2"></span>
+            <span asp-validation-for="NumberOfPages" class="text-danger col-md"></span>
         </div>
     </div>
     <div class="form-group mb-3">
         <div class="row">
-            <label asp-for="Category" class="col-lg-2 col-form-label"></label>
+            <label asp-for="Category" class="col-md-2 col-form-label"></label>
             <select asp-for="Category"
                     asp-items="@(new SelectList(Enum.GetValues<ArticleCategory>()))"
-                    class="form-control col-lg">
+                    class="form-control col-md">
             </select>
 
         </div>
         <div class="row">
-            <span class="col-lg-2"></span>
-            <span asp-validation-for="Category" class="text-danger col-lg"></span>
+            <span class="col-md-2"></span>
+            <span asp-validation-for="Category" class="text-danger col-md"></span>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary btn-lg">Save</button>
+    <button type="submit" class="btn btn-primary btn-md">Save</button>
 </form>
 
 @section Scripts {

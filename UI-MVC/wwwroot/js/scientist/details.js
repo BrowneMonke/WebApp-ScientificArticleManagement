@@ -29,10 +29,15 @@ function submit() {
 
     if (articleId === "" || articleId == null) {
         console.log("Pressed 'Add article' when all articles already assigned!");
-        alert("All articles have already been assigned!")
+        alert("All articles have already been assigned!");
+        resetLeadResearcherCheckbox();
         return;
     }
     
+    postArticleScientistLink(articleId, isLeadResearcher);
+}
+
+function postArticleScientistLink(articleId, isLeadResearcher){
     fetch('/api/ArticleScientistLinks', {
         method: 'POST', headers: {
             'Accept': 'application/json', 'Content-Type': 'application/json'
@@ -72,7 +77,7 @@ function loadArticlesByScientist() {
         .catch(err => {
             console.log(`Something went wrong.. :-/
                 ${err.message}`);
-            alert(`Error! Check console for details.`);
+            alert(`Error! Check the console for details.`);
         });
 }
 
@@ -114,42 +119,54 @@ function loadArticleAssignmentForm() {
         method: 'GET', headers: {'Accept': 'application/json'}
     })
         .then(response => {
-            if (!response) {
-                console.log("response is null");
-                return [];
-            } else if (response.status === 204) {
-                console.log("No articles left to assign.");
-                return [];
-            } else if (!response.ok) {
-                console.log("response NOT ok! >:(")
-                return response.text().then(errorText => {
-                    throw new Error(`HTTP Error ${response.status}: ${errorText}`)
-                });
-            }
-            return response.json();
+            return checkResponseData(response);
         })
         .then(data => {
-            let selectArticleElem = document.getElementById('articlesList');
-            selectArticleElem.innerHTML = '';
-            const isLeadResCheckBbox = document.getElementById('isLeadResearcherCheckbox');
-            isLeadResCheckBbox.checked = false;
-            if (data.length === 0) {
-                let option = document.createElement('option');
-                option.value = "";
-                option.innerText = "No articles available";
-                selectArticleElem.appendChild(option);
-            } else {
-            data.forEach(article => {
-                let option = document.createElement("option");
-                option.value = article.id;
-                option.innerText = article.title;
-                selectArticleElem.appendChild(option);
-            });
-            }
+            loadFormData(data);
         })
         .catch(err => {
             console.log(`Error status ${err.status}: ${err.message}`);
             alert(`Something went wrong while loading article selection.. :-/
-             Check console for details.`);
+                Check the console for details.`);
         });
+}
+
+function checkResponseData(response){
+    if (!response) {
+        console.log("response is null");
+        return [];
+    } else if (response.status === 204) {
+        console.log("No articles left to assign.");
+        return [];
+    } else if (!response.ok) {
+        console.log("response NOT ok! >:(");
+        return response.text().then(errorText => {
+            throw new Error(`HTTP Error ${response.status}: ${errorText}`);
+        });
+    }
+    return response.json();
+}
+
+function loadFormData(data) {
+    let selectArticleElem = document.getElementById('articlesList');
+    selectArticleElem.innerHTML = '';
+    resetLeadResearcherCheckbox();
+    if (data.length === 0) {
+        let option = document.createElement('option');
+        option.value = "";
+        option.innerText = "No articles available";
+        selectArticleElem.appendChild(option);
+    } else {
+        data.forEach(article => {
+            let option = document.createElement("option");
+            option.value = article.id;
+            option.innerText = article.title;
+            selectArticleElem.appendChild(option);
+        });
+    }
+}
+
+function resetLeadResearcherCheckbox() {
+    const isLeadResCheckBbox = document.getElementById('isLeadResearcherCheckbox');
+    isLeadResCheckBbox.checked = false;
 }

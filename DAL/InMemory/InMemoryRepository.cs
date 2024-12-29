@@ -4,7 +4,6 @@ namespace ArticleManagement.DAL.InMemory;
 
 public class InMemoryRepository : IRepository
 {
-    private IRepository _repositoryImplementation;
     private static readonly List<Scientist> Scientists = [];
     private static readonly List<ScientificArticle> Articles = [];
     private static readonly List<ScienceJournal> Journals = [];
@@ -19,7 +18,7 @@ public class InMemoryRepository : IRepository
         throw new NotImplementedException();
     }
 
-    public IEnumerable<ScientificArticle> ReadArticlesByCategory(ArticleCategory categoryChoice)
+    public static IEnumerable<ScientificArticle> ReadArticlesByCategory(ArticleCategory categoryChoice)
     {
         List<ScientificArticle> articlesOfCategory = [];
         foreach (ScientificArticle article in Articles)
@@ -81,7 +80,7 @@ public class InMemoryRepository : IRepository
         throw new NotImplementedException();
     }
 
-    private bool MatchScientistName(string nameString, Scientist scientist)
+    private static bool MatchScientistName(string nameString, Scientist scientist)
     {
         string[] scientistNameParts = nameString.Split(" ");
 
@@ -94,7 +93,7 @@ public class InMemoryRepository : IRepository
         return true;
     }
     
-    private void CheckNameFilter(string nameString, List<Scientist> filteredScientistsList)
+    private static void CheckNameFilter(string nameString, List<Scientist> filteredScientistsList)
     {
         if (nameString == null || nameString.Trim() == "") return;
         
@@ -106,7 +105,7 @@ public class InMemoryRepository : IRepository
         }
     }
     
-    private void CheckDobFilter(DateOnly? dateOfBirth, List<Scientist> filteredScientistsList)
+    private static void CheckDobFilter(DateOnly? dateOfBirth, List<Scientist> filteredScientistsList)
     {
         if (dateOfBirth == null) return;
         foreach (Scientist scientist in Scientists)
@@ -118,7 +117,7 @@ public class InMemoryRepository : IRepository
         }
     }
     
-    public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth)
+    public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirthWithArticles(string nameString, DateOnly? dateOfBirth)
     {
         List<Scientist> filteredScientistsList = [];
         CheckNameFilter(nameString, filteredScientistsList);
@@ -149,7 +148,7 @@ public class InMemoryRepository : IRepository
         throw new NotImplementedException();
     }
     
-    public void DeleteArticleScientistLink(int articleId, int scientistId)
+    public void DeleteArticleScientistLink(ArticleScientistLink articleScientistLink)
     {
         throw new NotImplementedException();
     }

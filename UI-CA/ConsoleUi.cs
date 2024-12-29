@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
-using ArticleManagement.BL.Domain.Extensions;
+using ArticleManagement.UI.CA.Extensions;
 
 namespace ArticleManagement.UI.CA;
 
@@ -25,18 +25,17 @@ public class ConsoleUi
         string authorNamesString = "";
         foreach (ArticleScientistLink articleScientistLink in article.AuthorLinks)
         {
-            authorNamesString += articleScientistLink.Scientist.Name + ", ";
+            authorNamesString += articleScientistLink.Scientist.Name + (articleScientistLink.IsLeadResearcher? " (Lead researcher)" : "") + ", ";
         }
-        return authorNamesString.Trim().Trim(',');
+        return authorNamesString.Trim([' ', ',']);
     }
     private static void PrintArticlesList(IEnumerable<ScientificArticle> scientificArticles)
     {
         int index = 0;
         foreach (var article in scientificArticles)
         {
-            index++;
             string authors = SumArticleAuthors(article);
-            Console.WriteLine($"{article.Id}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal?.Name ?? "UNKNOWN")}\" on {article.DateOfPublication}]\n");
+            Console.WriteLine($"{++index}. {article.Title} ({article.NumberOfPages} {(article.NumberOfPages == 1 ? "page" : "pages")}){(authors == "" ? "" : $"; by {authors}")} [published in \"{(article.Journal?.Name ?? "UNKNOWN")}\" on {article.DateOfPublication}] (ID: {article.Id})\n");
         }
         if (index == 0) Console.WriteLine("None Found\n");
     }
@@ -46,13 +45,12 @@ public class ConsoleUi
         int index = 0;
         foreach (var scientist in scientists)
         {
-            index++;
             string articlesOverview = null;
             foreach (var articleLink in scientist.ArticleLinks)
             {
-                articlesOverview += $"\t\t<Article> {articleLink.Article.Title}\n";
+                articlesOverview += $"\t\t<Article> {articleLink.Article.Title}{(articleLink.IsLeadResearcher? " (Lead researcher)" : "")}\n";
             }
-            Console.WriteLine($"{scientist.Id}. {scientist.Name}, Faculty of {scientist.Faculty} at {scientist.University} {(scientist.DateOfBirth != null? $"(born {scientist.DateOfBirth})" : "" )}\n" +
+            Console.WriteLine($"{++index}. {scientist.Name}, Faculty of {scientist.Faculty} at {scientist.University} {(scientist.DateOfBirth != null? $"(born {scientist.DateOfBirth}) " : "" )}(ID: {scientist.Id})\n" +
                               $"\tHas contributed to:\n" +
                               $"{articlesOverview ?? "\t\tNo articles found in database.\n"}");
         }
@@ -125,23 +123,16 @@ public class ConsoleUi
         return categoryChoice;
     }
     
-    private static void VerifyCategoryChoice(int categoryChoice)
-    {
-        if (!Enum.IsDefined((ArticleCategory)categoryChoice))
-        {
-            throw new ArithmeticException("Invalid Category Number! Please try again.");
-        }
-    }
-
+    
     private void ShowArticlesPerCategory()
     {
         int categoryChoice = InputCategoryChoice();
-
+        IEnumerable<ScientificArticle> articles;
         try
         {
-            VerifyCategoryChoice(categoryChoice);
+            articles = _manager.GetArticlesByCategoryWithAuthorsAndJournals(categoryChoice);
         }
-        catch (ArithmeticException exception)
+        catch (ValidationException exception)
         {
             Console.WriteLine(exception.Message);
             return;
@@ -149,9 +140,7 @@ public class ConsoleUi
         
         ArticleCategory selectedCategory = (ArticleCategory)categoryChoice;
         PrintHeader($"Articles on {selectedCategory.GetString()}");
-        
-        PrintArticlesList(_manager.GetArticlesByCategoryWithAuthorsAndJournals(selectedCategory));
-       
+        PrintArticlesList(articles);
     }
 
     private void ShowAllScientists()
@@ -167,10 +156,14 @@ public class ConsoleUi
         string nameString = Console.ReadLine();
         Console.Write("Enter a full date (dd/mm/yyyy) or leave blank: ");
         string dobString = Console.ReadLine();
-        bool isDateValid = DateOnly.TryParse(dobString, out DateOnly dateOfBirth);
+        bool isValidDate = DateOnly.TryParse(dobString, out DateOnly dateOfBirth);
         
         PrintHeader("Scientists By Name / DoB");
-        PrintScientistsList(_manager.GetScientistsByNameAndDateOfBirth(nameString, isDateValid? dateOfBirth : null));
+        if (!isValidDate && (nameString is null || nameString.Trim() == ""))
+        {
+            Console.WriteLine("\nNo criteria provided! Showing all scientists...\n\n");
+        }
+        PrintScientistsList(_manager.GetScientistsByNameAndDateOfBirthWithArticles(nameString, isValidDate? dateOfBirth : null));
     }
 
     private static string InputScientistName(string name)
@@ -202,24 +195,21 @@ public class ConsoleUi
         if (!TryParseScientist(scientistName, out Scientist existingScientist)) return true;
         Console.WriteLine($"{existingScientist.Name} already in the list!");
         return false;
-
     }
-    
 
-    private void ActionCreateScientist(string name = null)
+    private static void InputScientistDetails(out string scientistUniversity, out string scientistFaculty,
+        out string scientistDobString)
     {
-        string scientistName = InputScientistName(name);
-        if (!CheckScientistName(scientistName)) return;
-        
         Console.Write("Enter scientist university: ");
-        string scientistUniversity = Console.ReadLine();
+        scientistUniversity = Console.ReadLine();
         Console.Write("Enter scientist faculty: ");
-        string scientistFaculty = Console.ReadLine();
+        scientistFaculty = Console.ReadLine();
         Console.Write("Enter scientist date of birth [yyyy/mm/dd] (optional): ");
-        string scientistDobString = Console.ReadLine();
-        DateOnly? nullableDob = null;
-        if (DateOnly.TryParse(scientistDobString, out DateOnly dateOfBirth)) nullableDob = dateOfBirth;
-        
+        scientistDobString = Console.ReadLine();
+    }
+
+    private void AttemptScientistCreation(string scientistName, string scientistFaculty, string scientistUniversity, DateOnly? nullableDob)
+    {
         try
         {
             Scientist scientist = _manager.AddScientist(scientistName, scientistFaculty, scientistUniversity, nullableDob);
@@ -234,6 +224,19 @@ public class ConsoleUi
                 Console.WriteLine(errorMessage);
             }
         }
+    }
+    
+    private void ActionCreateScientist(string name = null)
+    {
+        string scientistName = InputScientistName(name);
+        if (!CheckScientistName(scientistName)) return;
+        
+       InputScientistDetails(out string scientistUniversity, out string scientistFaculty, out string scientistDobString);
+       
+        DateOnly? nullableDob = null;
+        if (DateOnly.TryParse(scientistDobString, out DateOnly dateOfBirth)) nullableDob = dateOfBirth;
+        
+        AttemptScientistCreation(scientistName, scientistFaculty, scientistUniversity, nullableDob);
     }
 
     private static string InputArticleTitle()
@@ -294,18 +297,12 @@ public class ConsoleUi
         // if !isInteger, default Int value = 0. Extra validation unnecessary
         return numberOfPages;
     }
-    
-    private void ActionCreateArticle()
+
+    private void AttemptArticleCreation(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category)
     {
-        Console.WriteLine();
-        string title = InputArticleTitle();
-        IEnumerable<Scientist> authors = InputArticleAuthors();
-        DateOnly dateOfPublication = InputArticleDateOfPublication();
-        int numberOfPages = InputArticleNumberOfPages();
-        int category = InputCategoryChoice();
         try
         {
-            ScientificArticle article = _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, (ArticleCategory) category);
+            ScientificArticle article = _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, category);
             Console.WriteLine($"\nArticle added successfully: {article.Title}");
         }
         catch (ValidationException exception)
@@ -316,6 +313,18 @@ public class ConsoleUi
                 Console.WriteLine(errorMessage);
             }
         }
+    }
+    
+    private void ActionCreateArticle()
+    {
+        Console.WriteLine();
+        string title = InputArticleTitle();
+        IEnumerable<Scientist> authors = InputArticleAuthors();
+        DateOnly dateOfPublication = InputArticleDateOfPublication();
+        int numberOfPages = InputArticleNumberOfPages();
+        int category = InputCategoryChoice();
+       
+        AttemptArticleCreation(title, authors, dateOfPublication, numberOfPages, (ArticleCategory) category);
     }
 
     private static void PrintScientistsWitId(IEnumerable<Scientist> scientists)
@@ -335,26 +344,13 @@ public class ConsoleUi
         }
         Console.Write("Please enter an article ID: ");
     }
-
-    private static bool CheckIdString(string idString, out int selectedId)
-    {
-        if (!Int32.TryParse(idString, out int convertedId))
-        {
-            Console.WriteLine("\nPlease enter a valid value.");
-            selectedId = convertedId;
-            return false;
-        }
-
-        selectedId = convertedId;
-        return true;
-    }
     
     private void ShowScientistSelectionMenu(string chooseScientistString, out int scientistId)
     {
         Console.WriteLine(chooseScientistString);
         PrintScientistsWitId(_manager.GetAllScientists());
         string scientistChoice = Console.ReadLine();
-        bool isValidScientistIdFormat = CheckIdString(scientistChoice, out int selectedScientistId);
+        bool isValidScientistIdFormat = Int32.TryParse(scientistChoice, out int selectedScientistId);
         scientistId = isValidScientistIdFormat? selectedScientistId : Int32.MaxValue;
     }
 
@@ -370,8 +366,8 @@ public class ConsoleUi
         Console.Write("Is this scientist the lead researcher? Enter Y/N: ");
         string leadResearcherReply = Console.ReadLine();
         isLeadResearcher = leadResearcherReply?.ToLower() == "y";
-        
-        bool isValidArticleIdFormat = CheckIdString(articleChoice, out int selectedArticleId);
+
+        bool isValidArticleIdFormat = Int32.TryParse(articleChoice, out int selectedArticleId);
         articleId = isValidArticleIdFormat? selectedArticleId : Int32.MaxValue;
     }
     
@@ -397,8 +393,7 @@ public class ConsoleUi
         Console.WriteLine("\n" + "Which article would you like to remove from this scientist?");
         PrintArticlesWitId(_manager.GetArticlesByScientist(selectedScientistId));
         string articleChoice = Console.ReadLine();
-        bool isValidArticleIdFormat = CheckIdString(articleChoice, out int selectedArticleId);
-        if (!isValidArticleIdFormat) return;
+        bool isValidArticleIdFormat = Int32.TryParse(articleChoice, out int selectedArticleId); 
         
         try
         {

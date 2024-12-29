@@ -25,12 +25,7 @@ public class EfRepository : IRepository
                                                                     .ThenInclude(authLk => authLk.Scientist);
         return articles.ToList();
     }
-
-    /*
-    public IEnumerable<ScientificArticle> ReadArticlesByCategory(ArticleCategory categoryChoice)
-    {
-        return _articleDbContext.Articles.Where(article => article.Category == categoryChoice).ToList();
-    }*/
+    
     public IEnumerable<ScientificArticle> ReadArticlesByCategoryWithAuthorsAndJournals(ArticleCategory categoryChoice)
     {
         IQueryable<ScientificArticle> articles = _articleDbContext.Articles
@@ -90,7 +85,7 @@ public class EfRepository : IRepository
         return scientists.ToList();
     }
 
-    public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth)
+    public IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirthWithArticles(string nameString, DateOnly? dateOfBirth)
     {
         IQueryable<Scientist> query = _articleDbContext.Scientists;
 
@@ -108,7 +103,7 @@ public class EfRepository : IRepository
             }
         }
 
-        return query.ToList();
+        return query.Include(s => s.ArticleLinks).ThenInclude(al => al.Article).ToList();
     }
 
     public Scientist ReadScientistById(int id)
@@ -139,13 +134,9 @@ public class EfRepository : IRepository
         _articleDbContext.SaveChanges();
     }
 
-    public void DeleteArticleScientistLink(int articleId, int scientistId)
+    public void DeleteArticleScientistLink(ArticleScientistLink articleScientistLink)
     {
-        ArticleScientistLink linkToDelete = _articleDbContext.ArticleScientistLinks
-            .Where(artScLk => artScLk.Article.Id == articleId)
-            .SingleOrDefault(artScLk => artScLk.Scientist.Id == scientistId);
-
-        if (linkToDelete != null) _articleDbContext.ArticleScientistLinks.Remove(linkToDelete);
+        _articleDbContext.ArticleScientistLinks.Remove(articleScientistLink);
         _articleDbContext.SaveChanges();
     }
 

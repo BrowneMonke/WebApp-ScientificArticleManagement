@@ -15,14 +15,14 @@ public interface IRepository
 
     IEnumerable<Scientist> ReadAllScientists();
     IEnumerable<Scientist> ReadAllScientistsWithArticles();
-    IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth);
+    IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirthWithArticles(string nameString, DateOnly? dateOfBirth);
     Scientist ReadScientistById(int id);
     void CreateScientist(Scientist scientistToInsert);
 
     IEnumerable<ArticleScientistLink> ReadArticleScientistLinksByArticleId(int articleId);
     ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId);
     void CreateArticleScientistLink(ArticleScientistLink articleScientistLink);
-    void DeleteArticleScientistLink(int articleId, int scientistId);
+    void DeleteArticleScientistLink(ArticleScientistLink articleScientistLink);
 
     IEnumerable<ScienceJournal> ReadAllJournals();
     ScienceJournal ReadJournalByIdWithArticles(int id);

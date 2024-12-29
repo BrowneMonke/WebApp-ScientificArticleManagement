@@ -22,15 +22,14 @@ public class Manager : IManager
     {
         return _repository.ReadAllArticlesWithAuthorsAndJournals();
     }
-
-    /*public IEnumerable<ScientificArticle> GetArticlesByCategory(ArticleCategory categoryChoice)
-    {
-        return _repository.ReadArticlesByCategory(categoryChoice);
-    }*/
     
-    public IEnumerable<ScientificArticle> GetArticlesByCategoryWithAuthorsAndJournals(ArticleCategory categoryChoice)
+    public IEnumerable<ScientificArticle> GetArticlesByCategoryWithAuthorsAndJournals(int categoryChoice)
     {
-        return _repository.ReadArticlesByCategoryWithAuthorsAndJournals(categoryChoice);
+        if (!Enum.IsDefined((ArticleCategory)categoryChoice))
+        {
+            throw new ValidationException("Invalid Category Number! Please try again.");
+        }
+        return _repository.ReadArticlesByCategoryWithAuthorsAndJournals((ArticleCategory)categoryChoice);
     }
 
     public IEnumerable<ScientificArticle> GetArticlesByScientist(int scientistId)
@@ -42,11 +41,6 @@ public class Manager : IManager
     {
         return _repository.ReadArticlesNotByScientist(scientistId);
     }
-
-    /*public ScientificArticle GetArticle(int articleId)
-    {
-        return _repository.ReadArticle(articleId);
-    }*/
     
     public ScientificArticle GetArticleByIdWithAuthorsAndJournal(int articleId)
     {
@@ -67,15 +61,9 @@ public class Manager : IManager
         article.Journal?.Articles.Add(article);
     }
 
-    /*private void FillAuthorsList(IEnumerable<Scientist> authors,
+    private void FillAuthorsList(IEnumerable<Scientist> authors,
         List<ArticleScientistLink> articleScientistLinksList)
     {
-        
-    } */
-    
-    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory categoryChoice, ScienceJournal journal = null)
-    {
-        List<ArticleScientistLink> linkArticleScientistsList = [];
         int leadResearcherToggle = 0;
         foreach (Scientist scientist in authors)
         {
@@ -84,19 +72,13 @@ public class Manager : IManager
                 Scientist = scientist,
                 IsLeadResearcher = (leadResearcherToggle == 0)
             };
-            linkArticleScientistsList.Add(authorInstance);
+            articleScientistLinksList.Add(authorInstance);
             leadResearcherToggle++;
         }
+    }
 
-        ScientificArticle article = new ScientificArticle(title)
-        {
-            AuthorLinks = linkArticleScientistsList,
-            DateOfPublication = dateOfPublication,
-            NumberOfPages = numberOfPages,
-            Category = categoryChoice,
-            Journal = journal
-        };
-        
+    private void ValidateAndAddArticle(ScientificArticle article)
+    {
         ICollection<ValidationResult> errors = new List<ValidationResult>();
         bool isValid = Validator.TryValidateObject(article, new ValidationContext(article), errors, validateAllProperties:true);
         if (!isValid)
@@ -107,6 +89,23 @@ public class Manager : IManager
         RelateAuthors(article);
         RelateJournal(article);
         _repository.CreateArticle(article);
+    }
+    
+    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory categoryChoice, ScienceJournal journal = null)
+    {
+        List<ArticleScientistLink> articleScientistLinksList = [];
+        FillAuthorsList(authors, articleScientistLinksList);
+
+        ScientificArticle article = new ScientificArticle(title)
+        {
+            AuthorLinks = articleScientistLinksList,
+            DateOfPublication = dateOfPublication,
+            NumberOfPages = numberOfPages,
+            Category = categoryChoice,
+            Journal = journal
+        };
+        
+        ValidateAndAddArticle(article);
 
         return article;
     }
@@ -121,10 +120,10 @@ public class Manager : IManager
         return _repository.ReadAllScientistsWithArticles();
     }
 
-    public IEnumerable<Scientist> GetScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth)
+    public IEnumerable<Scientist> GetScientistsByNameAndDateOfBirthWithArticles(string nameString, DateOnly? dateOfBirth)
     {
-        if (nameString.Trim() == "" && dateOfBirth == null) return _repository.ReadAllScientists();
-        return _repository.ReadScientistsByNameAndDateOfBirth(nameString, dateOfBirth);
+        if (nameString.Trim() == "" && dateOfBirth == null) return _repository.ReadAllScientistsWithArticles();
+        return _repository.ReadScientistsByNameAndDateOfBirthWithArticles(nameString, dateOfBirth);
     }
 
     public Scientist GetScientistById(int scientistId)
@@ -190,9 +189,9 @@ public class Manager : IManager
             _repository.ReadArticleScientistLinkByArticleIdAndScientistId(articleId, scientistId);
         if (articleScientistLink == null)
         {
-            throw new ValidationException("Invalid ID values!");
+            throw new ValidationException("Invalid ID values!\nPlease try again with valid values.");
         }
-        _repository.DeleteArticleScientistLink(articleId, scientistId);
+        _repository.DeleteArticleScientistLink(articleScientistLink);
     }
 
     public IEnumerable<ScienceJournal> GetAllJournals()

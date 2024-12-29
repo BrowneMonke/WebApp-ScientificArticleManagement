@@ -2,7 +2,7 @@
 
 namespace ArticleManagement.BL.Domain;
 
-public class Scientist 
+public class Scientist : IValidatableObject
 {
     [Key]
     public int Id { get; set; }
@@ -28,5 +28,18 @@ public class Scientist
         DateOfBirth = dateOfBirth;
         ArticleLinks = new List<ArticleScientistLink>();
     }
-    
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        List<ValidationResult> errors = [];
+        
+        //DoB check
+        if (DateOfBirth > DateOnly.FromDateTime(DateTime.Today))
+        {
+            errors.Add(new ValidationResult("Please enter a valid Date of Birth! The date may not be in the future.", 
+                new string[]{ nameof(DateOfBirth) }));
+        }
+
+        return errors;   
+    }
 }

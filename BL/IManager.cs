@@ -6,7 +6,7 @@ public interface IManager
 {
     IEnumerable<ScientificArticle> GetAllArticles();
     IEnumerable<ScientificArticle> GetAllArticlesWithAuthorsAndJournals();
-    public IEnumerable<ScientificArticle> GetArticlesByCategoryWithAuthorsAndJournals(ArticleCategory categoryChoice);
+    public IEnumerable<ScientificArticle> GetArticlesByCategoryWithAuthorsAndJournals(int categoryChoice);
     IEnumerable<ScientificArticle> GetArticlesByScientist(int scientistId);
     IEnumerable<ScientificArticle> GetArticlesNotByScientist(int scientistId);
     public ScientificArticle GetArticleByIdWithAuthorsAndJournal(int articleId);
@@ -14,7 +14,7 @@ public interface IManager
     
     IEnumerable<Scientist> GetAllScientists();
     IEnumerable<Scientist> GetAllScientistsWithArticles();
-    IEnumerable<Scientist> GetScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth);
+    IEnumerable<Scientist> GetScientistsByNameAndDateOfBirthWithArticles(string nameString, DateOnly? dateOfBirth);
     Scientist GetScientistById(int scientistId);
     Scientist AddScientist(string name, string faculty, string university, DateOnly? dateOfBirth = null);
 

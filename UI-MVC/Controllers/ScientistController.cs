@@ -18,5 +18,4 @@ public class ScientistController : Controller
         return View(scientist);
     }
     
-    
 }
