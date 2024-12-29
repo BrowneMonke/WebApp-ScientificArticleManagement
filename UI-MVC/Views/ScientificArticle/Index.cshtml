@@ -10,6 +10,7 @@
 <table class="table table-striped">
     <thead>
     <tr>
+        <th></th>
         <th class="w-50">Title</th>
         <th>Published</th>
         <th># Pages</th>
@@ -18,17 +19,22 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var article in Model)
+    @if (Model.Any())
     {
-        <tr>
-            <td>@article.Title</td>
-            <td>@article.DateOfPublication.ToString("MMM dd, yyyy")</td>
-            <td>@article.NumberOfPages</td>
-            <td>@article.Category.GetString()</td>
-            <td>
-                <a asp-controller="ScientificArticle" asp-action="Details" asp-route-id="@article.Id">Details</a>
-            </td>
-        </tr>
+        int rowNumber = 1;
+        foreach (var article in Model)
+        {
+            <tr>
+                <td>@(rowNumber++ + ".")</td>
+                <td>@article.Title</td>
+                <td>@article.DateOfPublication.ToString("MMM dd, yyyy")</td>
+                <td>@article.NumberOfPages</td>
+                <td>@article.Category.GetString()</td>
+                <td>
+                    <a asp-controller="ScientificArticle" asp-action="Details" asp-route-id="@article.Id">Details</a>
+                </td>
+            </tr>
+        }
     }
     </tbody>
 </table>

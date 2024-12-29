@@ -28,12 +28,17 @@ function loadJournals() {
 
 function showJournals(journals) {
     journalsTableBody.innerHTML = '';
-    journals.forEach(journal => addJournalToList(journal));
+    let rowNo = 1;
+    journals.forEach(journal => addJournalToList(journal, rowNo++));
 }
 
-function addJournalToList(journal) {
+function addJournalToList(journal, rowNo) {
     const row = document.createElement('tr');
 
+    const rowNumberCell = document.createElement('td');
+    rowNumberCell.textContent = `${rowNo}.`;
+    row.appendChild(rowNumberCell);
+    
     const nameCell = document.createElement('td');
     nameCell.textContent = journal.name;
     row.appendChild(nameCell);

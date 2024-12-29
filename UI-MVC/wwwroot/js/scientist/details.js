@@ -78,11 +78,16 @@ function loadArticlesByScientist() {
 
 function showArticles(articles) {
     articlesTableBody.innerHTML = '';
-    articles.forEach(art => addArticleToList(art));
+    let rowNo = 1;
+    articles.forEach(art => addArticleToList(art, rowNo++));
 }
 
-function addArticleToList(article) {
+function addArticleToList(article, rowNo) {
     const row = document.createElement('tr');
+
+    const rowNumberCell = document.createElement('td');
+    rowNumberCell.textContent = `${rowNo}.`;
+    row.appendChild(rowNumberCell);
 
     const titleCell = document.createElement('td');
     titleCell.textContent = article.title;

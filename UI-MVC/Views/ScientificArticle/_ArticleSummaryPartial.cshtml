@@ -25,25 +25,31 @@
 <table class="table table-striped">
     <thead>
     <tr>
-        <td>Lead Researcher?</td>
-        <td>Name</td>
-        <td>Date of Birth</td>
-        <td>Affiliation</td>
-        <td></td>
+        <th></th>
+        <th>Lead Researcher?</th>
+        <th>Name</th>
+        <th>Date of Birth</th>
+        <th>Affiliation</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var asLk in @Model.AuthorLinks)
+    @if (Model.AuthorLinks.Any())
     {
-        <tr>
-            <td>@(asLk.IsLeadResearcher ? "Yes" : "No")</td>
-            <td>@asLk.Scientist.Name</td>
-            <td>@(asLk.Scientist.DateOfBirth.HasValue ? asLk.Scientist.DateOfBirth.Value.ToString("MMM dd, yyyy") : "UNKNOWN")</td>
-            <td>Faculty of @asLk.Scientist.Faculty, @asLk.Scientist.University</td>
-            <td>
-                <a asp-controller="Scientist" asp-action="Details" asp-route-id="@asLk.Scientist.Id">Details</a>
-            </td>
-        </tr>
+        int rowNumber = 1;
+        foreach (var asLk in @Model.AuthorLinks)
+        {
+            <tr>
+                <td>@(rowNumber++ + ".")</td>
+                <td>@(asLk.IsLeadResearcher ? "Yes" : "No")</td>
+                <td>@asLk.Scientist.Name</td>
+                <td>@(asLk.Scientist.DateOfBirth.HasValue ? asLk.Scientist.DateOfBirth.Value.ToString("MMM dd, yyyy") : "UNKNOWN")</td>
+                <td>Faculty of @asLk.Scientist.Faculty, @asLk.Scientist.University</td>
+                <td>
+                    <a asp-controller="Scientist" asp-action="Details" asp-route-id="@asLk.Scientist.Id">Details</a>
+                </td>
+            </tr>
+        }
     }
     </tbody>
 </table>
