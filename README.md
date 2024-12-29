@@ -73,7 +73,7 @@ POST https://localhost:7176/api/ScienceJournals HTTP/1.1
 Accept: application/json
 Content-Type: application/json
 
-{"name":"Bio+", "price":null, "yearFounded": 2012, "countryOfOrigin": 0}
+{"name":"Bio+", "price":null, "yearFounded": 2012, "countryOfOrigin": 4}
 ```
 
 #### Response
@@ -81,17 +81,17 @@ Content-Type: application/json
 ```http request
 HTTP/1.1 201 Created
 Content-Type: application/json; charset=utf-8
-Date: Fri, 27 Dec 2024 01:26:32 GMT
+Date: Sun, 29 Dec 2024 01:00:11 GMT
 Server: Kestrel
-Location: https://localhost:7176/api/ScienceJournals/3
+Location: https://localhost:7176/api/ScienceJournals/6
 Transfer-Encoding: chunked
 
 {
-  "id": 3,
+  "id": 6,
   "name": "Bio+",
   "price": null,
   "yearFounded": 2012,
-  "countryOfOrigin": 0,
+  "countryOfOrigin": 4,
   "articles": []
 }
 ```
