@@ -35,7 +35,7 @@ function showJournals(journals) {
 function addJournalToList(journal, rowNo) {
     const row = document.createElement('tr');
 
-    const rowNumberCell = document.createElement('td');
+    const rowNumberCell = document.createElement('th');
     rowNumberCell.textContent = `${rowNo}.`;
     row.appendChild(rowNumberCell);
     

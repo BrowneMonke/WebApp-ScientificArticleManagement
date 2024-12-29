@@ -85,7 +85,7 @@ function showArticles(articles) {
 function addArticleToList(article, rowNo) {
     const row = document.createElement('tr');
 
-    const rowNumberCell = document.createElement('td');
+    const rowNumberCell = document.createElement('th');
     rowNumberCell.textContent = `${rowNo}.`;
     row.appendChild(rowNumberCell);
 
@@ -116,10 +116,10 @@ function loadArticleAssignmentForm() {
         .then(response => {
             if (!response) {
                 console.log("response is null");
-                return Promise.resolve("");
+                return [];
             } else if (response.status === 204) {
                 console.log("No articles left to assign.");
-                return Promise.resolve("");
+                return [];
             } else if (!response.ok) {
                 console.log("response NOT ok! >:(")
                 return response.text().then(errorText => {
