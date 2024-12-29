@@ -1,27 +1,31 @@
-﻿@using ArticleManagement.BL.Domain.Extensions
+﻿@using ArticleManagement.UI.Web.Extensions
 @model ScientificArticle
 
 
 <h2>Article Details</h2>
-<div class="container-fluid">
-    <div class="row">
-        <span class="col-lg-1 fw-bold">Title</span>
-        <p class="col-lg-8">@Model.Title</p>
-    </div>
-    <div class="row">
-        <span class="col-lg-1 fw-bold"># Pages</span>
-        <p class="col-lg-8">@Model.NumberOfPages</p>
-    </div>
-    <div class="row">
-        <span class="col-lg-1 fw-bold">Genre</span>
-        <p class="col-lg-8">@Model.Category.GetString()</p>
-    </div>
-    <div class="row">
-        <span class="col-lg-1 fw-bold">Published</span>
-        <p class="col-lg-8">@Model.DateOfPublication.ToString("MMM dd, yyyy") in <a asp-controller="ScienceJournal" asp-action="Index">@(Model.Journal?.Name ?? "UNKNOWN")</a> </p>
-    </div>
-</div>
+
+<dl class="row">
+    <dt class="col-md-1 mb-2">Title</dt>
+    <dd class="col-md-11 mb-2">
+        @Model.Title
+    </dd>
+    <dt class="col-md-1 mb-2">Number of Pages</dt>
+    <dd class="col-md-11 mb-2">
+        @Model.NumberOfPages
+    </dd>
+    <dt class="col-md-1 mb-2">Genre</dt>
+    <dd class="col-md-11 mb-2">
+        @Model.Category.GetString()
+    </dd>
+    <dt class="col-md-1 mb-2">Published</dt>
+    <dd class="col-md-11 mb-2">
+        @Model.DateOfPublication.ToString("MMM dd, yyyy") in <a asp-controller="ScienceJournal" asp-action="Index">@(Model.Journal?.Name ?? "UNKNOWN")</a>
+    </dd>
+</dl>
+
+
 <h3>Authors</h3>
+
 <table class="table table-striped">
     <thead>
     <tr>

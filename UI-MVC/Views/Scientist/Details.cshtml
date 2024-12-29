@@ -8,20 +8,21 @@
 <h2>Scientist Details</h2>
 <span class="d-none" id="scientistIdentification">@Model.Id</span>
 
-<div class=".container-fluid">
-    <div class="row">
-        <span class="col-lg-1 fw-bold">Name</span>
-        <p class="col-lg-8">@Model.Name</p>
-    </div>
-    <div class="row">
-        <span class="col-lg-1 fw-bold">Date of Birth</span>
-        <p class="col-lg-8">@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("MMM dd, yyyy") : "UNKNOWN")</p>
-    </div>
-    <div class="row">
-        <span class="col-lg-1 fw-bold">Affiliation</span>
-        <p class="col-lg-8">Faculty of @Model.Faculty, @Model.University</p>
-    </div>
-</div>
+<dl class="row">
+    <dt class="col-md-1 mb-2">Name</dt>
+    <dd class="col-md-11 mb-2">
+        @Model.Name
+    </dd>
+    <dt class="col-md-1 mb-2">Date of Birth</dt>
+    <dd class="col-md-11 mb-2">
+        @(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("MMM dd, yyyy") : "UNKNOWN")
+    </dd>
+    <dt class="col-md-1 mb-2">Affiliation</dt>
+    <dd class="col-md-11 mb-2">
+        Faculty of @Model.Faculty, @Model.University
+    </dd>
+</dl>
+
 
 <h3>Articles</h3>
 
@@ -61,5 +62,4 @@
 @section Scripts
 {
     <script src="~/js/scientist/details.js" defer></script>
-    <partial name="_ValidationScriptsPartial"/>
 }
