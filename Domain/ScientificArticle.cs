@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArticleManagement.BL.Domain;
 
@@ -12,6 +11,8 @@ public class ScientificArticle : IValidatableObject
     [Required] [StringLength(256, MinimumLength = 5)]
     public string Title { get; init; }
     public DateOnly DateOfPublication { get; init; }
+    
+    [Range(1,Int32.MaxValue, ErrorMessage = "Enter a valid number of pages!")]
     public int NumberOfPages { get; init; }
     public ArticleCategory Category { get; init; }
     
@@ -41,12 +42,6 @@ public class ScientificArticle : IValidatableObject
         {
             errors.Add(new ValidationResult("Please enter a valid date. The date may not be in the future.", 
                 new string[]{ nameof(DateOfPublication) }));
-        }
-        
-        // NoP check
-        if (NumberOfPages < 1)
-        {
-            errors.Add(new ValidationResult("Please enter a valid number of pages!", new string[] { nameof(NumberOfPages) }));
         }
         
         return errors;    

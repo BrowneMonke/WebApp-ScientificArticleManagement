@@ -1,6 +1,4 @@
 ﻿using ArticleManagement.BL;
-using ArticleManagement.BL.Domain;
-using ArticleManagement.UI.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleManagement.UI.Web.Controllers;

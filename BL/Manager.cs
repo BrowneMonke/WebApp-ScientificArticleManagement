@@ -127,9 +127,9 @@ public class Manager : IManager
         return _repository.ReadScientistsByNameAndDateOfBirth(nameString, dateOfBirth);
     }
 
-    public Scientist GetScientist(int scientistId)
+    public Scientist GetScientistById(int scientistId)
     {
-        return _repository.ReadScientist(scientistId);
+        return _repository.ReadScientistById(scientistId);
     }
     
     public Scientist AddScientist(string name, string faculty, string university, DateOnly? dateOfBirth = null)
@@ -153,7 +153,7 @@ public class Manager : IManager
     
     private void CheckLinkValidity(int articleId, int scientistId)
     {
-        if (articleId == Int32.MaxValue || scientistId == Int32.MaxValue || _repository.ReadArticle(articleId) == null || _repository.ReadScientist(scientistId) == null)
+        if (articleId == Int32.MaxValue || scientistId == Int32.MaxValue || _repository.ReadArticleById(articleId) == null || _repository.ReadScientistById(scientistId) == null)
         {
             throw new ValidationException("Invalid ID values.\nPlease try again with valid values.");
         }
@@ -176,8 +176,8 @@ public class Manager : IManager
         }
         ArticleScientistLink articleScientistLinkToAdd = new ArticleScientistLink
         {
-            Article = _repository.ReadArticle(articleId),
-            Scientist = _repository.ReadScientist(scientistId),
+            Article = _repository.ReadArticleById(articleId),
+            Scientist = _repository.ReadScientistById(scientistId),
             IsLeadResearcher = isLeadResearcher
         };
         _repository.CreateArticleScientistLink(articleScientistLinkToAdd);

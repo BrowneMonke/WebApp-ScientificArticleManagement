@@ -26,10 +26,11 @@ public class EfRepository : IRepository
         return articles.ToList();
     }
 
+    /*
     public IEnumerable<ScientificArticle> ReadArticlesByCategory(ArticleCategory categoryChoice)
     {
         return _articleDbContext.Articles.Where(article => article.Category == categoryChoice).ToList();
-    }
+    }*/
     public IEnumerable<ScientificArticle> ReadArticlesByCategoryWithAuthorsAndJournals(ArticleCategory categoryChoice)
     {
         IQueryable<ScientificArticle> articles = _articleDbContext.Articles
@@ -47,14 +48,14 @@ public class EfRepository : IRepository
         return articles.ToList();
     }
 
-    public IEnumerable<ScientificArticle> ReadArticlesNotByScientist(int scieintistId)
+    public IEnumerable<ScientificArticle> ReadArticlesNotByScientist(int scientistId)
     {
         var articles = _articleDbContext.Articles
-            .Where(article => article.AuthorLinks.All(authLk => authLk.Scientist.Id != scieintistId));
+            .Where(article => article.AuthorLinks.All(authLk => authLk.Scientist.Id != scientistId));
         return articles.ToList();
     }
 
-    public ScientificArticle ReadArticle(int id)
+    public ScientificArticle ReadArticleById(int id)
     {
         return _articleDbContext.Articles.Find(id);
     }
@@ -75,6 +76,7 @@ public class EfRepository : IRepository
         _articleDbContext.SaveChanges();
     }
 
+    
     public IEnumerable<Scientist> ReadAllScientists()
     {
         return _articleDbContext.Scientists.ToList();
@@ -109,7 +111,7 @@ public class EfRepository : IRepository
         return query.ToList();
     }
 
-    public Scientist ReadScientist(int id)
+    public Scientist ReadScientistById(int id)
     {
         return _articleDbContext.Scientists.Find(id);
     }
@@ -118,6 +120,17 @@ public class EfRepository : IRepository
     {
         _articleDbContext.Scientists.Add(scientistToInsert);
         _articleDbContext.SaveChanges();
+    }
+    
+
+    public IEnumerable<ArticleScientistLink> ReadArticleScientistLinksByArticleId(int articleId)
+    {
+        return _articleDbContext.ArticleScientistLinks.Where(asLk => asLk.Article.Id == articleId).ToList();
+    }
+
+    public ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId)
+    {
+        return _articleDbContext.ArticleScientistLinks.Find(articleId, scientistId);
     }
 
     public void CreateArticleScientistLink(ArticleScientistLink articleScientistLink)
@@ -134,16 +147,6 @@ public class EfRepository : IRepository
 
         if (linkToDelete != null) _articleDbContext.ArticleScientistLinks.Remove(linkToDelete);
         _articleDbContext.SaveChanges();
-    }
-
-    public IEnumerable<ArticleScientistLink> ReadArticleScientistLinksByArticleId(int articleId)
-    {
-        return _articleDbContext.ArticleScientistLinks.Where(asLk => asLk.Article.Id == articleId).ToList();
-    }
-
-    public ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId)
-    {
-        return _articleDbContext.ArticleScientistLinks.Find(articleId, scientistId);
     }
 
     public IEnumerable<ScienceJournal> ReadAllJournals()

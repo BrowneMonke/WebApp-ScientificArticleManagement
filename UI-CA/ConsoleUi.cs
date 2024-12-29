@@ -69,10 +69,10 @@ public class ConsoleUi
     private static void ShowCategories()
     {
         Console.WriteLine();
-        ArticleCategory[] categories = Enum.GetValues<ArticleCategory>();
-        foreach (ArticleCategory category in categories)
+        var categories = Enum.GetValues<ArticleCategory>();
+        foreach (var category in categories)
         {
-            Console.Write($"{(int) category} = {category}");
+            Console.Write($"{(int) category} = {category.GetString()}");
             if ((int) category == categories.Length - 1) continue;
             Console.Write(", ");
         }

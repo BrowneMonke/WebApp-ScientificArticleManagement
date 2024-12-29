@@ -7,9 +7,11 @@ public class NewScientificArticleViewModel
 {
     [Required] [StringLength(256, MinimumLength = 5)]
     public string Title { get; init; }
+    
     [Required(ErrorMessage = "The Date of Publication field is required.")] [CustomValidation(typeof(NewScientificArticleViewModel), nameof(ValidateDateOfPublication))]
     public DateOnly DateOfPublication { get; init; }
-    [Required(ErrorMessage = "The Number of Pages field is required.")]
+    
+    [Required(ErrorMessage = "The Number of Pages field is required.")] // default message contains no spaces: NumberOfPages 
     public int NumberOfPages { get; init; }
     public ArticleCategory Category { get; init; }
 

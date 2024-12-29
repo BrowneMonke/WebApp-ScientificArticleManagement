@@ -3,7 +3,6 @@
 using ArticleManagement.BL;
 using ArticleManagement.DAL;
 using ArticleManagement.DAL.EF;
-using ArticleManagement.DAL.InMemory;
 using ArticleManagement.UI.CA;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,13 +13,11 @@ dbContextOptionsBuilder.UseSqlite("Data Source=../../../../ArticleDatabase.db");
 ArticleDbContext articleDbContext = new ArticleDbContext(dbContextOptionsBuilder.Options);
 IRepository repository = new EfRepository(articleDbContext);
 
-// IRepository inMemrepository = new InMemoryRepository();
 IManager manager = new Manager(repository);
-// InMemoryRepository.Seed();
 ConsoleUi ui = new ConsoleUi(manager);
 
 
-// database storage
+// DB Seeding
 const bool doDropDatabase = true;
 bool isDbCreated = articleDbContext.CreateDatabase(doDropDatabase);
 if (isDbCreated) DataSeeder.Seed(articleDbContext);

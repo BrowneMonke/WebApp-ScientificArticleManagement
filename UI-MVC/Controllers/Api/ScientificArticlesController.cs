@@ -16,7 +16,7 @@ public class ScientificArticlesController : ControllerBase
     [HttpGet("by-scientist/{scientistId}")]
     public IActionResult GetArticlesByScientist(int scientistId)
     {
-        if (_manager.GetScientist(scientistId) is null) return NotFound(); // 404
+        if (_manager.GetScientistById(scientistId) is null) return NotFound(); // 404
         
         var articlesByScientist =  _manager.GetArticlesByScientist(scientistId);
         
@@ -29,7 +29,7 @@ public class ScientificArticlesController : ControllerBase
     [HttpGet("not-by-scientist/{scientistId}")]
     public IActionResult GetArticlesNotByScientist(int scientistId)
     {
-        if (_manager.GetScientist(scientistId) is null) return NotFound(); // 404
+        if (_manager.GetScientistById(scientistId) is null) return NotFound(); // 404
         
         var articlesNotByScientist =  _manager.GetArticlesNotByScientist(scientistId);
         

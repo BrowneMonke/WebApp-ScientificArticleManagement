@@ -1,7 +1,7 @@
 ﻿@model NewScientificArticleViewModel
 
 @{
-    ViewBag.Title = "New scientific article";
+    ViewBag.Title = "Add article";
 }
 
 <h2>Add article</h2>
@@ -9,7 +9,7 @@
 <form asp-controller="ScientificArticle" asp-action="Add" method="post">
     <div class="form-group mb-3">
         <div class="row">
-            <label asp-for="Title" class="col-lg-2"></label>
+            <label asp-for="Title" class="col-lg-2 col-form-label"></label>
             <input asp-for="Title" class="form-control col-lg"/>
         </div>
         <div class="row">
@@ -19,7 +19,9 @@
     </div>
     <div class="form-group mb-3">
         <div class="row">
-            <label asp-for="DateOfPublication" class="col-lg-2">Date of Publication</label>
+            <label asp-for="DateOfPublication" class="col-lg-2 col-form-label">
+                Date of Publication
+            </label>
             <input asp-for="DateOfPublication" type="date" class="form-control col-lg"/>
         </div>
         <div class="row">
@@ -29,7 +31,9 @@
     </div>
     <div class="form-group mb-3">
         <div class="row">
-            <label asp-for="NumberOfPages" class="col-lg-2">Pages</label>
+            <label asp-for="NumberOfPages" class="col-lg-2 col-form-label">
+                No. of Pages
+            </label>
             <input asp-for="NumberOfPages" min="1" step="1" class="form-control col-lg"/>
         </div>
         <div class="row">
@@ -39,12 +43,12 @@
     </div>
     <div class="form-group mb-3">
         <div class="row">
-            <label asp-for="Category" class="col-lg-2"></label>
+            <label asp-for="Category" class="col-lg-2 col-form-label"></label>
             <select asp-for="Category"
                     asp-items="@(new SelectList(Enum.GetValues<ArticleCategory>()))"
                     class="form-control col-lg">
             </select>
-            
+
         </div>
         <div class="row">
             <span class="col-lg-2"></span>
@@ -55,5 +59,5 @@
 </form>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial"/>
 }

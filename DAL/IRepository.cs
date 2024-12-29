@@ -6,25 +6,23 @@ public interface IRepository
 {
     IEnumerable<ScientificArticle> ReadAllArticles();
     IEnumerable<ScientificArticle> ReadAllArticlesWithAuthorsAndJournals();
-    IEnumerable<ScientificArticle> ReadArticlesByCategory(ArticleCategory categoryChoice);
     public IEnumerable<ScientificArticle> ReadArticlesByCategoryWithAuthorsAndJournals(ArticleCategory categoryChoice);
     public IEnumerable<ScientificArticle> ReadArticlesByScientist(int scientistId);
-    public IEnumerable<ScientificArticle> ReadArticlesNotByScientist(int scieintistId);
-
-    ScientificArticle ReadArticle(int id);
+    public IEnumerable<ScientificArticle> ReadArticlesNotByScientist(int scientistId);
+    ScientificArticle ReadArticleById(int id);
     public ScientificArticle ReadArticleByIdWithAuthorsAndJournal(int id);
     void CreateArticle(ScientificArticle articleToInsert);
 
     IEnumerable<Scientist> ReadAllScientists();
     IEnumerable<Scientist> ReadAllScientistsWithArticles();
     IEnumerable<Scientist> ReadScientistsByNameAndDateOfBirth(string nameString, DateOnly? dateOfBirth);
-    Scientist ReadScientist(int id);
+    Scientist ReadScientistById(int id);
     void CreateScientist(Scientist scientistToInsert);
 
-    void CreateArticleScientistLink(ArticleScientistLink articleScientistLink);
-    void DeleteArticleScientistLink(int articleId, int scientistId);
     IEnumerable<ArticleScientistLink> ReadArticleScientistLinksByArticleId(int articleId);
     ArticleScientistLink ReadArticleScientistLinkByArticleIdAndScientistId(int articleId, int scientistId);
+    void CreateArticleScientistLink(ArticleScientistLink articleScientistLink);
+    void DeleteArticleScientistLink(int articleId, int scientistId);
 
     IEnumerable<ScienceJournal> ReadAllJournals();
     ScienceJournal ReadJournalByIdWithArticles(int id);

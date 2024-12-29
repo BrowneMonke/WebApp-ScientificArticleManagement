@@ -18,7 +18,7 @@
     </div>
     <div class="row">
         <span class="col-lg-1 fw-bold">Published</span>
-        <p class="col-lg-8">@Model.DateOfPublication.ToString("MMM dd, yyyy") in @(Model.Journal?.Name ?? "UNKNOWN")</p>
+        <p class="col-lg-8">@Model.DateOfPublication.ToString("MMM dd, yyyy") in <a asp-controller="ScienceJournal" asp-action="Index">@(Model.Journal?.Name ?? "UNKNOWN")</a> </p>
     </div>
 </div>
 <h3>Authors</h3>

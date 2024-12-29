@@ -43,12 +43,12 @@ public class InMemoryRepository : IRepository
         throw new NotImplementedException();
     }
 
-    public IEnumerable<ScientificArticle> ReadArticlesNotByScientist(int scieintistId)
+    public IEnumerable<ScientificArticle> ReadArticlesNotByScientist(int scientistId)
     {
         throw new NotImplementedException();
     }
 
-    public ScientificArticle ReadArticle(int articleId)
+    public ScientificArticle ReadArticleById(int articleId)
     {
         return Articles[articleId - 1];
     }
@@ -126,7 +126,7 @@ public class InMemoryRepository : IRepository
         return filteredScientistsList;
     }
 
-    public Scientist ReadScientist(int scientistId)
+    public Scientist ReadScientistById(int scientistId)
     {
         return Scientists[scientistId - 1];
     }

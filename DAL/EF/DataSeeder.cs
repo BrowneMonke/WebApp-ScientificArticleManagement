@@ -13,6 +13,13 @@ public static class DataSeeder
         Scientist charlesWarwick = new Scientist("Charles Warwick", "Neuroscience", "University of Pittsburgh");
         Scientist anelaChoy = new Scientist("Anela Choy", "Oceanography", "UC San Diego");
         Scientist robSherlock = new Scientist("Robert E. Sherlock", "Research", "MBARI", new DateOnly(1966, 11, 1));
+        Scientist masahiroEri = new Scientist("Masahiro Eriguchi", "Nephrology", "Nara Medical University", new DateOnly(1979, 12, 4));
+        Scientist yuLi = new Scientist("Yu Li", "Cardiology", "Zhejiang University School of Medicine");
+        Scientist xiaoLiu = new Scientist("Xiaoli Liu", "Neurology", "Zhejiang University School of Medicine", new DateOnly(1985, 2, 7));
+        Scientist robinRogers = new Scientist("Robin D. Rogers", "Chemistry", "University of Alabama");
+        Scientist keithComb = new Scientist("Keith D. Combrink", "Chemistry", "University of Kansas", new DateOnly(1965, 5, 17));
+        Scientist arthurVes = new Scientist("Arthur Vesperini", "Physics", "University of Siena", new DateOnly(1977, 4, 12));
+        Scientist robertoFranz = new Scientist("Roberto Franzosi", "Physics", "University of Siena", new DateOnly(1982, 3, 11));
 
 
         ScienceJournal journalNature = new ScienceJournal("Nature")
@@ -24,6 +31,21 @@ public static class DataSeeder
         {
             CountryOfOrigin = Country.Usa,
             YearFounded = 2015
+        };
+        ScienceJournal journalScImmunology = new ScienceJournal("Science Immunology", 21.89)
+        {
+            CountryOfOrigin = Country.Usa,
+            YearFounded = 2016
+        };
+        ScienceJournal journalHelvetica = new ScienceJournal("Helvetica Chimica Acta", 29.50)
+        {
+            CountryOfOrigin = Country.Switzerland,
+            YearFounded = 1918
+        };
+        ScienceJournal journalAnnalen = new ScienceJournal("Annalen der Physik", 18)
+        {
+            CountryOfOrigin = Country.Germany,
+            YearFounded = 1799
         };
 
 
@@ -71,8 +93,48 @@ public static class DataSeeder
         ArticleScientistLink larvaceansAnelaChoy = new ArticleScientistLink() { Article = articleLarvaceans, Scientist = anelaChoy };
         ArticleScientistLink larvaceansRobSherlock = new ArticleScientistLink() { Article = articleLarvaceans, Scientist = robSherlock, IsLeadResearcher = true};
         articleLarvaceans.AuthorLinks = [larvaceansAnelaChoy, larvaceansRobSherlock];
+
+        ScientificArticle articleAtpImmuneResponses =
+            new ScientificArticle("ATP release drives heightened immune responses associated with hypertension")
+            {
+                DateOfPublication = new DateOnly(2019, 6, 7),
+                NumberOfPages = 23,
+                Category = ArticleCategory.Biology,
+                Journal = journalScImmunology
+            };
+        ArticleScientistLink immuneResponsesMasahiro = new ArticleScientistLink() { Article = articleAtpImmuneResponses, Scientist = masahiroEri };
+        ArticleScientistLink immuneResponsesYuLi = new ArticleScientistLink() { Article = articleAtpImmuneResponses, Scientist = yuLi, IsLeadResearcher = true};
+        ArticleScientistLink immuneResponsesXiaoLiu = new ArticleScientistLink() { Article = articleAtpImmuneResponses, Scientist = xiaoLiu };
+        articleAtpImmuneResponses.AuthorLinks = [immuneResponsesMasahiro, immuneResponsesYuLi, immuneResponsesXiaoLiu];
+
+        ScientificArticle articleTaxanes =
+            new ScientificArticle(
+                "An Enantioselective Approach to the Taxanes: Direct access to functionalized cis-tricyclopentadecanes via  Wagner-Meerwein rearrangements")
+            {
+                DateOfPublication = new DateOnly(1992, 10, 2),
+                NumberOfPages = 16,
+                Category = ArticleCategory.Chemistry,
+                Journal = journalHelvetica
+            };
+        ArticleScientistLink taxanesRobertRogers = new ArticleScientistLink() { Article = articleTaxanes, Scientist = robinRogers, IsLeadResearcher = true };
+        ArticleScientistLink taxanesCombrink = new ArticleScientistLink() { Article = articleTaxanes, Scientist = keithComb };
+        articleTaxanes.AuthorLinks = [taxanesRobertRogers, taxanesCombrink];
+
+        ScientificArticle articleQuantumEntanglement =
+            new ScientificArticle("Enhancing Quantum Entanglement Through Parametric Control of Atomic-Cavity States")
+            {
+                DateOfPublication = new DateOnly(2017, 8, 23),
+                NumberOfPages = 14,
+                Category = ArticleCategory.QuantumPhysics,
+                Journal = journalAnnalen
+            };
+        ArticleScientistLink quantumRoberto = new ArticleScientistLink() { Article = articleQuantumEntanglement, Scientist = robertoFranz };
+        ArticleScientistLink quantumArthur = new ArticleScientistLink() { Article = articleQuantumEntanglement, Scientist = arthurVes, IsLeadResearcher = true};
+        articleQuantumEntanglement.AuthorLinks = [quantumRoberto, quantumArthur];
         
-        ScientificArticle[] seedArticles = [articleOrbitalPeriodXRayBurster, articleXRayBurstSources, articleKappa, articleLarvaceans];
+        
+        // no. of articles = 7 ; no. of journals = 5 ; no. of scientists = 14
+        ScientificArticle[] seedArticles = [articleOrbitalPeriodXRayBurster, articleXRayBurstSources, articleKappa, articleLarvaceans, articleAtpImmuneResponses, articleTaxanes, articleQuantumEntanglement];
         foreach (var article in seedArticles)
         {
             foreach (var linkArticleScientist in article.AuthorLinks)

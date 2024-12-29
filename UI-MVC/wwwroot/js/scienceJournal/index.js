@@ -5,6 +5,8 @@ const countryOfOriginEnum = {
     0: "UNKNOWN",
     1: "USA",
     2: "UK",
+    3: "Switzerland",
+    4: "Germany"
 };
 
 window.addEventListener('load', loadJournals);

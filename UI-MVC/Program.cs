@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<ArticleDbContext>(optionsBuillder =>
+builder.Services.AddDbContext<ArticleDbContext>(optionsBuilder =>
 {
-    optionsBuillder.UseSqlite("Data Source=../ArticleDatabase.db");
+    optionsBuilder.UseSqlite("Data Source=../ArticleDatabase.db");
 });
 builder.Services.AddScoped<IRepository, EfRepository>();
 builder.Services.AddScoped<IManager, Manager>();

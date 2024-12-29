@@ -12,15 +12,9 @@ public class ScientistController : Controller
         _manager = manager;
     }
     
-    public ViewResult Index()
-    {
-        var scientists = _manager.GetAllScientists();
-        return View(scientists);
-    }
-    
     public ViewResult Details(int id)
     {
-        var scientist = _manager.GetScientist(id);
+        var scientist = _manager.GetScientistById(id);
         return View(scientist);
     }
     

@@ -1,11 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArticleManagement.BL.Domain;
 
-public class ScienceJournal
+public class ScienceJournal : IValidatableObject
 {
-    //TODO: Minstens 5 instanties door de dataseeder laten aangemaakt worden (en die dan ook koppelen aan article instanties!!)
     // scalar-properties
     [Key]
     public int Id { get; set; }
@@ -15,7 +13,6 @@ public class ScienceJournal
     public Country CountryOfOrigin { get; init; }
     
     // navigation-property
-    [NotMapped]
     public ICollection<ScientificArticle> Articles { get; set; }
 
     public ScienceJournal(string name, double? price = null)
@@ -26,4 +23,13 @@ public class ScienceJournal
             Price = price;
     }
 
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        List<ValidationResult> errors = [];
+        if (YearFounded < 0 || YearFounded > DateTime.Today.Year)
+        {
+            errors.Add(new ValidationResult("The year can neither be negative nor be in the future!", new[]{ nameof(YearFounded)}));
+        }
+        return errors;
+    }
 }
