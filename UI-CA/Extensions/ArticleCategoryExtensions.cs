@@ -1,4 +1,6 @@
-﻿namespace ArticleManagement.BL.Domain.Extensions;
+﻿using ArticleManagement.BL.Domain;
+
+namespace ArticleManagement.UI.CA.Extensions;
 
 public static class ArticleCategoryExtensions
 {
