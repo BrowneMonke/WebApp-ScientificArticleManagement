@@ -1,5 +1,9 @@
 ﻿@model Scientist
 
+@{
+    ViewBag.Title = "Scientist details";
+}
+
 
 <h2>Scientist Details</h2>
 
@@ -18,41 +22,44 @@
     </div>
 </div>
 
-<div id="articleFeatures">
-    <span class="d-none" id="scientistIdentification">@Model.Id</span>
-    
-    <h3>Articles</h3>
-    <table class="table" id="articlesTable">
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Published</th>
-            <th># Pages</th>
-            <th>Category</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    <form id="addArticleForm">
-        <div class="form-group row" id="articleSelectionDiv">
-            <label for="articlesList" class="col-lg-2">Select an article</label>
-            <select name="articleSelection" id="articlesList" class="form-control col-lg"></select>
-        </div>
-        
-        <div class="row form-row mt-3" id="isLeadResCheckboxDiv">
-            <label class="form-check-label col-2" for="isLeadResearcherCheckbox">
-                Is Lead Researcher?
-            </label>
-            <input class="form-check-input col-4" type="checkbox" value="" id="isLeadResearcherCheckbox">
-        </div>
-        
-        <button class="btn btn-primary mt-3" type="submit" id="addArticleBtn">Add article to scientist</button>
-    </form>
-</div>
+<span class="d-none" id="scientistIdentification">@Model.Id</span>
+
+<h3>Articles</h3>
+
+<table class="table table-striped" id="articlesTable">
+    <thead>
+    <tr>
+        <th class="w-50">Title</th>
+        <th>Published</th>
+        <th># Pages</th>
+        <th>Category</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<h3>Add Article</h3>
+<form id="addArticleForm">
+    <div class="form-group row" id="articleSelectionDiv">
+        <label for="articlesList" class="col-2 col-form-label">
+            Select an article
+        </label>
+        <select name="articleSelection" id="articlesList" class="form-control col-lg"></select>
+    </div>
+
+    <div class="row form-row mt-4" id="isLeadResCheckboxDiv">
+        <label class="form-check-label col-2" for="isLeadResearcherCheckbox">
+            Is Lead Researcher?
+        </label>
+        <input class="form-check-input col-3" type="checkbox" value="" id="isLeadResearcherCheckbox">
+    </div>
+
+    <button class="btn btn-primary mt-3" type="submit" id="addArticleBtn">Add article to scientist</button>
+</form>
 
 @section Scripts
 {
     <script src="~/js/scientist/details.js" defer></script>
-    <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial"/>
 }
