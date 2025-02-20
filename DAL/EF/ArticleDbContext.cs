@@ -1,11 +1,12 @@
 using System.Diagnostics;
 using ArticleManagement.BL.Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ArticleManagement.DAL.EF;
 
-public class ArticleDbContext : DbContext
+public class ArticleDbContext : IdentityDbContext
 {
     public DbSet<Scientist> Scientists { get; set; }
     public DbSet<ScientificArticle> Articles { get; set; }
@@ -45,10 +46,12 @@ public class ArticleDbContext : DbContext
             .HasOne(art => art.Journal)
             .WithMany(j => j.Articles)
             .IsRequired(false); // 0..1 ipv 1
-        modelBuilder.Entity<ScienceJournal>()
+        /*
+         modelBuilder.Entity<ScienceJournal>() // duplicate code of above ↑
             .HasMany(j => j.Articles)
             .WithOne(art => art.Journal)
             .IsRequired(false);
+        */
 
         modelBuilder.Entity<ArticleScientistLink>().Property<int>("fkArticleId");
         modelBuilder.Entity<ArticleScientistLink>().Property<int>("fkScientistId"); // shadow properties

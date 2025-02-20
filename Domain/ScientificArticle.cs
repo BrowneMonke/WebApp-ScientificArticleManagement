@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace ArticleManagement.BL.Domain;
 
@@ -18,8 +19,10 @@ public class ScientificArticle : IValidatableObject
     
     // navigation-properties
     public ScienceJournal Journal { get; set; }
-    
     public ICollection<ArticleScientistLink> AuthorLinks { get; set; }
+    
+    [Required]
+    public IdentityUser DataOwner { get; set; }
 
     public ScientificArticle(string title)
     {

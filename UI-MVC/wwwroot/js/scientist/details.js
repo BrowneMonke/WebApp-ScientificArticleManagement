@@ -33,11 +33,11 @@ function submit() {
         resetLeadResearcherCheckbox();
         return;
     }
-    
+
     postArticleScientistLink(articleId, isLeadResearcher);
 }
 
-function postArticleScientistLink(articleId, isLeadResearcher){
+function postArticleScientistLink(articleId, isLeadResearcher) {
     fetch('/api/ArticleScientistLinks', {
         method: 'POST', headers: {
             'Accept': 'application/json', 'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ function loadArticleAssignmentForm() {
         });
 }
 
-function checkResponseData(response){
+function checkResponseData(response) {
     if (!response) {
         console.log("response is null");
         return [];
