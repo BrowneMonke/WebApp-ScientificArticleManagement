@@ -9,16 +9,16 @@
 <span class="d-none" id="scientistIdentification">@Model.Id</span>
 
 <dl class="row">
-    <dt class="col-md-1 mb-2">Name</dt>
-    <dd class="col-md-11 mb-2">
+    <dt class="col-lg-1 mb-2">Name</dt>
+    <dd class="col-lg-11 mb-2">
         @Model.Name
     </dd>
-    <dt class="col-md-1 mb-2">Date of Birth</dt>
-    <dd class="col-md-11 mb-2">
+    <dt class="col-lg-1 mb-2">Date of Birth</dt>
+    <dd class="col-lg-11 mb-2">
         @(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("MMM dd, yyyy") : "UNKNOWN")
     </dd>
-    <dt class="col-md-1 mb-2">Affiliation</dt>
-    <dd class="col-md-11 mb-2">
+    <dt class="col-lg-1 mb-2">Affiliation</dt>
+    <dd class="col-lg-11 mb-2">
         Faculty of @Model.Faculty, @Model.University
     </dd>
 </dl>
@@ -56,7 +56,14 @@
         <input class="form-check-input col-md-3" type="checkbox" value="" id="isLeadResearcherCheckbox">
     </div>
 
-    <button class="btn btn-primary mt-3" type="submit" id="addArticleBtn">Add article to scientist</button>
+    @if (User.Identity?.IsAuthenticated ?? false)
+    {
+        <button class="btn btn-primary mt-3" type="submit" id="addArticleBtn">Add article to scientist</button>
+    }
+    else
+    {
+        <button class="btn btn-primary mt-3 disabled" type="submit" id="addArticleBtn">Log in to add</button>
+    }
 </form>
 
 @section Scripts

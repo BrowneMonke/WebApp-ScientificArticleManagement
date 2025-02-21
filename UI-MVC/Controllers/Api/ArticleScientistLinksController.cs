@@ -2,6 +2,7 @@
 using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
 using ArticleManagement.UI.Web.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleManagement.UI.Web.Controllers.Api;
@@ -27,7 +28,7 @@ public class ArticleScientistLinksController : ControllerBase
     }
     
     
-    [HttpPost]
+    [HttpPost] [Authorize]
     public IActionResult PostLink(NewArticleScientistLinkDto newArticleScientistLinkDto)
     {
         ArticleScientistLink asLk;

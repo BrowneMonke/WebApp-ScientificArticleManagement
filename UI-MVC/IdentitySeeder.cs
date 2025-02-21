@@ -21,9 +21,9 @@ public class IdentitySeeder
         var userRole = new IdentityRole("User");
         await _roleManager.CreateAsync(userRole);
         
-        var defaultUser = new IdentityUser("default_user@kdg.be")
+        var defaultUser = new IdentityUser("default.user@kdg.be")
         {
-            Email = "default_user@kdg.be"
+            Email = "default.user@kdg.be"
         };
         await _userManager.CreateAsync(defaultUser, "DefaultUser123!");
         await _userManager.AddToRoleAsync(defaultUser, "User");
@@ -49,9 +49,9 @@ public class IdentitySeeder
         await _userManager.CreateAsync(ross, "Ross123!");
         await _userManager.AddToRoleAsync(ross, "User");
         
-        var deBouwer = new IdentityUser("de_bouwer@kdg.be")
+        var deBouwer = new IdentityUser("de.bouwer@kdg.be")
         {
-            Email = "de_bouwer@kdg.be"
+            Email = "de.bouwer@kdg.be"
         };
         await _userManager.CreateAsync(deBouwer, "DeBouwer123!");
         await _userManager.AddToRoleAsync(deBouwer, "Admin");
