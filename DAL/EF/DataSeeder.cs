@@ -12,7 +12,7 @@ public static class DataSeeder
         var bob = articleDbContext.Users.SingleOrDefault(u => u.UserName == "bob@kdg.be");
         var marley = articleDbContext.Users.SingleOrDefault(u => u.UserName == "marley@kdg.be");
         var ross = articleDbContext.Users.SingleOrDefault(u => u.UserName == "ross@kdg.be");
-        var deBouwer = articleDbContext.Users.SingleOrDefault(u => u.UserName == "debouwer@kdg.be");
+        var deBouwer = articleDbContext.Users.SingleOrDefault(u => u.UserName == "de_bouwer@kdg.be");
         
         Scientist walterLewin = new Scientist("Walter H. G. Lewin", "Physics", "MIT", new DateOnly(1936, 1, 29));
         Scientist janVanParadijs = new Scientist("Jan Van Paradijs", "Physics", "University Of Amsterdam", new DateOnly(1946, 6, 9));

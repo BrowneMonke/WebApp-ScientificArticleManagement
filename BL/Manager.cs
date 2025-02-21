@@ -47,6 +47,11 @@ public class Manager : IManager
         return _repository.ReadArticleByIdWithAuthorsAndJournal(articleId);
     }
     
+    public ScientificArticle GetArticleByIdWithAuthorsAndJournalAndDataOwner(int articleId)
+    {
+        return _repository.ReadArticleByIdWithAuthorsAndJournalAndDataOwner(articleId);
+    }
+    
     private static void RelateAuthors(ScientificArticle article)
     {
         foreach (ArticleScientistLink linkArticleScientist in article.AuthorLinks)
@@ -91,7 +96,7 @@ public class Manager : IManager
         _repository.CreateArticle(article);
     }
     
-    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory categoryChoice, ScienceJournal journal = null)
+    public ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory categoryChoice, string userName, ScienceJournal journal = null)
     {
         List<ArticleScientistLink> articleScientistLinksList = [];
         FillAuthorsList(authors, articleScientistLinksList);
@@ -102,7 +107,8 @@ public class Manager : IManager
             DateOfPublication = dateOfPublication,
             NumberOfPages = numberOfPages,
             Category = categoryChoice,
-            Journal = journal
+            Journal = journal,
+            DataOwner = _repository.GetUserByUserName(userName)
         };
         
         ValidateAndAddArticle(article);

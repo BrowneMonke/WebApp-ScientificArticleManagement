@@ -1,4 +1,5 @@
 ﻿using ArticleManagement.BL.Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace ArticleManagement.DAL.InMemory;
 
@@ -53,6 +54,11 @@ public class InMemoryRepository : IRepository
     }
 
     public ScientificArticle ReadArticleByIdWithAuthorsAndJournal(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ScientificArticle ReadArticleByIdWithAuthorsAndJournalAndDataOwner(int id)
     {
         throw new NotImplementedException();
     }
@@ -179,7 +185,12 @@ public class InMemoryRepository : IRepository
         throw new NotImplementedException();
     }
 
-    
+    public IdentityUser GetUserByUserName(string userName)
+    {
+        throw new NotImplementedException();
+    }
+
+
     private static void SeedScientists()
     {
         Scientist walterLewin = new Scientist("Walter H. G. Lewin", "Physics", "MIT", new DateOnly(1936, 1, 29));

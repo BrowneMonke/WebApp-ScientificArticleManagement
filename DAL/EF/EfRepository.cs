@@ -1,4 +1,5 @@
 ﻿using ArticleManagement.BL.Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArticleManagement.DAL.EF;
@@ -61,6 +62,17 @@ public class EfRepository : IRepository
             .Include(art => art.Journal)
             .Include(art => art.AuthorLinks)
             .ThenInclude(authLk => authLk.Scientist)
+            .SingleOrDefault();
+        return article;
+    }
+
+    public ScientificArticle ReadArticleByIdWithAuthorsAndJournalAndDataOwner(int id)
+    {
+        var article = _articleDbContext.Articles.Where(art => art.Id == id)
+            .Include(art => art.Journal)
+            .Include(art => art.AuthorLinks)
+            .ThenInclude(authLk => authLk.Scientist)
+            .Include(art => art.DataOwner)
             .SingleOrDefault();
         return article;
     }
@@ -157,5 +169,10 @@ public class EfRepository : IRepository
     {
         _articleDbContext.Journals.Add(journalToInsert);
         _articleDbContext.SaveChanges();
+    }
+
+    public IdentityUser GetUserByUserName(string userName)
+    {
+        return _articleDbContext.Users.SingleOrDefault(u => u.UserName == userName);
     }
 }

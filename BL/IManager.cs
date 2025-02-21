@@ -10,7 +10,8 @@ public interface IManager
     IEnumerable<ScientificArticle> GetArticlesByScientist(int scientistId);
     IEnumerable<ScientificArticle> GetArticlesNotByScientist(int scientistId);
     public ScientificArticle GetArticleByIdWithAuthorsAndJournal(int articleId);
-    ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, ScienceJournal journal = null);
+    public ScientificArticle GetArticleByIdWithAuthorsAndJournalAndDataOwner(int articleId);
+    ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, string userName, ScienceJournal journal = null);
     
     IEnumerable<Scientist> GetAllScientists();
     IEnumerable<Scientist> GetAllScientistsWithArticles();

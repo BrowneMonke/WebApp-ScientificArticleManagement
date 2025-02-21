@@ -2,6 +2,7 @@
 using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
 using ArticleManagement.UI.Web.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleManagement.UI.Web.Controllers.Api;
@@ -50,7 +51,7 @@ public class ScienceJournalsController : ControllerBase
         return Ok(journalDto); // 200
     }
 
-    [HttpPost]
+    [HttpPost] [Authorize]
     public IActionResult PostJournal(NewScienceJournalDto newScienceJournalDto)
     {
         ScienceJournal createdJournal;

@@ -1,4 +1,5 @@
 ﻿using ArticleManagement.BL.Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace ArticleManagement.DAL;
 
@@ -11,6 +12,7 @@ public interface IRepository
     public IEnumerable<ScientificArticle> ReadArticlesNotByScientist(int scientistId);
     ScientificArticle ReadArticleById(int id);
     public ScientificArticle ReadArticleByIdWithAuthorsAndJournal(int id);
+    public ScientificArticle ReadArticleByIdWithAuthorsAndJournalAndDataOwner(int id);
     void CreateArticle(ScientificArticle articleToInsert);
 
     IEnumerable<Scientist> ReadAllScientists();
@@ -27,5 +29,7 @@ public interface IRepository
     IEnumerable<ScienceJournal> ReadAllJournals();
     ScienceJournal ReadJournalByIdWithArticles(int id);
     void CreateJournal(ScienceJournal journalToInsert);
+
+    IdentityUser GetUserByUserName(string userName);
     
 }

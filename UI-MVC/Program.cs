@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("ArticleDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ArticleDbContextConnection' not found.");
 
 // Add services to the container.
 builder.Services.AddDbContext<ArticleDbContext>(optionsBuilder =>
@@ -38,10 +39,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(/*options => options.SignIn.Re
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ArticleDbContext>();
 
-var connectionString = builder.Configuration.GetConnectionString("ArticleDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ArticleDbContextConnection' not found.");
+// Authorization
+builder.Services.AddAuthorization();
 
+// KdG TI ASP.NET Live Monitoring
+builder.Services.AddLiveMonitoring(); 
 
-builder.Services.AddLiveMonitoring(); // KdG TI ASP.NET Live Monitoring
 var app = builder.Build();
 
 // database storage: EF Code First Trigger
@@ -54,7 +57,8 @@ using (var scope = app.Services.CreateScope())
     {
         // ASP.NET Identity
         var userManager = scope.ServiceProvider.GetService<UserManager<IdentityUser>>();
-        IdentitySeeder identitySeeder = new IdentitySeeder(userManager);
+        var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+        IdentitySeeder identitySeeder = new IdentitySeeder(userManager, roleManager);
         await identitySeeder.AsyncSeed();
         // dummy data
         DataSeeder.Seed(articleDbContext);

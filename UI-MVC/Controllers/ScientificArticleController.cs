@@ -1,11 +1,13 @@
 ﻿using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
 using ArticleManagement.UI.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleManagement.UI.Web.Controllers;
 
 // /ScientificArticle/<actionMethod>
+[Authorize]
 public class ScientificArticleController : Controller
 {
     private readonly IManager _manager;
@@ -15,12 +17,20 @@ public class ScientificArticleController : Controller
         _manager = manager;
     }
 
+    [AllowAnonymous]
     public ViewResult Index()
     {
         var articles = _manager.GetAllArticles();
         return View(articles);
     }
-    
+
+    [AllowAnonymous]
+    public ViewResult Details(int id)
+    {
+        var article = _manager.GetArticleByIdWithAuthorsAndJournalAndDataOwner(id);
+        return View(article);
+    }
+
     [HttpGet]
     public ViewResult Add()
     {
@@ -35,16 +45,10 @@ public class ScientificArticleController : Controller
             return View(newArticle);
         }
 
+        string currentUserName = User.Identity?.Name;
         var addedArticle = _manager.AddArticle(newArticle.Title, new List<Scientist>(), newArticle.DateOfPublication,
-            newArticle.NumberOfPages, newArticle.Category);
+            newArticle.NumberOfPages, newArticle.Category, currentUserName);
         
         return RedirectToAction("Details", new{id = addedArticle.Id});
     }
-    
-    public ViewResult Details(int id)
-    {
-        var article = _manager.GetArticleByIdWithAuthorsAndJournal(id);
-        return View(article);
-    }
-    
 }
