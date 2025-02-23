@@ -1,0 +1,15 @@
+﻿### Create new journal (unauthenticated)
+POST https://localhost:7176/api/ScienceJournals HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{"name":"Bio+", "price":null, "yearFounded": 2012, "countryOfOrigin": 4}
+
+
+### Create new journal (authenticated with cookie: default.user@kdg.be)
+POST https://localhost:7176/api/ScienceJournals HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Cookie: .AspNetCore.Identity.Application=CfDJ8IyEH_NxhK1FmLPBzcQPeCCp460htM7Pv_6htv_UhibvYjV8PVisDEnBnFtftdNodbX4AUzBmCLVzjBV81V8VME6Dq32k4-_q5piumNI-RY5I4YEFV6nFtP5qVnUQ24dtWkfTMy_nLzFZZXYNzgXXXKyiy84Iq3mzcJOi_tQ7D-cdSgL_SpHF_OhD5WR8hGY6G-9FaBfZnWasYQIYg1J3JPKzq07FXvBjOxMFZ1HunNL-t6yBZkZLzsTUFp2wGIZo615j8FK6499j-nhrnihas4lgfyIGNjbjR-0K28qPKsUIRLOJmGFBXRC2ztYdWjDiNHUcPKoS4Mrs8ZmDZcS4a5P40sTwRlQ4dcnHRj-3qbY9KUYGW6xEMxVRzh8A3ZmQn8F_oN1fcLYKRtHNEMbuoIsTyO6mGFp9aEeqdXE9gLfmBfHwuxlwkT3G0w3YzepqCIrBapxHiLTy2uzy3zR-pTbEcDsQRYL7g1XKwuyy_aXD_eEm-1xu40KX8WJPx7jj6oeResBmCYBeoilihWyCr-m3BtNq99v-AjAWyi7NWPWLYvBVKEXI73IpEK2mNLIm8_vzKR78hQ8aYnvBKepPeCtmhUehV3usFTr66KOYbstGjYRmkGNG3zHVgaKln-5kmabJR_IDqKBygohGmFxqshdEPTjfsQga9ySw-HfQdSwzKZEFFhqx7IgEjC5r3tYZ9wigbxTVZo8ds-OrsRQkqQx9ouxopW0oDom0GvGMKnr2Nkqt9VqfBiJKGNgqZA8r4VO1H43xLBqXox-XJYxLhOnORfpXDreM-vtTC5JXbpr_8y_5uShfYc8UlXLu82GmkPFPiwfNs4-PGwlyyt2R3c
+
+{"name":"Bio+", "price":null, "yearFounded": 2012, "countryOfOrigin": 4}

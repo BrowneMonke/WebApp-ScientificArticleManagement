@@ -16,7 +16,7 @@
     else
     {
         <li class="nav-item mt-2 me-1">
-           Hello @(User.Identity?.Name?.Split('@')[0].Titleize() ?? "Nameless user")!
+           Hello <abbr title="@User.Identity?.Name">@(User.Identity?.Name?.Split('@')[0].Titleize() ?? "Nameless user")</abbr>!
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/Identity/Account/Logout">Logout</a>
