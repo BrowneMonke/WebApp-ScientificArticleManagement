@@ -42,6 +42,10 @@ public class Manager : IManager
         return _repository.ReadArticlesNotByScientist(scientistId);
     }
     
+    public ScientificArticle GetArticleByIdWithDataOwner(int articleId)
+    {
+        return _repository.ReadArticleByIdWithDataOwner(articleId);
+    }
     public ScientificArticle GetArticleByIdWithAuthorsAndJournal(int articleId)
     {
         return _repository.ReadArticleByIdWithAuthorsAndJournal(articleId);
@@ -82,7 +86,7 @@ public class Manager : IManager
         }
     }
 
-    private void ValidateAndAddArticle(ScientificArticle article)
+    private void ValidateArticle(ScientificArticle article)
     {
         ICollection<ValidationResult> errors = new List<ValidationResult>();
         bool isValid = Validator.TryValidateObject(article, new ValidationContext(article), errors, validateAllProperties:true);
@@ -90,7 +94,11 @@ public class Manager : IManager
         {
             throw new ValidationException(String.Join("|", errors.Select(err => err.ErrorMessage)));
         }
-
+    }
+    
+    private void ValidateAndAddArticle(ScientificArticle article)
+    {
+        ValidateArticle(article);
         RelateAuthors(article);
         RelateJournal(article);
         _repository.CreateArticle(article);
@@ -114,6 +122,14 @@ public class Manager : IManager
         ValidateAndAddArticle(article);
 
         return article;
+    }
+
+    public ScientificArticle ChangeArticle(ScientificArticle existingArticle, ArticleCategory updatedCategory)
+    {
+        existingArticle.Category = updatedCategory;
+        ValidateArticle(existingArticle);
+        _repository.UpdateArticle(existingArticle);
+        return existingArticle;
     }
 
     public IEnumerable<Scientist> GetAllScientists()

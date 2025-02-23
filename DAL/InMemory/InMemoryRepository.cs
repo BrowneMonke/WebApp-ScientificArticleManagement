@@ -53,6 +53,11 @@ public class InMemoryRepository : IRepository
         return Articles[articleId - 1];
     }
 
+    public ScientificArticle ReadArticleByIdWithDataOwner(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public ScientificArticle ReadArticleByIdWithAuthorsAndJournal(int id)
     {
         throw new NotImplementedException();
@@ -74,6 +79,11 @@ public class InMemoryRepository : IRepository
             articleToInsert.Id = Articles.Last().Id + 1;
         }
         Articles.Add(articleToInsert);
+    }
+
+    public void UpdateArticle(ScientificArticle scientificArticle)
+    {
+        throw new NotImplementedException();
     }
 
     public IEnumerable<Scientist> ReadAllScientists()

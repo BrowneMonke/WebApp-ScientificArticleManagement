@@ -42,6 +42,27 @@ builder.Services.AddDefaultIdentity<IdentityUser>(/*options => options.SignIn.Re
 // Authorization
 builder.Services.AddAuthorization();
 
+// Web API: fix auth responses
+builder.Services.ConfigureApplicationCookie(cfg =>
+{
+    cfg.Events.OnRedirectToLogin += ctx =>
+    {
+        if (ctx.Request.Path.StartsWithSegments("/api"))
+        {
+            ctx.Response.StatusCode = 401; // unauthorized ( = unauthenticated)
+        }
+        return Task.CompletedTask;
+    };
+    cfg.Events.OnRedirectToAccessDenied += ctx =>
+    {
+        if (ctx.Request.Path.StartsWithSegments("/api"))
+        {
+            ctx.Response.StatusCode = 403; // forbidden ( = actually unauthorized for the particular role/user)
+        }
+        return Task.CompletedTask;
+    };
+});
+
 // KdG TI ASP.NET Live Monitoring
 builder.Services.AddLiveMonitoring(); 
 

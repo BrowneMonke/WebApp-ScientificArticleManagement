@@ -6,3 +6,10 @@
 
 <partial name="_ArticleSummaryPartial" for="@Model"/>
 
+@if (User.Identity?.Name == Model.DataOwner.UserName || User.IsInRole("Admin"))
+{
+    @section Scripts
+    {
+        <script src="/js/scientificArticle/details.js" defer></script>
+    }
+}

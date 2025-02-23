@@ -15,7 +15,7 @@ public class ScientificArticle : IValidatableObject
     
     [Range(1,Int32.MaxValue, ErrorMessage = "Enter a valid number of pages!")]
     public int NumberOfPages { get; init; }
-    public ArticleCategory Category { get; init; }
+    public ArticleCategory Category { get; set; }
     
     // navigation-properties
     public ScienceJournal Journal { get; set; }

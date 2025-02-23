@@ -11,9 +11,11 @@ public interface IRepository
     public IEnumerable<ScientificArticle> ReadArticlesByScientist(int scientistId);
     public IEnumerable<ScientificArticle> ReadArticlesNotByScientist(int scientistId);
     ScientificArticle ReadArticleById(int id);
+    ScientificArticle ReadArticleByIdWithDataOwner(int id);
     public ScientificArticle ReadArticleByIdWithAuthorsAndJournal(int id);
     public ScientificArticle ReadArticleByIdWithAuthorsAndJournalAndDataOwner(int id);
     void CreateArticle(ScientificArticle articleToInsert);
+    public void UpdateArticle(ScientificArticle scientificArticle);
 
     IEnumerable<Scientist> ReadAllScientists();
     IEnumerable<Scientist> ReadAllScientistsWithArticles();

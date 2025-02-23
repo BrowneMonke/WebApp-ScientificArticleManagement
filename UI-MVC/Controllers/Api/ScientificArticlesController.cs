@@ -1,4 +1,7 @@
 ﻿using ArticleManagement.BL;
+using ArticleManagement.BL.Domain;
+using ArticleManagement.UI.Web.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArticleManagement.UI.Web.Controllers.Api;
@@ -47,6 +50,21 @@ public class ScientificArticlesController : ControllerBase
             return NoContent(); // 204
 
         return Ok(articles);
+    }
+    
+    [Authorize][HttpPut]
+    public IActionResult PutArticle(UpdateScientificArticleDto updateScientificArticleDto)
+    {
+        ScientificArticle existingArticle = _manager.GetArticleByIdWithDataOwner(updateScientificArticleDto.Id);
+        if (existingArticle == null) return NotFound(); // 404
+
+        if (!(existingArticle.DataOwner.UserName == User.Identity?.Name || User.IsInRole("Admin")))
+        {
+            return Redirect("/Identity/Account/AccessDenied");
+        }
+
+        var updatedArticle = _manager.ChangeArticle(existingArticle, updateScientificArticleDto.Category);
+        return Ok(updatedArticle);
     }
     
 }

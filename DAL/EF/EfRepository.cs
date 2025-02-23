@@ -56,6 +56,13 @@ public class EfRepository : IRepository
         return _articleDbContext.Articles.Find(id);
     }
     
+    public ScientificArticle ReadArticleByIdWithDataOwner(int id)
+    {
+        return _articleDbContext.Articles
+            .Include(art => art.DataOwner)
+            .SingleOrDefault(art => art.Id == id);
+    }
+    
     public ScientificArticle ReadArticleByIdWithAuthorsAndJournal(int id)
     {
         var article = _articleDbContext.Articles.Where(art => art.Id == id)
@@ -80,6 +87,12 @@ public class EfRepository : IRepository
     public void CreateArticle(ScientificArticle articleToInsert)
     {
         _articleDbContext.Articles.Add(articleToInsert);
+        _articleDbContext.SaveChanges();
+    }
+    
+    public void UpdateArticle(ScientificArticle scientificArticle)
+    {
+        _articleDbContext.Articles.Update(scientificArticle);
         _articleDbContext.SaveChanges();
     }
 

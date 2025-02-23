@@ -1,24 +1,38 @@
 ﻿@using ArticleManagement.UI.Web.Extensions
 @model ScientificArticle
 
-
 <h2>Article Details</h2>
+<span class="d-none" id="articleIdSpan">@Model.Id</span>
 
 <dl class="row">
-    <dt class="col-md-1 mb-2">Title</dt>
-    <dd class="col-md-11 mb-2">
+    <dt class="col-lg-1 mb-2">Title</dt>
+    <dd class="col-lg-11 mb-2">
         @Model.Title
     </dd>
-    <dt class="col-md-1 mb-2">Number of Pages</dt>
-    <dd class="col-md-11 mb-2">
+    <dt class="col-lg-1 mb-2">Number of Pages</dt>
+    <dd class="col-lg-11 mb-2">
         @Model.NumberOfPages
     </dd>
-    <dt class="col-md-1 mb-2">Genre</dt>
-    <dd class="col-md-11 mb-2">
-        @Model.Category.GetString()
-    </dd>
-    <dt class="col-md-1 mb-2">Published</dt>
-    <dd class="col-md-11 mb-2">
+    <dt class="col-lg-1 mb-2">Genre</dt>
+    @if (User.Identity?.Name == Model.DataOwner.UserName || User.IsInRole("Admin"))
+    {
+        <dd class="col-lg-7 mb-2">
+            <select id="categorySelectionElem" asp-for="Category"
+                    asp-items="@(new SelectList(Enum.GetValues<ArticleCategory>()))"
+                    class="form-control col-md">
+            </select>
+        </dd>
+        <button class="btn btn-primary col-lg-2 mb-2" id="updateBtn">Update</button>
+        <span class="col-lg-2"></span>
+    }
+    else
+    {
+        <dd class="col-lg-11 mb-2">
+            @Model.Category.GetString()
+        </dd>
+    }
+    <dt class="col-lg-1 mb-2">Published</dt>
+    <dd class="col-lg-11 mb-2">
         @Model.DateOfPublication.ToString("MMM dd, yyyy") in <a asp-controller="ScienceJournal" asp-action="Index">@(Model.Journal?.Name ?? "UNKNOWN")</a>
     </dd>
 </dl>
@@ -58,3 +72,5 @@
     }
     </tbody>
 </table>
+
+
