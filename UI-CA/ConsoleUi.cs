@@ -302,7 +302,7 @@ public class ConsoleUi
     {
         try
         {
-            ScientificArticle article = _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, category);
+            ScientificArticle article = _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, category, userName:"");
             Console.WriteLine($"\nArticle added successfully: {article.Title}");
         }
         catch (ValidationException exception)
