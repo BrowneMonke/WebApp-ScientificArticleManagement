@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
 using ArticleManagement.DAL.EF;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Tests.IntegrationTests;
@@ -79,7 +80,7 @@ public class ManagerTests : IClassFixture<ExtendedWebApplicationFactoryWithMockA
         IManager mgr = scope.ServiceProvider.GetService<IManager>();
         ArticleDbContext ctx = scope.ServiceProvider.GetService<ArticleDbContext>();
 
-        var selectedArticle = ctx.Articles.FirstOrDefault(); // Selected article 0
+        var selectedArticle = ctx.Articles.Include(art => art.DataOwner).FirstOrDefault(); // Selected article 0
         var newArticleCategory = (ArticleCategory) 3;
         
 
@@ -90,7 +91,7 @@ public class ManagerTests : IClassFixture<ExtendedWebApplicationFactoryWithMockA
         // Assert
         Assert.NotNull(selectedArticle);
         Assert.NotNull(updatedArticle);
-        Assert.False(updatedArticle.Id == selectedArticle.Id);
+        Assert.True(updatedArticle.Id == selectedArticle.Id);
         Assert.Equal(updatedArticle.Title, selectedArticle.Title);
         Assert.Equal(updatedArticle.DateOfPublication, selectedArticle.DateOfPublication);
         Assert.Equal(updatedArticle.NumberOfPages, selectedArticle.NumberOfPages);
