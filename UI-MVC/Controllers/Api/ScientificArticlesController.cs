@@ -60,7 +60,7 @@ public class ScientificArticlesController : ControllerBase
 
         if (!(existingArticle.DataOwner.UserName == User.Identity?.Name || User.IsInRole("Admin")))
         {
-            return Redirect("/Identity/Account/AccessDenied");
+            return Forbid();
         }
 
         var updatedArticle = _manager.ChangeArticle(existingArticle, updateScientificArticleDto.Category);

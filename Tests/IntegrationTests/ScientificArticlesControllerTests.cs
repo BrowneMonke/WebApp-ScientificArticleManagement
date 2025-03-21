@@ -20,11 +20,30 @@ public class ScientificArticlesControllerTests : IClassFixture<ExtendedWebApplic
         _factory = factory;
     }
 
+    
     [Fact]
     public void PutArticle_AsUnauthenticatedUser_ReturnsUnauthorizedStatusCode()
     {
-        var httpClient = _factory.CreateClient();
+        // Arrange
+        var httpClient = _factory.CreateClient(); // no authentication
+
+        const int articleId = 1;
+        const ArticleCategory newArticleCategory = (ArticleCategory) 5;
+
+        UpdateScientificArticleDto updateScientificArticleDto = new UpdateScientificArticleDto()
+        {
+            Id = articleId,
+            Category = newArticleCategory
+        };        
+        var updatedScientificArticleJson = new StringContent(JsonConvert.SerializeObject(updateScientificArticleDto), Encoding.UTF8, "application/json");
+
+        string url = "/api/ScientificArticles/";
         
+        // Act
+        var response = httpClient.PutAsync(url, updatedScientificArticleJson).GetAwaiter().GetResult();
+        
+        // Assert
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
     
         
@@ -52,6 +71,45 @@ public class ScientificArticlesControllerTests : IClassFixture<ExtendedWebApplic
         
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        
+        // clear authenticated user
+        _factory.SetAuthenticatedUser();
+    }
+    
+    
+    [Fact]
+    public void PutArticle_AuthenticatedButUnauthorizedUser_GivenValidData_ReturnsForbidden()
+    {
+        // Arrange
+        var httpClient = _factory
+            .SetAuthenticatedUser(
+                new Claim(ClaimTypes.Name, "authenticated.user@kdg.be")
+            )
+            .CreateClient( new WebApplicationFactoryClientOptions()
+            {
+                AllowAutoRedirect = false
+            });
+        
+        const int articleId = 1;
+        const ArticleCategory newArticleCategory = (ArticleCategory) 5;
+
+        UpdateScientificArticleDto updateScientificArticleDto = new UpdateScientificArticleDto()
+        {
+            Id = articleId,
+            Category = newArticleCategory
+        };
+        var updatedScientificArticleJson = new StringContent(JsonConvert.SerializeObject(updateScientificArticleDto), Encoding.UTF8, "application/json");
+
+        string url = "/api/ScientificArticles/";
+        
+        // Act
+        var response = httpClient.PutAsync(url, updatedScientificArticleJson).GetAwaiter().GetResult();
+        
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        
+        // clear authenticated user
+        _factory.SetAuthenticatedUser();
     }
     
     
@@ -65,18 +123,13 @@ public class ScientificArticlesControllerTests : IClassFixture<ExtendedWebApplic
                 new Claim(ClaimTypes.Role, "Admin")
             )
             .CreateClient();
-        
-        using var scope = _factory.Services.CreateScope();
-        var mgr = scope.ServiceProvider.GetService<IManager>();
-        var ctx = scope.ServiceProvider.GetService<ArticleDbContext>();
 
+        const int articleId = 1;
         const ArticleCategory newArticleCategory = (ArticleCategory) 5;
-        var selectedArticle = ctx.Articles.FirstOrDefault();
-        if (selectedArticle == null) return; // ASK TEACHER!!
 
         UpdateScientificArticleDto updateScientificArticleDto = new UpdateScientificArticleDto()
         {
-            Id = selectedArticle.Id,
+            Id = articleId,
             Category = newArticleCategory
         };
         var updatedScientificArticleJson = new StringContent(JsonConvert.SerializeObject(updateScientificArticleDto), Encoding.UTF8, "application/json");
@@ -89,12 +142,21 @@ public class ScientificArticlesControllerTests : IClassFixture<ExtendedWebApplic
         
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        using var scope = _factory.Services.CreateScope();
+        var ctx = scope.ServiceProvider.GetService<ArticleDbContext>();
+        var selectedArticle = ctx.Articles.Find(articleId);
         var updatedArticle = JsonConvert.DeserializeObject<ScientificArticle>(responseBodyAsString);
+
+        Assert.NotNull(selectedArticle);
         Assert.Equal(selectedArticle.Id, updatedArticle.Id);
         Assert.Equal(selectedArticle.Title, updatedArticle.Title);
         Assert.Equal(selectedArticle.NumberOfPages, updatedArticle.NumberOfPages);
         Assert.Equal(selectedArticle.DateOfPublication, updatedArticle.DateOfPublication);
         Assert.Equal(newArticleCategory, updatedArticle.Category);
+        
+        // clear authenticated user
+        _factory.SetAuthenticatedUser();
     }
 
     
