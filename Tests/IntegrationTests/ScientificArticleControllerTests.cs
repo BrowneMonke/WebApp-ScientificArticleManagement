@@ -14,7 +14,7 @@ public class ScientificArticleControllerTests : IClassFixture<ExtendedWebApplica
     }
 
     [Fact]
-    public void Add_AsAuthenticatedUser_ReturnsAddArticleFormPage()
+    public void Add_Get_AsAuthenticatedUser_ReturnsAddArticleFormPage()
     {
         // Arrange
         var httpClient = _factory
@@ -38,7 +38,7 @@ public class ScientificArticleControllerTests : IClassFixture<ExtendedWebApplica
     }
     
     [Fact]
-    public void Add_AsUnauthenticatedUser_ReturnsRedirectToLoginPage()
+    public void Add_Get_AsUnauthenticatedUser_ReturnsRedirectToLoginPage()
     {
         // Arrange
         var httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions()
