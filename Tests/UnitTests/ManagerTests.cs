@@ -23,10 +23,10 @@ public class ManagerTests
     {
         // Arrange
         string title = "Testing title";
-        List<Scientist> auths = [];
-        DateOnly dop = DateOnly.FromDateTime(DateTime.Today);
-        int nop = 9;
-        ArticleCategory cat = ArticleCategory.Astrophysics;
+        List<Scientist> authors = [];
+        DateOnly dateOfPublication = DateOnly.FromDateTime(DateTime.Today);
+        int numberOfPages = 9;
+        ArticleCategory category = ArticleCategory.Astrophysics;
         string userName = "data.owner@kdg.be";
 
         _repository.Setup(repo => repo.ReadUserByUserName(userName))
@@ -36,14 +36,14 @@ public class ManagerTests
 
 
         // Act
-        ScientificArticle createdArticle = _manager.AddArticle(title, auths, dop, nop, cat, userName);
+        ScientificArticle createdArticle = _manager.AddArticle(title, authors, dateOfPublication, numberOfPages, category, userName);
 
         // Assert
         Assert.NotNull(createdArticle);
         Assert.Equal(title, createdArticle.Title);
-        Assert.Equal(dop, createdArticle.DateOfPublication);
-        Assert.Equal(nop, createdArticle.NumberOfPages);
-        Assert.Equal(cat, createdArticle.Category);
+        Assert.Equal(dateOfPublication, createdArticle.DateOfPublication);
+        Assert.Equal(numberOfPages, createdArticle.NumberOfPages);
+        Assert.Equal(category, createdArticle.Category);
         _repository.VerifyAll();
     }
 
@@ -108,7 +108,7 @@ public class ManagerTests
 
         // Assert
         Assert.Throws<ValidationException>(wrappedActCall);
-        _repository.Verify(repo => repo.UpdateArticle(existingArticle), Times.Never);
+        _repository.Verify(repo => repo.UpdateArticle(It.IsAny<ScientificArticle>()), Times.Never);
     }
 
 }
