@@ -13,7 +13,7 @@ public interface IManager
     public ScientificArticle GetArticleByIdWithAuthorsAndJournal(int articleId);
     public ScientificArticle GetArticleByIdWithAuthorsAndJournalAndDataOwner(int articleId);
     ScientificArticle AddArticle(string title, IEnumerable<Scientist> authors, DateOnly dateOfPublication, int numberOfPages, ArticleCategory category, string userName, ScienceJournal journal = null);
-    ScientificArticle ChangeArticle(ScientificArticle existingArticle, ArticleCategory updatedCategory);
+    ScientificArticle ChangeArticle(ScientificArticle existingArticle, ArticleCategory newCategory);
     
     
     IEnumerable<Scientist> GetAllScientists();

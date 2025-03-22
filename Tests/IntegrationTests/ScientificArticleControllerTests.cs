@@ -50,11 +50,9 @@ public class ScientificArticleControllerTests : IClassFixture<ExtendedWebApplica
         
         // Act
         var response = httpClient.GetAsync(url).GetAwaiter().GetResult();
-        string responseBodyAsString = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
         
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-        // Assert.StartsWith("/Identity/Account/Login", response.Headers.Location?.OriginalString);
     }
     
 }

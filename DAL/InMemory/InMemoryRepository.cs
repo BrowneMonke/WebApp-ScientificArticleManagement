@@ -195,7 +195,7 @@ public class InMemoryRepository : IRepository
         throw new NotImplementedException();
     }
 
-    public IdentityUser GetUserByUserName(string userName)
+    public IdentityUser ReadUserByUserName(string userName)
     {
         throw new NotImplementedException();
     }

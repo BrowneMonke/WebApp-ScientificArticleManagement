@@ -32,6 +32,6 @@ public interface IRepository
     ScienceJournal ReadJournalByIdWithArticles(int id);
     void CreateJournal(ScienceJournal journalToInsert);
 
-    IdentityUser GetUserByUserName(string userName);
+    IdentityUser ReadUserByUserName(string userName);
     
 }

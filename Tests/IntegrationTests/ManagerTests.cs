@@ -57,16 +57,16 @@ public class ManagerTests : IClassFixture<ExtendedWebApplicationFactoryWithMockA
         using var scope = _factory.Services.CreateScope();
         var mgr = scope.ServiceProvider.GetService<IManager>();
 
-        string title = "Negative pages hehe"; // empty title not allowed
-        List<Scientist> auths = [];
-        DateOnly dop = DateOnly.FromDateTime(DateTime.Today);
-        int nop = -2; // negative number of pages not allowed
-        ArticleCategory cat = ArticleCategory.Astrophysics;
+        string title = "Negative pages hehe";
+        List<Scientist> authors = [];
+        DateOnly dateOfPublication = DateOnly.FromDateTime(DateTime.Today);
+        int numberOfPages = -2; // negative number of pages not allowed
+        ArticleCategory category = ArticleCategory.Astrophysics;
         string userName = "bob@kdg.be";
 
         // Act
         // Book createdBook = mgr.AddBook(isbn, title, format);
-        var wrappedActCall = new Func<ScientificArticle>(() => mgr.AddArticle(title, auths, dop, nop, cat, userName));
+        var wrappedActCall = new Func<ScientificArticle>(() => mgr.AddArticle(title, authors, dateOfPublication, numberOfPages, category, userName));
 
         // Assert
         Assert.Throws<ValidationException>(wrappedActCall);

@@ -184,7 +184,7 @@ public class EfRepository : IRepository
         _articleDbContext.SaveChanges();
     }
 
-    public IdentityUser GetUserByUserName(string userName)
+    public IdentityUser ReadUserByUserName(string userName)
     {
         return _articleDbContext.Users.SingleOrDefault(u => u.UserName == userName);
     }

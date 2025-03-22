@@ -116,7 +116,7 @@ public class Manager : IManager
             NumberOfPages = numberOfPages,
             Category = categoryChoice,
             Journal = journal,
-            DataOwner = _repository.GetUserByUserName(userName)
+            DataOwner = _repository.ReadUserByUserName(userName)
         };
         
         ValidateAndAddArticle(article);
@@ -124,9 +124,9 @@ public class Manager : IManager
         return article;
     }
 
-    public ScientificArticle ChangeArticle(ScientificArticle existingArticle, ArticleCategory updatedCategory)
+    public ScientificArticle ChangeArticle(ScientificArticle existingArticle, ArticleCategory newCategory)
     {
-        existingArticle.Category = updatedCategory;
+        existingArticle.Category = newCategory;
         ValidateArticle(existingArticle);
         _repository.UpdateArticle(existingArticle);
         return existingArticle;
