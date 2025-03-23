@@ -212,12 +212,12 @@ Transfer-Encoding: chunked
 ![Code coverage](coverage.png)
 
 ### Test complexe authorization
- - Tests.IntegrationTests.ScientificArticlesControllerTests.cs
- - Tests.UnitTests.ScientificArticlesControllerTests.cs
+ - Tests.IntegrationTests.ScientificArticlesControllerTests
+ - Tests.UnitTests.ScientificArticlesControllerTests
 
 ### Test verification
- - Tests.UnitTests.ManagerTests.cs
- - Tests.UnitTests.ScientificArticlesControllerTests.cs
+ - Tests.UnitTests.ManagerTests
+ - Tests.UnitTests.ScientificArticlesControllerTests
 
 ### Links
  - <a href="https://gitlab.com/kdg-ti/programmeren-2-dotnet/24-25/isb204/projects/akshat.verma/-/pipelines/1729977826/test_report?job_name=tests">Pipeline tests</a>
