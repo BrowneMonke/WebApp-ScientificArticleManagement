@@ -143,6 +143,7 @@ public class ScientificArticlesControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.Equal(updatedArticle, okResult.Value);
+        _manager.VerifyAll();
     }
 
     [Fact]
@@ -180,5 +181,6 @@ public class ScientificArticlesControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.Equal(updatedArticle, okResult.Value);
+        _manager.VerifyAll();
     }
 }
