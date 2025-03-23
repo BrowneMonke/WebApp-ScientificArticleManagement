@@ -25,16 +25,6 @@ builder.Services.AddControllersWithViews()
     });
 
 // ASP.NET Identity
-/*
-builder.Services.AddAuthentication("Cookies")
-    .AddCookie("Cookies");
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<ArticleDbContext>()
-    .AddDefaultUI()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddRazorPages();
-*/
 builder.Services.AddDefaultIdentity<IdentityUser>(/*options => options.SignIn.RequireConfirmedAccount = false*/) // RequireConfirmedAccount = false by default
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ArticleDbContext>();

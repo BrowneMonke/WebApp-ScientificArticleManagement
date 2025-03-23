@@ -202,3 +202,23 @@ Transfer-Encoding: chunked
   "articles": []
 }
 ```
+
+## Sprint 8
+
+```shell
+  dotnet test
+```
+
+![Code coverage](coverage.png)
+
+### Test complexe authorization
+ - Tests.IntegrationTests.ScientificArticlesControllerTests.cs
+ - Tests.UnitTests.ScientificArticlesControllerTests.cs
+
+### Test verification
+ - Tests.UnitTests.ManagerTests.cs
+ - Tests.UnitTests.ScientificArticlesControllerTests.cs
+
+### Links
+ - <a href="https://gitlab.com/kdg-ti/programmeren-2-dotnet/24-25/isb204/projects/akshat.verma/-/pipelines/1729977826/test_report?job_name=tests">Pipeline tests</a>
+ - <a href="https://kdg-ti.gitlab.io/-/programmeren-2-dotnet/24-25/isb204/projects/akshat.verma/-/jobs/9492553805/artifacts/coveragereport/index.html">Code coverage</a>
