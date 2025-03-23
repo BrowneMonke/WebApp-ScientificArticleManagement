@@ -125,8 +125,3 @@ tests:
         coverage_format: cobertura
     paths:
       - coveragereport
-
-deploy:
-  stage: deploy
-  script: echo "Define your deployment script!"
-  environment: production
