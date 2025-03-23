@@ -52,6 +52,10 @@ public class ScientificArticleControllerTests : IClassFixture<ExtendedWebApplica
         var response = httpClient.GetAsync(url).GetAwaiter().GetResult();
         
         // Assert
+        /*
+         * Returns unauthorized when it's supposed to redirect to the Login Page.
+         * Using standard (not ExtendedWithMockAuth) WebApplicationFactory doesn't cause this issue. Bug in ExtendedWebApp?
+         */
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
     
