@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Security.Claims;
 using System.Text;
-using ArticleManagement.BL;
 using ArticleManagement.BL.Domain;
 using ArticleManagement.DAL.EF;
 using ArticleManagement.UI.Web.Models.Dto;

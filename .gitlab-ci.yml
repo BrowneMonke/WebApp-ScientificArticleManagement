@@ -110,13 +110,21 @@ tests:
   # You may want to define separate testing jobs for different types of testing
   # (e.g. integration tests, unit tests etc).
   script:
-    - 'dotnet test --no-restore --logger junit'
+    - 'dotnet test --no-restore --logger junit --collect "XPlat Code Coverage"'
+    - 'dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools --version 5.4.4'
+    - './tools/reportgenerator
+      -reports:"Tests/TestResults/*/coverage.cobertura.xml"
+      -targetdir:"coveragereport"
+      -reportypes:Html'
+    
   artifacts:
     reports:
       junit: Tests/TestResults/TestResults.xml
       coverage_report:
         path: Tests/TestResults/*/coverage.cobertura.xml
         coverage_format: cobertura
+    paths:
+      - coveragereport
 
 deploy:
   stage: deploy
